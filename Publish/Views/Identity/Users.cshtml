@@ -1,0 +1,72 @@
+﻿@model Logisto.Models.ListFilter
+@{
+	ViewBag.Title = "Пользователи";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetRoles = "@Url.Action("GetRoles", "Identity")";
+		app.urls.GetItems = "@Url.Action("UsersGetItems", "Identity")";
+		app.urls.GetNewUser = "@Url.Action("GetNewUser", "Identity")";
+		app.urls.DeleteUser = "@Url.Action("DeleteUser", "Identity")";
+		app.urls.SaveUser = "@Url.Action("SaveUser", "Identity")";
+		app.urls.GetUserRoles = "@Url.Action("GetUserRoles", "Identity")";
+		app.urls.UpdateUserRoles = "@Url.Action("UpdateUserRoles", "Identity")";
+		app.urls.ResetUserPassword = "@Url.Action("ResetUserPassword", "Identity")";
+
+	</script>
+
+	<script src="~/Scripts/Identity/Users.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>Пользователи</h2></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-1"><button class="btn btn-a" data-bind="click: OpenUserCreate" style="margin-top: 22px;">+новый</button></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2">Логин</th>
+				<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">Имя</a>
+				</th>
+				<th class="col-md-2">Email</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: Login"></td>
+				<td data-bind="text: Name"></td>
+				<td data-bind="text: Email"></td>
+				<td><button class="btn btn-xs" data-bind="click: $parent.OpenUserEdit"><span class="glyphicon glyphicon-pencil"></span></button><a href="#" data-bind="click: $parent.DeleteUser" class="close">&times;</a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+
+@Html.Partial("_UserEditModal")

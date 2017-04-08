@@ -1,0 +1,203 @@
+﻿@model Dictionary<string, object>
+@{
+	ViewBag.Title = "Договор";
+}
+
+@section Styles{
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.EditContract = "@Url.Action("Edit", "Contracts")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+		app.urls.ContractorDetails = "@Url.Action("LegalDetails", "Orders")";
+	</script>
+
+	<script src="~/Scripts/Contracts/Contract.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-4"><h2>Договор <span class="text-ghost">#<span data-bind="text: Contract.ID"></span></span></h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-3">
+			<a class="btn btn-a" style="margin-top: 22px;" href="#" data-bind="attr:{href:GotoContractorUrl(Contract.LegalId())}"><strong>Перейти к контрагенту</strong></a>
+			<button class="btn btn-primary" style="margin-top: 22px;" data-bind="click: EditContract">Редактировать</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default shadow">
+				<div class="panel-heading">
+					Договор № <strong data-bind="text: Contract.Number"></strong>
+					<span class="text-muted"> от </span>
+					<span data-bind="text: app.utility.FormatDate(Contract.Date)"></span>
+				</div>
+				<div class="panel-body">
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Действует с</div>
+						<div class="col-md-9">
+							<span data-bind="text: app.utility.FormatDate(Contract.BeginDate)"></span>
+							<span class="text-muted"> по </span>
+							<span data-bind="text: app.utility.FormatDate(Contract.EndDate)"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 "></div>
+						<div class="col-md-9" style="background-color:#f9f9f9">
+							<span data-bind="if: Contract.IsProlongation">С пролонгацией, </span>
+							<span data-bind="ifnot: Contract.IsProlongation">Без пролонгации, </span>
+							<span data-bind="if: Contract.IsFixed">Зафиксирован</span>
+							<span data-bind="ifnot: Contract.IsFixed">Не фиксирован</span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Между</div>
+						<div class="col-md-9">
+							<strong data-bind="text: Contract.OurLegal"></strong>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">выступающей как</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.OurContractRole"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">и</div>
+						<div class="col-md-9">
+							<strong data-bind="text: Contract.Legal"></strong>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">выступающей как</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.ContractRole"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Вид договора</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.ContractServiceType"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Тип договора</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.ContractType"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Условия оплаты</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.PaymentTerm"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Комментарий</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.Comment"></span>
+						</div>
+					</div>
+
+					<hr />
+					<!-- ko foreach: Contract.Currencies -->
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted"><span data-bind="text: Display"></span></div>
+						<div class="col-md-9">
+							наш р/с
+							<strong data-bind="text: OurBankAccount"></strong> в банке
+							<span data-bind="text: OurBank"></span>, клиента
+							<strong data-bind="text: BankAccount"></strong> в банке
+							<span data-bind="text: Bank"></span>
+						</div>
+					</div>
+					<!-- /ko -->
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Применяемый курс</div>
+						<div class="col-md-9">
+							<span data-bind="text: Contract.CurrencyRateUse"></span>
+						</div>
+					</div>
+					<hr />
+					<!-- ko foreach: Contract.Documents -->
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Документ</div>
+						<div class="col-md-9 pointer" data-bind="click: $parent.ViewDocument">
+							<span data-bind="text: Number"></span>,
+							<strong data-bind="text: Filename"></strong>
+							<span data-bind="text: FileSize"></span>Б,
+							<span data-bind="visible: IsPrint" class="glyphicon glyphicon-print text-muted" title="Вывод на печать"></span>
+							<span data-bind="visible: IsNipVisible" class="glyphicon glyphicon-tent text-muted" title="Вывод в NIP"></span>
+						</div>
+					</div>
+					<!-- /ko -->
+					<!-- ko with: Contract.Marks -->
+					<hr />
+
+					<div class="row form-group">
+						<div class="col-md-3"></div>
+						<div class="col-md-9">
+							<!-- ko if: IsContractOk() -->
+							<span>Договор Ок</span>
+							<span data-bind="text: ContractOkUser"></span>
+							<span data-bind="text: app.utility.FormatDateTime(ContractOkDate)"></span>
+							<!-- /ko -->
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3"></div>
+						<div class="col-md-9">
+							<!-- ko if: IsContractChecked() -->
+							<span>Договор проверен</span>
+							<span data-bind="text: ContractCheckedUser"></span>
+							<span data-bind="text: app.utility.FormatDateTime(ContractCheckedDate)"></span>
+							<!-- /ko -->
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3"></div>
+						<div class="col-md-9">
+							<!-- ko if: IsContractRejected() -->
+							<span>Договор отклонен</span>
+							<span data-bind="text: ContractRejectedUser"></span>
+							<span data-bind="text: app.utility.FormatDateTime(ContractRejectedDate)"></span>
+							по причине
+							"<span data-bind="text: ContractRejectedComment"></span>"
+							<!-- /ko -->
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3"></div>
+						<div class="col-md-9">
+							<!-- ko if: IsContractBlocked() -->
+							<span>Договор заблокирован</span>
+							<span data-bind="text: ContractBlockedUser"></span>
+							<span data-bind="text: app.utility.FormatDateTime(ContractBlockedDate)"></span>
+							по причине
+							"<span data-bind="text: ContractBlockedComment"></span>"
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<!-- /ko -->
+
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

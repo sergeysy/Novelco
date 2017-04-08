@@ -1,0 +1,70 @@
+﻿@model Logisto.ViewModels.CrmLegalsViewModel
+@{
+	ViewBag.Title = "CRM ИНН";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetCrmLegalItems", "R")";
+		app.urls.DownloadExcel = "@Url.Action("DownloadCrmLegalsReport", "R")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/CrmLegals.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>ИНН (CRM)</h2></div>
+		<div class="col-md-6 text-right"><a href="#" class="btn btn-a" style="margin-top:22px" data-bind="click: DownloadReport">Загрузить отчет</a></div>
+	</div>
+	<hr />
+	
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th>Название</th>
+				<th>Полное Название</th>
+				<th>Адрес</th>
+				<th>Юр адрес</th>
+				<th>Почтовый адрес</th>
+				<th>ИНН</th>
+				<th>КПП</th>
+				<th>ОГРН</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: CompanyName"></td>
+				<td data-bind="text: CompanyFullName"></td>
+				<td data-bind="text: Address"></td>
+				<td data-bind="text: LegalAddress"></td>
+				<td data-bind="text: PostAddress"></td>
+				<td data-bind="text: TIN"></td>
+				<td data-bind="text: KPP"></td>
+				<td data-bind="text: OGRN"></td>
+			</tr>
+			<!-- /ko -->
+
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+

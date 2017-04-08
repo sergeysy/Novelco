@@ -1,0 +1,192 @@
+﻿@model Logisto.ViewModels.OrdersViewModel
+@{
+	ViewBag.Title = "Заказы";
+}
+
+@section Styles{
+
+	<style>
+		.main-container {
+			margin-top: 24px;
+		}
+
+		.select-container {
+			height: 2em;
+		}
+
+		select {
+			width: 100%;
+			height: 100%;
+			border: 1px solid #A0A9A9;
+			border-radius: 3px;
+		}
+
+		.select-container::after {
+			width: 100%;
+			height: 100%;
+			content: "";
+			position: absolute;
+			top: 0;
+			background: rgba(0,0,0,0);
+			display: block;
+		}
+
+		.options-container {
+			position: absolute;
+			top: 2em;
+			width: 100%;
+			border: 1px solid #A0A9A9;
+			border-radius: 3px;
+			background: #FFFFFF;
+			display: none;
+		}
+
+			.options-container.shown {
+				display: block;
+			}
+
+			.options-container label {
+				display: block;
+				padding: .2em;
+			}
+
+				.options-container label:not(:last-child) {
+					border-bottom: 1px solid #FFFFFF;
+				}
+
+		.button-container {
+			display: flex;
+			justify-content: space-around;
+			border-top: 1px solid #A9A9A9;
+			background: #F6F6F6;
+		}
+
+			.button-container button {
+				margin: 2px;
+				margin-left: 0;
+			}
+	</style>
+
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "Orders")";
+		app.urls.GetContract = "@Url.Action("GetContract", "Ajax")";
+		app.urls.UserDetails = "@Url.Action("View", "Users")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.LegalDetails = "@Url.Action("LegalDetails", "Orders")";
+		app.urls.PersonDetails = "@Url.Action("Details", "Persons")";
+		app.urls.ContractDetails = "@Url.Action("Edit", "Contracts")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+		app.urls.GetContractCurrencies = "@Url.Action("GetContractCurrencies", "Contractors")";
+		app.urls.GetBankAccountsByLegalItems = "@Url.Action("GetBankAccountsByLegal", "Contractors")";
+		app.urls.GetDocumentsByContractItems = "@Url.Action("GetDocumentsByContract", "Orders")";
+	</script>
+
+	<script src="~/Scripts/Orders/Orders.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Заказы</h2></div>
+		<div class="col-md-2">
+		</div>
+		<div class="col-md-1"><a href="~/Orders/Create" class="btn btn-a" style="margin-top:22px;" ><strong>+новый</strong></a></div>
+		<div class="col-md-2">
+			<div class="main-container">
+				<div class="select-container" data-bind="click: Filter.ToggleOptions">
+					<select data-bind="options: [Filter.SelectedItemsDisplay]"></select>
+				</div>
+				<div class="options-container" data-bind="css: { 'shown': Filter.OptionsShown }">
+					<div class="options" data-bind="foreach: Filter.Statuses">
+						<label data-bind="css: { 'checked': isChecked }">
+							<input type="checkbox" data-bind="checked: isChecked">
+							<span data-bind="text: Name"></span>
+						</label>
+					</div>
+					<div class="button-container">
+						<button type="button" class="btn" data-bind="click: Filter.ResetSelection">Очистить</button>
+						<button type="button" class="btn" data-bind="click: Filter.ConfirmSelection">Готово</button>
+						<button type="button" class="btn" data-bind="click: Filter.CloseOptions">Отмена</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-2"><input id="filterText" type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed table-hover" style="font-size:9pt;">
+		<thead>
+			<tr>
+				<th class="sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='Number'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Number'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Number')}">Номер</a>
+				</th>
+				<th class="sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('CreatedDate')}">Дата</a>
+				</th>
+				<th class="overflowed sortable" style="width:7%" data-bind="css:{'asc-sorted':Filter.Sort()=='OrderStatusId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='OrderStatusId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('OrderStatusId')}">Статус</a>
+				</th>
+				<th style="width:12%" class=" sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ProductId')}">Продукт</a>
+				</th>
+				<th class="overflowed sortable" style="width:10%" data-bind="css:{'asc-sorted':Filter.Sort()=='Contractor'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Contractor'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Contractor')}">Контрагент</a>
+				</th>
+				<th class="overflowed sortable" style="width:19%" data-bind="css:{'asc-sorted':Filter.Sort()=='Legal'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Legal'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Legal')}">Юрлицо</a>
+				</th>
+				<th class="overflowed sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ContractId')}">Договор</a>
+				</th>
+				<th class="sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='GrossWeight'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='GrossWeight'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('GrossWeight')}">Брутто</a>
+				</th>
+				<th class="overflowed sortable" style="width:12%" data-bind="css:{'asc-sorted':Filter.Sort()=='From'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='From'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('From')}">Пункт отправления</a>
+				</th>
+				<th class="overflowed sortable" style="width:12%" data-bind="css:{'asc-sorted':Filter.Sort()=='To'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='To'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('To')}">Пункт назначения</a>
+				</th>
+				<th class="sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Balance'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Balance'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Balance')}">Баланс</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody style="word-wrap:break-word; word-break:break-all">
+			<!-- ko foreach: Items -->
+			<tr class="pointer">
+				<td><a data-bind="text: Number, attr: { href: $parent.OrderDetailsUrl(ID) }"></a></td>
+				<td data-bind="text: app.utility.FormatDate(CreatedDate), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OrderStatus, OrderStatusId), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractorByOrder, ID), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId), click: $parent.GotoOrderDetails, attr:{'title':app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+				<td class="overflowed"><a href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Contract, ContractId), click: function(){$parent.OpenContractInfo(ContractId)}"></a></td>
+				<td data-bind="text: app.utility.FormatDecimal(GrossWeight), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: From, click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: To, click: $parent.GotoOrderDetails"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Balance), click: $parent.GotoOrderDetails"></td>
+			</tr>
+			<!-- /ko -->
+
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+
+@Html.Partial("_ContractInfoModal")

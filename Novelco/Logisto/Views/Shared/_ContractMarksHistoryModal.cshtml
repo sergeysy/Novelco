@@ -1,0 +1,38 @@
+﻿
+<div class="modal" id="contractMarksHistoryModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg" data-bind="with: ContractMarksHistoryModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<h4 class="modal-title">История меток</h4>
+			</div>
+			<div class="modal-body">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Дата</th>
+							<th class="col-md-3">Статус</th>
+							<th class="col-md-2">Пользователь</th>
+							<th class="col-md-3">Причина</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: CurrentItem().Items -->
+						<tr>
+							<td data-bind="text: app.utility.FormatDateTime(Date)"></td>
+							<td style="border-top-color: #f0f0f0" data-bind="text: Text"></td>
+							<td style="border-top-color: #f5f5f5" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, UserId)"></td>
+							<td style="border-top-color: #f8f8f8" data-bind="text: Reason"></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">				
+				<div style="float:right;line-height: 34px;">
+					<button type="button" class="btn btn-primary" data-bind="click: Done">Понятно</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

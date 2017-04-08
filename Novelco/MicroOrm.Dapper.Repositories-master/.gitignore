@@ -1,0 +1,8 @@
+*.nupkg
+*.user
+*.suo
+*.exe
+
+bin
+obj
+packages

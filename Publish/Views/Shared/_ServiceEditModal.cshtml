@@ -1,0 +1,81 @@
+﻿
+<div class="modal" id="serviceEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ServiceEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Услуга <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новая услуга</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Название</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: $parent.Dictionaries.ServiceType, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().ServiceTypeId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Ндс</div>
+						<div class="col-md-8">
+							<!-- ko if: $parent.SelectedAccounting() && $parent.SelectedAccounting().IsIncome() -->
+							<span class="form-control" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Vat, CurrentItem().VatId)"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: $parent.SelectedAccounting() && $parent.SelectedAccounting().IsIncome() -->
+							<select class="form-control" data-bind="options: $parent.Dictionaries.Vat, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().VatId"></select>
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Количество</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Count" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Валюта</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: $parent.Dictionaries.Currency, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().CurrencyId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Цена</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Price" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Сумма в валюте</div>
+						<div class="col-md-8"><span data-bind="text: CurrentItem().OriginalSum" class="form-control"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Сумма в рублях</div>
+						<div class="col-md-8"><span data-bind="text: CurrentItem().Sum" class="form-control"></span></div>
+					</div>
+					<div class="row form-group">
+						<!-- ko if: FixedRate() -->
+						<div class="col-md-offset-4 form-text text-muted">Пересчет производится по фиксированному курсу: <span data-bind="text: app.utility.FormatDecimal(FixedRate)"></span></div>
+						<!-- /ko -->
+						<!-- ko ifnot: FixedRate() -->
+						<!-- ko if: $parent.SelectedAccounting() -->
+						<div class="col-md-offset-4 form-text text-muted">Пересчет производится по курсу на <span data-bind="text: app.utility.FormatDate($parent.SelectedAccounting().AccountingDate)"></span>: <span data-bind="text: app.utility.FormatDecimal(CurrentRate)"></span></div>
+						<!-- /ko -->
+						<!-- /ko -->
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsForDetalization" />Детализация</label>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

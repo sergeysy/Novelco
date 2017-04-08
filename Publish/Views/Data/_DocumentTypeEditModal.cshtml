@@ -1,0 +1,53 @@
+﻿
+<div class="modal" id="documentTypeEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: DocumentTypeEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Тип документа <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый Тип документа</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Display"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Описание</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Description"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Описание (en)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnDescription"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsNipVisible" />Выводить в NIP</label>
+						</div>
+					</div>
+
+					<h5>Выводить на печать</h5>
+					<div class="row form-group">
+						<!-- ko foreach: ProductPrints -->
+						<div class="col-md-offset-4 checkbox">
+							<label><input type="checkbox" data-bind="checked: $parent.IsChecked($data), click: $parent.ToggleSelected"><span data-bind="text: Display"></span></label>
+						</div>
+						<!-- /ko -->
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

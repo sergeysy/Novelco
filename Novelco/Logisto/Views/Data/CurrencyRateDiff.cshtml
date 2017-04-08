@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Logisto.Models.CurrencyRateDiff>
+@{
+	ViewBag.Title = "Курсовая разница";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewCurrencyRateDiff = "@Url.Action("GetNewCurrencyRateDiff", "Data")";
+		app.urls.SaveCurrencyRateDiff = "@Url.Action("SaveCurrencyRateDiff", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/CurrencyRateDiff.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Курсовая разница</h2></div>
+		<div class="col-md-2 col-md-offset-5"><button class="btn btn-a" style="margin-top: 22px;" data-bind="click: OpenCurrencyRateDiffCreate">+новый</button></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2">Начало</th>
+				<th class="col-md-2">Конец</th>
+				<th class="col-md-2">USD</th>
+				<th class="col-md-2">EUR</th>
+				<th class="col-md-2">CNY</th>
+				<th class="col-md-2">GBP</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: app.utility.FormatDate(From)"></td>
+				<td data-bind="text: app.utility.FormatDate(To)"></td>
+				<td data-bind="text: USD"></td>
+				<td data-bind="text: EUR"></td>
+				<td data-bind="text: CNY"></td>
+				<td data-bind="text: GBP"></td>
+				<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenCurrencyRateDiffEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+
+@Html.Partial("_CurrencyRateDiffEditModal")

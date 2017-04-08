@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Logisto.Models.DocumentType>
+@{
+	ViewBag.Title = "Тип документа";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewDocumentType = "@Url.Action("GetNewDocumentType", "Data")";
+		app.urls.GetProductPrints = "@Url.Action("GetDocumentTypeProductPrints", "Data")";
+		app.urls.SaveDocumentType = "@Url.Action("SaveDocumentType", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/DocumentTypes.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Тип документа</h2></div>
+		<div class="col-md-2 col-md-offset-5"><button class="btn btn-a" style="margin-top: 22px;" data-bind="click:OpenDocumentTypeCreate">+новый</button></div>
+	</div>
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2">Наименование</th>
+				<th class="col-md-3">Описание</th>
+				<th class="col-md-2">Описание (en)</th>
+				<th class="col-md-1">NIP</th>
+				<th class="col-md-3">Печать в документах</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: Display"></td>
+				<td data-bind="text: Description"></td>
+				<td data-bind="text: EnDescription"></td>
+				<td data-bind="text: IsNipVisible()?'да':''"></td>
+				<td data-bind="text: IsPrint"></td>
+				<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenDocumentTypeEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+
+@Html.Partial("_DocumentTypeEditModal")

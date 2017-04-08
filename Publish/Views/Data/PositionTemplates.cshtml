@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Logisto.Models.PositionTemplate>
+@{
+	ViewBag.Title = "Шаблоны должностей";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewPositionTemplate = "@Url.Action("GetNewPositionTemplate", "Data")";
+		app.urls.DeletePositionTemplate = "@Url.Action("DeletePositionTemplate", "Data")";
+		app.urls.SavePositionTemplate = "@Url.Action("SavePositionTemplate", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/PositionTemplates.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5">
+			<h2>Шаблоны должностей</h2>
+		</div>
+		<div class="col-md-1 col-md-offset-6"><input type="text" class="form-control" style="margin-top:24px" data-bind="textInput: FilterContext" placeholder="поиск..." /></div>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">Шаблоны <strong class="pull-right" data-bind="click: OpenPositionTemplateCreate">+новый</strong></div>
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>Должность</th>
+					<th>Основание</th>
+					<th>Должность р.п.</th>
+					<th>Должность англ</th>
+					<th>Основание англ</th>
+					<th>Отдел</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- ko foreach: Items -->
+				<!-- ko if: $parent.IsVisible($data) -->
+				<tr>
+					<td data-bind="text: Position"></td>
+					<td data-bind="text: Basis"></td>
+					<td data-bind="text: GenitivePosition"></td>
+					<td data-bind="text: EnPosition"></td>
+					<td data-bind="text: EnBasis"></td>
+					<td data-bind="text: Department"></td>
+					<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPositionTemplateEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeletePositionTemplate" class="close">&times;</a></td>
+				</tr>
+				<!-- /ko -->
+				<!-- /ko -->
+			</tbody>
+		</table>
+	</div>
+</div>
+
+
+@Html.Partial("_PositionTemplateEditModal")

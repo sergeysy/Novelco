@@ -1,0 +1,97 @@
+﻿@model Logisto.ViewModels.OrderViewModel
+@{
+	ViewBag.Title = "Изменение продукта заказа";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+
+		app.urls.GetOrderTemplatesByProduct = "@Url.Action("GetOrderTemplatesByProduct", "Data")";
+		app.urls.GetServicesByOrder = "@Url.Action("GetServices", "Orders")";
+		app.urls.ChangeOrderProduct = "@Url.Action("ChangeOrderProduct", "Orders")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/ChangeProduct.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Изменение продукта заказа <strong data-bind="text: Order.Number"></strong></h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="row form-group">
+			<div class="col-md-1 text-right">Продукт</div>
+			<div class="col-md-2">
+				<select class="form-control" data-bind="options: Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: Order.ProductId"></select>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-1 text-right">Шаблон</div>
+			<div class="col-md-2">
+				<select class="form-control" data-bind="options: TemplatesItems, optionsText: 'Name', optionsValue: 'ID', value: SelectedOrderTemplate"></select>
+			</div>
+		</div>
+		<p>
+			Также нужно поменять тип всех услуг этого заказа.
+		</p>
+		<div class="panel panel-info">
+			<div class="panel-heading">Услуги</div>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-2">Услуга</th>
+						<th class="col-md-2">Базовая</th>
+						<th class="col-md-1">Количество</th>
+						<th class="col-md-1">Цена</th>
+						<th class="col-md-1">Ед. изм.</th>
+						<th class="col-md-1">Сумма в валюте</th>
+						<th class="col-md-1">Сумма, руб.</th>
+						<th class="col-md-1">Исправленная услуга</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: ServicesItems -->
+					<tr class="pointer">
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ServiceType, ServiceTypeId)"></td>
+						<td data-bind="text: $parent.GetServiceKind(ServiceTypeId)"></td>
+						<td data-bind="text: Count"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Price)"></td>
+						<td data-bind="text: $parent.GetMeasureDisplay(ServiceTypeId)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(OriginalSum)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ServiceType, NewServiceTypeId)" class="text-strong"></td>
+						<td><button class="btn btn-default btn-xs" data-bind="click: $parent.OpenServiceTypeSelect"><span class="glyphicon glyphicon-pencil"></span></button></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_ServiceTypeSelectModal")

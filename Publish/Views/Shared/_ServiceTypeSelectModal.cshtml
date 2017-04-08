@@ -1,0 +1,32 @@
+﻿
+<div class="modal" id="serviceTypeSelectModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ServiceTypeSelectModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Услуга <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Название</div>
+						<div class="col-md-8">
+							<span class="form-control" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ServiceType, CurrentServiceTypeId)"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Новое название</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: CurrentServiceTypes, optionsText: 'Name', optionsValue: 'ID', value: SelectedServiceTypeId"></select>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

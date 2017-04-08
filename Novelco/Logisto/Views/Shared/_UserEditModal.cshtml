@@ -1,0 +1,79 @@
+﻿
+<div class="modal" id="userEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: UserEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().Id() > 0 -->
+				<h4 class="modal-title">Пользователь <span class="text-ghost">#<span data-bind="text: CurrentItem().Id"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().Id() > 0 -->
+				<h4 class="modal-title">Новый пользователь</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Логин</div>
+						<!-- ko if: CurrentItem().Id() > 0 -->
+						<div class="col-md-8"><span class="form-control" data-bind="text: CurrentItem().Login"></span></div><!-- /ko -->
+						<!-- ko ifnot: CurrentItem().Id() > 0 -->
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Login"></div>
+						<!-- /ko -->
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Имя</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Name"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Email</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Email"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">PersonId</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().PersonId"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">CrmId</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="valueAllowUnset: true, optionsCaption: '', options: $parent.Dictionaries.CrmManager, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().CrmId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<!-- ko foreach: Roles -->
+						<div class="col-md-offset-4 checkbox">
+							<label><input type="checkbox" data-bind="checked: $parent.IsChecked($data), click: $parent.ToggleSelected"><span data-bind="text: Name"></span> (<span data-bind="text: Description"></span>)</label>
+						</div>
+						<!-- /ko -->
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Фото (128*128)</div>
+						<div class="col-md-8">
+							<form enctype="multipart/form-data" method="post">
+								<input id="photoUpload" type="file" style="width:350px; display:inline-block;" />
+								<br />
+								<span class="text-muted">Выберите файл или перетащите его сюда.</span>
+							</form>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="float:left">
+					<a class="btn btn-a" data-bind="click: ResetPassword" href="#">Сбросить пароль</a>
+				</div>
+				<div style="float:right;line-height: 34px;">
+					<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

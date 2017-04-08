@@ -1,0 +1,111 @@
+﻿@model Dictionary<string, object>
+@{
+	ViewBag.Title = "Платеж";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.AccountingDetails = "@Url.Action("AccountingDetails", "Orders")";
+	</script>
+
+	<script src="~/Scripts/Orders/ViewPayment.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-4"><h2>Платеж <span class="text-ghost">#<span data-bind="text: Payment.ID"></span></span></h2></div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default shadow">
+				<div class="panel-heading">
+					Номер <strong data-bind="text: Payment.Number"></strong>
+					<span class="text-muted"> от </span>
+					<span data-bind="text: app.utility.FormatDate(Payment.Date)"></span>
+				</div>
+				<div class="panel-body">
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted"></div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.IsIncome()?'Входящий':'Исходящий'"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Сумма</div>
+						<div class="col-md-9">
+							<strong data-bind="text: app.utility.FormatDecimal(Payment.Sum)"></strong>
+							<span data-bind="text: Payment.Currency"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Описание</div>
+						<div class="col-md-9">
+							<strong data-bind="text: Payment.Description"></strong>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Доход/расход №</div>
+						<div class="col-md-9">
+							<a href="#" data-bind="text: Payment.Accounting, attr:{href:AccountingDetailsUrl(Payment.AccountingId)}"></a>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Документ-основание №</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.BaseNumber"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Банковский счет</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.BankAccount"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">КПП</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.KPP"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ИНН</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.TIN"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">BIC Swift</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.BIC_Swift"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Идентификатор в 1С</div>
+						<div class="col-md-9">
+							<span data-bind="text: Payment.FinReference"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

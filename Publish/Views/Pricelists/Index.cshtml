@@ -1,0 +1,88 @@
+﻿@model Logisto.ViewModels.PricelistsViewModel
+@{
+	ViewBag.Title = "Прайслисты";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "Pricelists")";
+		app.urls.ContractDetails = "@Url.Action("View", "Contracts")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+		app.urls.CreatePricelist = "@Url.Action("Create", "Pricelists")";
+		app.urls.ViewPricelist = "@Url.Action("View", "Pricelists")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Pricelists/Pricelists.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Прайслисты</h2></div>
+		<div class="col-md-2 col-md-offset-5 text-right">
+			<a href="~/Pricelists/Create" class="btn btn-a" style="margin-top: 22px;">+новый</a>
+		</div>
+	</div>
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-1">Контрагент</th>
+				<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">Наименование</a>
+				</th>
+				<th class="col-md-2">Юрлицо</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ContractId')}">Договор</a>
+				</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='From'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='From'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('From')}">Срок с</a>
+				</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='To'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='To'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('To')}">Срок по</a>
+				</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='FinRepCenterId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='FinRepCenterId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('FinRepCenterId')}">ЦФО</a>
+				</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ProductId')}">Продукт</a>
+				</th>
+				<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Comment'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Comment'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Comment')}">Комментарий</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr class="pointer" data-bind="">
+				<td><a href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractorByContract, ContractId), attr:{href:$parent.GetContractorUrl($data)}"></a></td>
+				<td data-bind="text: Name, click: $parent.GotoPricelist" class="overflowed"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId)"></td>
+				<td><a href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Contract, ContractId), attr:{href:$parent.GetContractUrl($data)}"></a></td>
+				<td data-bind="text: app.utility.FormatDate(From), click: $parent.GotoPricelist"></td>
+				<td data-bind="text: app.utility.FormatDate(To), click: $parent.GotoPricelist"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.FinRepCenter, FinRepCenterId), click: $parent.GotoPricelist"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId), click: $parent.GotoPricelist"></td>
+				<td data-bind="text: Comment" class="overflowed"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>

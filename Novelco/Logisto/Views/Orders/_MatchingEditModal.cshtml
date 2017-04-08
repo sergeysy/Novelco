@@ -1,0 +1,42 @@
+﻿
+<div class="modal" id="matchingEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: MatchingEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Сопоставление расхода <span data-bind="text: $parent.GetExpenseAccountingName(CurrentItem())"></span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">					
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="col-md-3">Доход №</th>
+								<th class="col-md-3">Cумма общая, руб</th>
+								<th class="col-md-5">Cумма сопоставления, руб</th>
+								<th class="col-md-1"><a href="#" class="btn btn-default btn-sm" data-bind="click: AddIncomeMatch">+</a></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: CurrentItem().Incomes -->
+							<tr>
+								<td>
+									<select class="form-control" data-bind="optionsCaption:'',options: $parents[1].Incomes, optionsText: 'Number', optionsValue: 'ID', value: AccountingId"></select>
+								</td>
+								<td data-bind="text: $parents[1].GetIncomeAccountingSum($data)"></td>
+								<td>
+									<input class="form-control" type="text" data-bind="textInput: Sum" />
+								</td>
+								<td><span class="close" data-bind="click: $parent.DeleteIncomeMatch">&times;</span></td>
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>										
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

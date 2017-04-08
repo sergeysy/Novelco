@@ -1,0 +1,82 @@
+﻿@model Logisto.ViewModels.Contractors2ViewModel
+@{
+	ViewBag.Title = "Клиенты";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetContractorItems", "R")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+		app.urls.DownloadExcel = "@Url.Action("DownloadClientsReport", "R")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/Clients.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>Клиенты</h2></div>
+		<div class="col-md-4 text-right"><a href="#" class="btn btn-a" style="margin-top:22px" data-bind="click: DownloadReport">Загрузить отчет</a></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">Название</a>
+				</th>
+				<th class="col-md-1">SL</th>
+				<th class="col-md-1" style="width:5%">с</th>
+				<th class="col-md-1" style="width:5%">по</th>
+				<th class="col-md-1">SM</th>
+				<th class="col-md-1" style="width:5%">с</th>
+				<th class="col-md-1" style="width:5%">по</th>
+				<th class="col-md-1">Ответственный AM</th>
+				<th class="col-md-1" style="width:5%">с</th>
+				<th class="col-md-1" style="width:5%">по</th>
+				<th class="col-md-1">AM заместитель</th>
+				<th class="col-md-1" style="width:5%">с</th>
+				<th class="col-md-1" style="width:5%">по</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td><a href="#" data-bind="text: Contractor.Name, attr:{href:$parent.ContractorDetailsUrl(Contractor.ID())}"></a></td>
+				<td data-bind="text: SLDisplay"></td>
+				<td data-bind="text: $parent.GetFromDisplay(SL)"></td>
+				<td data-bind="text: $parent.GetToDisplay(SL)"></td>
+				<td data-bind="text: SMDisplay"></td>
+				<td data-bind="text: $parent.GetFromDisplay(SM)"></td>
+				<td data-bind="text: $parent.GetToDisplay(SM)"></td>
+				<td data-bind="text: ResponsibleAMDisplay"></td>
+				<td data-bind="text: $parent.GetFromDisplay(ResponsibleAM)"></td>
+				<td data-bind="text: $parent.GetToDisplay(ResponsibleAM)"></td>
+				<td data-bind="text: DeputyAMDisplay"></td>
+				<td data-bind="text: $parent.GetFromDisplay(DeputyAM)"></td>
+				<td data-bind="text: $parent.GetToDisplay(DeputyAM)"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+

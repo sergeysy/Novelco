@@ -1,0 +1,140 @@
+﻿@model Logisto.ViewModels.IndexViewModel
+@{
+	ViewBag.Title = "Запросы";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "Requests")";
+		app.urls.SaveRequest = "@Url.Action("SaveRequest", "Requests")";
+		app.urls.UploadFile = "@Url.Action("UploadFile", "Requests")";
+		app.urls.DownloadExcel = "@Url.Action("DownloadExcel", "Requests")";
+		app.urls.DownloadRequestFile = "@Url.Action("DownloadFile", "Requests")";
+		app.urls.GetNewRequest = "@Url.Action("GetNewRequest", "Requests")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Requests/Requests.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Запросы</h2></div>
+		<div class="col-md-2 col-md-offset-5 text-right">
+			<a href="#" class="btn btn-a" style="margin-top: 22px;" data-bind="click: DownloadExcel, visible: Filter.UserId()==0"><span class="glyphicon glyphicon-download-alt"></span> excel</a>
+			<button class="btn btn-a" style="margin-top: 22px;" data-bind="click: OpenRequestCreate">+новый</button>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-3" style="width:23%">
+					<span style="color:#fff">.</span>
+					<input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по клиенту, запросу, комментарию" />
+				</div>
+
+				<div class="col-md-1" style="width:10%">
+					<span style="color:#fff">.</span>
+					<button style="display:block;width:100%" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">Продукт <span class="caret"></span></button>
+					<ul id="products" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.Product -->
+						<li><a href="#" class="small" tabindex="-1"><input type="checkbox" data-bind="attr:{value:ID}, checkedValue: ID, checked: $parent.Filter.Statuses" />&nbsp;<span data-bind="text: Display"></span></a></li>
+						<!-- /ko -->
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<span class="form-text">Дата запроса</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1">
+					<span class="form-text">Дата ответа</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.From2, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.To2, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-2">
+					<span style="color:#fff">.</span>
+					<button type="button" class="btn btn-default btn-sm dropdown-toggle" style="width:100%" data-toggle="dropdown">Пользователь <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.ActiveUser -->
+						<li><a href="#" class="small" tabindex="-1"><input type="radio" name="user" data-bind="attr:{value:ID}, checked: $parent.Filter.UserId" />&nbsp;<span data-bind="text: Display"></span></a></li>
+						<!-- /ko -->
+						<li><a href="#" class="small" tabindex="-1" data-bind="click: ResetUserSelection">сбросить</a></li>
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<span style="color:#fff">.</span>
+					<button type="button" class="btn btn-primary btn-sm" style="width:100%" data-bind="click: ApplyFilter">Применить</button>
+				</div>
+				<div class="col-md-1" style="padding:2px; width:5%">
+					<a href="#" class="btn" data-bind="click: Collapse"><span class="glyphicon glyphicon-minus"></span></a>
+				</div>
+			</div>
+			<a href="#" style="display:none;width:100%" class="btn" data-bind="click: Expand">Развернуть фильтр</a>
+		</div>
+	</div>
+</div>
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th class="col-md-1 sortable" style="width:4%" data-bind="css:{'asc-sorted':Filter.Sort()=='ID'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ID'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('ID')}">Номер</a>
+			</th>
+			<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ClientName'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ClientName'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('ClientName')}">Клиент</a>
+			</th>
+			<th class="col-md-1">Продукт</th>
+			<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Date'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Date'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('Date')}">Дата запроса</a>
+			</th>
+			<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ResponseDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ResponseDate'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('ResponseDate')}">Дата ответа</a>
+			</th>
+			<th class="col-md-1 sortable" style="width:8%" data-bind="css:{'asc-sorted':Filter.Sort()=='SalesUserId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='SalesUserId'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('SalesUserId')}">Создал</a>
+			</th>
+			<th class="col-md-1 sortable" style="width:8%" data-bind="css:{'asc-sorted':Filter.Sort()=='AccountUserId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='AccountUserId'&& Filter.SortDirection()=='Desc'}">
+				<a data-bind="click: function(){SortBy('AccountUserId')}">Ответственный</a>
+			</th>
+			<th class="col-md-2">Текст</th>
+			<th class="col-md-1">Срок обработки</th>
+		</tr>
+	</thead>
+	<tbody>
+		<!-- ko foreach: Items -->
+		<tr class="pointer" data-bind="css:{danger:$parent.GetDatesDiff($data)>1, warning:$parent.IsYesterday($data) && !ResponseDate()}, click: $parent.OpenRequestEdit">
+			<td data-bind="text: ID"></td>
+			<td data-bind="text: ClientName"></td>
+			<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId)" class="overflowed"></td>
+			<td data-bind="text: app.utility.FormatDate(Date)"></td>
+			<td data-bind="text: app.utility.FormatDate(ResponseDate)"></td>
+			<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, SalesUserId)"></td>
+			<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, AccountUserId)"></td>
+			<td data-bind="text: Text" class="overflowed"></td>
+			<td data-bind="text: $parent.GetDatesDiff($data)"></td>
+		</tr>
+		<!-- /ko -->
+	</tbody>
+</table>
+
+<div class="text-center">
+	<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+	<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+	Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+	из <span data-bind="text: TotalPageCount"></span>
+	<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+	<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+</div>
+
+
+@Html.Partial("_RequestEditModal")

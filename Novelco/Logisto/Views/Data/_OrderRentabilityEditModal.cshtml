@@ -1,0 +1,53 @@
+﻿
+<div class="modal" id="orderRentabilityEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: OrderRentabilityEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Рентабельность <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новая рентабельность</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="row form-group">
+						<div class="col-md-4">Продукт</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().ProductId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Шаблон</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: OrderTemplates, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().OrderTemplateId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Год</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Year"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">ЦФО</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.FinRepCenter, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().FinRepCenterId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Мин.рентабельность</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Rentability"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

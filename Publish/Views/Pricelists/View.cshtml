@@ -1,0 +1,117 @@
+﻿@model Logisto.ViewModels.PricelistViewModel
+@{
+	ViewBag.Title = "Прайслист";
+}
+
+@section Styles{
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetPricelistData = "@Url.Action("GetPricelistData", "Pricelists")";
+		app.urls.EditPricelist = "@Url.Action("Edit", "Pricelists")";
+	</script>
+
+	<script src="~/Scripts/Pricelists/View.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-4"><h2>Прайслист <span class="text-ghost">#<span data-bind="text: Pricelist.ID"></span></span></h2></div>
+		<div class="col-md-3 col-md-offset-5 text-right">
+			<button class="btn btn-primary" style="margin-top: 22px;" data-bind="click: EditPricelist">Редактировать</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default shadow">
+				<div class="panel-body">
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted form-text">Наименование</div>
+						<div class="col-md-7 form-text">
+							<span data-bind="text: Pricelist.Name"></span>
+						</div>
+						<div class="col-md-2 form-text"><button class="btn btn-default" data-bind="visible:Pricelist.IsDataExists, click: OpenData">Открыть скан</button></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Действует с</div>
+						<div class="col-md-9">
+							<span data-bind="text: app.utility.FormatDate(Pricelist.From)"></span>
+							<span class="text-muted"> по </span>
+							<span data-bind="text: app.utility.FormatDate(Pricelist.To)"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ЦФО</div>
+						<div class="col-md-4 ">
+							<span data-bind="text: app.utility.GetDisplay(Dictionaries.FinRepCenter, Pricelist.FinRepCenterId)"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Продукт</div>
+						<div class="col-md-4 ">
+							<span data-bind="text: app.utility.GetDisplay(Dictionaries.Product, Pricelist.ProductId)"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Договор</div>
+						<div class="col-md-4 ">
+							<span data-bind="text: app.utility.GetDisplay(Dictionaries.Contract, Pricelist.ContractId)"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Комментарий</div>
+						<div class="col-md-9">
+							<span data-bind="text: Pricelist.Comment"></span>
+						</div>
+					</div>
+
+					<hr />
+
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="col-md-7">Услуга</th>
+								<th class="col-md-1">Валюта</th>
+								<th class="col-md-1">НДС</th>
+								<th class="col-md-1">Количество</th>
+								<th class="col-md-1">Сумма</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: Pricelist.Prices -->
+							<tr>
+								<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Service, ServiceId)"></td>
+								<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, CurrencyId)"></td>
+								<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Vat, VatId)"></td>
+								<td data-bind="text: Count"></td>
+								<td data-bind="text: Sum"></td>
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

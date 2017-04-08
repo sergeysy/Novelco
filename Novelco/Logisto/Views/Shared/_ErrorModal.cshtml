@@ -1,0 +1,20 @@
+﻿
+<div class="modal" id="errorModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ErrorModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Предупреждение</h4>
+			</div>
+			<div class="modal-body">
+				<p data-bind="text: Message"></p>
+				<div class="well" data-bind="if: Hint()">
+					<ul data-bind="html: Hint"></ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Ок</button>
+			</div>
+		</div>
+	</div>
+</div>

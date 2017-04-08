@@ -1,0 +1,1024 @@
+﻿@model Logisto.ViewModels.OrderViewModel
+@{
+	ViewBag.Title = "Заказ " + @Model.Order.Number;
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+
+		.stale {
+			color: #b00;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		@if (ViewBag.SelectedAccountingId != null)
+		{
+			<text>var initialSelectedAccountingId = @ViewBag.SelectedAccountingId;</text>
+		}
+		else
+		{
+			<text>var initialSelectedAccountingId = null;</text>
+		}
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetMatchings = "@Url.Action("GetMatchings", "Orders")";
+		app.urls.GetLegalsItems = "@Url.Action("GetLegalsByContractor", "Ajax")";
+		app.urls.GetOrdersItems = "@Url.Action("GetOrdersByContractor", "Ajax")";
+		app.urls.GetWorkgroupItems = "@Url.Action("GetWorkgroupByOrder", "Ajax")";
+		app.urls.GetCargoSeatsItems = "@Url.Action("GetCargoSeats", "Orders")";
+		app.urls.GetOperationsItems = "@Url.Action("GetOperations", "Orders")";
+		app.urls.GetOrderEventsItems = "@Url.Action("GetOrderEvents", "Orders")";
+		app.urls.GetRoutePointsItems = "@Url.Action("GetRoutePoints", "Orders")";
+		app.urls.GetMarksByOrderItems = "@Url.Action("GetAccountingMarksByOrder", "Orders")";
+		app.urls.GetRouteSegmentsItems = "@Url.Action("GetRouteSegments", "Orders")";
+		app.urls.GetContactsByLegalItems = "@Url.Action("GetContactsByLegal", "Ajax")";
+		app.urls.GetContractsByLegalItems = "@Url.Action("GetContractsByLegal", "Contractors")";
+		app.urls.GetDocumentsByOrderItems = "@Url.Action("GetDocuments", "Orders")";
+		app.urls.GetAccountingsItems = "@Url.Action("GetAccountings", "Orders")";
+		app.urls.GetEmployeesByLegalItems = "@Url.Action("GetEmployeesByLegal", "Contractors")";
+		app.urls.GetLegalsByContractorItems = "@Url.Action("GetLegalsByContractor", "Orders")";
+		app.urls.GetAccountingsByLegalItems = "@Url.Action("GetAccountingsByLegal", "Ajax")";
+		app.urls.GetBankAccountsByLegalItems = "@Url.Action("GetBankAccountsByLegal", "Contractors")";
+		app.urls.GetPaymentsByAccountingItems = "@Url.Action("GetPaymentsByAccounting", "Orders")";
+		app.urls.GetServicesByAccountingItems = "@Url.Action("GetServicesByAccounting", "Orders")";
+		app.urls.GetJointDocumentsByOrderItems = "@Url.Action("GetJointDocuments", "Orders")";
+		app.urls.GetDocumentsByAccountingItems = "@Url.Action("GetDocumentsByAccounting", "Orders")";
+		app.urls.GetContractsByContractorItems = "@Url.Action("GetContractsByContractor", "Orders")";
+		app.urls.GetRouteSegmentsByAccountingItems = "@Url.Action("GetOrderAccountingRouteSegments", "Orders")";
+		app.urls.GetTemplatedDocumentsByOrderItems = "@Url.Action("GetTemplatedDocuments", "Orders")";
+		app.urls.GetJointDocumentsByAccountingItems = "@Url.Action("GetJointDocumentsByAccounting", "Orders")";
+
+		app.urls.UserDetails = "@Url.Action("View", "Users")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders", new { id = "" })";
+		app.urls.LegalDetails = "@Url.Action("Details", "Legals")";
+		app.urls.EmployeeDetails = "@Url.Action("Details", "Employees")";
+		app.urls.ContractDetails = "@Url.Action("View", "Contracts")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+		app.urls.OrderAccountingDetails = "@Url.Action("Details", "Orders")";
+
+		app.urls.GetBank = "@Url.Action("GetBank", "Ajax")";
+		app.urls.GetBanks = "@Url.Action("SearchBanks", "Ajax")";
+		app.urls.GetPrice = "@Url.Action("GetPrice", "Orders")";
+		app.urls.GetLegal = "@Url.Action("GetLegal", "Ajax")";
+		app.urls.GetPlace = "@Url.Action("GetPlace", "Ajax")";
+		app.urls.GetPlaces = "@Url.Action("SearchPlaces", "Ajax")";
+		app.urls.GetPersons = "@Url.Action("SearchPersons", "Ajax")";
+		app.urls.GetContractor = "@Url.Action("GetContractor", "Ajax")";
+		app.urls.GetNewService = "@Url.Action("GetNewService", "Orders")";
+		app.urls.GetRoutePoint = "@Url.Action("GetRoutePoint", "Orders")";
+		app.urls.GetNewDocument = "@Url.Action("GetNewDocument", "Orders")";
+		app.urls.GetNewCargoSeat = "@Url.Action("GetNewCargoSeat", "Orders")";
+		app.urls.GetNewOperation = "@Url.Action("GetNewOperation", "Orders")";
+		app.urls.GetNewWorkgroup = "@Url.Action("GetNewParticipant", "Orders")";
+		app.urls.GetNewRoutePoint = "@Url.Action("GetNewRoutePoint", "Orders")";
+		app.urls.GetNewAccounting = "@Url.Action("GetNewAccounting", "Orders")";
+		app.urls.CheckStatusRules = "@Url.Action("CheckStatusRules", "Orders")";
+		app.urls.EditRouteContact = "@Url.Action("RouteContact", "Orders")";
+		app.urls.GetOrderStatusHistory = "@Url.Action("GetOrderStatusHistory", "Orders")";
+		app.urls.CalculateRouteLength = "@Url.Action("CalculateRouteLength", "Orders")";
+		app.urls.IsHasVatInvoice = "@Url.Action("IsHasVatInvoice", "Orders")";
+		app.urls.GetActionHint = "@Url.Action("GetActionHint", "Ajax")";
+		app.urls.CloneOrder = "@Url.Action("CloneOrder", "Orders")";
+
+		app.urls.CreateAmpleDetailing = "@Url.Action("CreateAmpleDetailing", "Orders")";
+		app.urls.CreateShortLegal = "@Url.Action("CreateShortLegal", "Orders")";
+		app.urls.CreateVatInvoice = "@Url.Action("CreateVatInvoice", "Orders")";
+		app.urls.CreateDetailing = "@Url.Action("CreateDetailing", "Orders")";
+		app.urls.CreateInvoice = "@Url.Action("CreateInvoice", "Orders")";
+		app.urls.CreateRequest = "@Url.Action("CreateRequest", "Orders")";
+		app.urls.CreateClaim = "@Url.Action("CreateClaim", "Orders")";
+		app.urls.CreateAct = "@Url.Action("CreateAct", "Orders")";
+
+		app.urls.OpenMergedAccountingDocuments = "@Url.Action("OpenMergedAccountingDocuments", "Orders")";
+		app.urls.OpenClientAccountingDocuments = "@Url.Action("OpenClientAccountingDocuments", "Orders")";
+		app.urls.ViewTemplatedDocument = "@Url.Action("ViewTemplatedDocument", "Orders")";
+		app.urls.OpenTemplatedDocument = "@Url.Action("OpenTemplatedDocument", "Orders")";
+		app.urls.UpdateAccountingSum = "@Url.Action("RecalculateAccountingSum", "Orders")";
+		app.urls.ChangeOrderTemplate = "@Url.Action("ChangeOrderTemplate", "Orders")";
+		app.urls.DeleteAccounting = "@Url.Action("DeleteAccounting", "Orders")";
+		app.urls.GetOrderBalance = "@Url.Action("GetOrderBalance", "Orders")";
+		app.urls.UploadDocument = "@Url.Action("UploadDocument", "Orders")";
+		app.urls.OpenDocument = "@Url.Action("OpenDocument", "Orders")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+		app.urls.CloseOrder = "@Url.Action("CloseOrder", "Orders")";
+
+		app.urls.SetCurrencyRate = "@Url.Action("SetCurrencyRate", "Orders")";
+		app.urls.GetCurrencyRate = "@Url.Action("GetCurrencyRate", "Ajax")";
+		app.urls.ChangePayMethod = "@Url.Action("ChangePayMethod", "Orders")";
+		app.urls.ChangeContractor = "@Url.Action("ChangeOrderContractor", "Orders")";
+		app.urls.RecalculateRoute = "@Url.Action("RecalculateRoute", "Orders")";
+		app.urls.ChangeOrderStatus = "@Url.Action("ChangeOrderStatus", "Orders")";
+		app.urls.ChangeOrderProduct = "@Url.Action("ChangeProduct", "Orders")";
+		app.urls.GetAccountingMarks = "@Url.Action("GetAccountingMarks", "Orders")";
+		app.urls.ToggleDocumentIsPrint = "@Url.Action("ToggleDocumentIsPrint", "Orders")";
+		app.urls.GetContractCurrencies = "@Url.Action("GetContractCurrencies", "Contractors")";
+		app.urls.RecalculateCargoSeats = "@Url.Action("RecalculateOrderCargoSeats", "Orders")";
+		app.urls.GetCurrentCurrencyRate = "@Url.Action("GetCurrentCurrencyRate", "Data")";
+		app.urls.GetOrderTemplatesByProduct = "@Url.Action("GetOrderTemplatesByProduct", "Data")";
+		app.urls.GetOrderTemplatesByContract = "@Url.Action("GetOrderTemplatesByContract", "Orders")";
+		app.urls.RegenerateAccountingDocuments = "@Url.Action("RegenerateAccountingDocuments", "Orders")";
+		app.urls.CheckDocumentsIsPrintLimit = "@Url.Action("CheckDocumentsIsPrintLimit", "Orders")";
+		app.urls.RecalculatePaymentPlanDate = "@Url.Action("RecalculatePaymentPlanDate", "Orders")";
+		app.urls.DeleteTemplatedDocument = "@Url.Action("DeleteTemplatedDocument", "Orders")";
+		app.urls.UpdateTemplatedDocument = "@Url.Action("UpdateTemplatedDocument", "Orders")";
+		app.urls.RecalculatePricelist = "@Url.Action("RecalculatePricelist", "Orders")";
+		app.urls.DownloadPaymentsFile = "@Url.Action("GetPaymentsFile", "Orders")";
+		app.urls.UpdateDocument = "@Url.Action("UpdateDocument", "Orders")";
+
+		app.urls.SaveOrder = "@Url.Action("SaveOrder", "Orders")";
+		app.urls.SaveService = "@Url.Action("SaveService", "Orders")";
+		app.urls.SaveDocument = "@Url.Action("SaveDocument", "Orders")";
+		app.urls.SaveCargoSeat = "@Url.Action("SaveCargoSeat", "Orders")";
+		app.urls.SaveOperation = "@Url.Action("SaveOperation", "Orders")";
+		app.urls.SaveWorkgroup = "@Url.Action("SaveParticipant", "Contractors")";
+		app.urls.SaveRoutePoint = "@Url.Action("SaveRoutePoint", "Orders")";
+		app.urls.SaveAccounting = "@Url.Action("SaveAccounting", "Orders")";
+		app.urls.SaveRouteSegment = "@Url.Action("SaveRouteSegment", "Orders")";
+		app.urls.SaveDocumentDeliveryInfo = "@Url.Action("SaveDocumentDeliveryInfo", "Orders")";
+
+		app.urls.ToggleAccountingInvoiceOk = "@Url.Action("ToggleAccountingInvoiceOk", "Orders")";
+		app.urls.ToggleAccountingInvoiceChecked = "@Url.Action("ToggleAccountingInvoiceChecked", "Orders")";
+		app.urls.ToggleAccountingInvoiceRejected = "@Url.Action("ToggleAccountingInvoiceRejected", "Orders")";
+		app.urls.ToggleAccountingActOk = "@Url.Action("ToggleAccountingActOk", "Orders")";
+		app.urls.ToggleAccountingActChecked = "@Url.Action("ToggleAccountingActChecked", "Orders")";
+		app.urls.ToggleAccountingActRejected = "@Url.Action("ToggleAccountingActRejected", "Orders")";
+		app.urls.ToggleAccountingOk = "@Url.Action("ToggleAccountingOk", "Orders")";
+		app.urls.ToggleAccountingChecked = "@Url.Action("ToggleAccountingChecked", "Orders")";
+		app.urls.ToggleAccountingRejected = "@Url.Action("ToggleAccountingRejected", "Orders")";
+
+		app.urls.ViewPricelist = "@Url.Action("View", "Pricelists")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/Order.js"></script>
+
+	@if (ViewBag.ActivePart != null)
+	{
+		<text>
+			<script type="text/javascript">
+				// установка нужного таба
+				$(function () { $('.nav li a[href="' + '#@ViewBag.ActivePart' + '"]').trigger('click', true); });
+			</script>
+		</text>
+	}
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Заказ № <span data-bind="text: Order.Number"></span> <span class="text-ghost">#<span data-bind="text: Order.ID"></span></span></h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-1"><button class="btn btn-success" style="margin-top: 22px; display:none; width:100%" data-bind="visible: IsDirty, click: Save">Сохранить</button></div>
+		<div class="col-md-1"><button class="btn btn-default" style="margin-top: 22px;" data-bind="click: OpenCloneOrder">Копировать заказ</button></div>
+	</div>
+	<hr />
+
+	<div class="row row-v-padding">
+		<div class="col-md-1 text-muted form-text text-right">ЦФО</div>
+		<div class="col-md-2">
+			<span class="form-text" data-bind="text: app.utility.GetDisplay(Dictionaries.FinRepCenter, Order.FinRepCenterId)"></span>
+		</div>
+
+		<div class="col-md-1 text-muted text-right form-text openable" data-bind="click: ViewContractor">Контрагент</div>
+		<div class="col-md-3 form-text">
+			<button class="btn btn-button text-left" data-bind="text: ContractorId()? app.utility.GetDisplay(Dictionaries.Contractor, ContractorId):'выбрать', click:OpenChangeOrderContractor"></button>
+		</div>
+
+		<div class="col-md-1 text-muted text-right">Пункт загрузки</div>
+		<div class="col-md-2"><span data-bind="text: Order.From"></span></div>
+
+		<div class="col-md-1 text-muted text-right">Доход</div>
+		<div class="col-md-1 text-right"><span data-bind="text: app.utility.FormatDecimal(Order.Income)"></span></div>
+	</div>
+
+	<div class="row row-v-padding">
+		<div class="col-md-1 text-muted form-text text-right">Продукт</div>
+		<div class="col-md-2 form-text"><a class="pointer" data-bind="text: app.utility.GetDisplay(Dictionaries.Product, Order.ProductId), click: ChangeProduct"></a></div>
+
+		<div class="col-md-1 sortable text-muted text-right form-text openable" data-bind="click: ViewContract">Договор</div>
+		<div class="col-md-3">
+			<select class="form-control" data-bind="css:{stale: IsDanger(Order.ContractId)}, optionsCaption:'', options: ClientContractsItems, optionsText: function(item) {return item.Number() + ' ' + GetContractCurrenciesDisplay(item) + ' ' + item.OurLegal() + ' - ' + item.Legal() + ' - ' + item.Type()  }, optionsValue: 'ID', optionsAfterRender: ContractOptionsAfterRender, value: Order.ContractId"></select>
+		</div>
+
+		<div class="col-md-1 text-muted text-right">Пункт разгрузки</div>
+		<div class="col-md-2"><span data-bind="text: Order.To"></span></div>
+
+		<div class="col-md-1 text-muted text-right">Расход</div>
+		<div class="col-md-1 text-right"><span data-bind="text: app.utility.FormatDecimal(Order.Expense)"></span></div>
+	</div>
+
+	<div class="row row-v-padding">
+		<div class="col-md-1 text-muted form-text text-right">Шаблон</div>
+		<div class="col-md-2 form-text">
+			<button class="btn btn-button text-left" data-bind="text: Order.OrderTemplateId()? app.utility.GetDisplay(Dictionaries.OrderTemplate, Order.OrderTemplateId):'изменить', click: function(){OpenChangeOrderTemplate(Order.ContractId(), Order.ProductId())}"></button>
+		</div>
+
+		<div class="col-md-1 text-muted form-text text-right">Юрлицо</div>
+		<div class="col-md-3 form-text" data-bind="text: app.utility.GetDisplay(Dictionaries.LegalByContract, Order.ContractId)"></div>
+
+		<div class="col-md-1 text-muted text-right">Кол. мест</div>
+		<div class="col-md-2"><span data-bind="text: Order.SeatsCount"></span></div>
+
+		<div class="col-md-1 text-muted text-right">Прибыль</div>
+		<div class="col-md-1 text-right"><span data-bind="text: app.utility.FormatDecimal(Order.Balance)"></span></div>
+	</div>
+
+	<div class="row row-v-padding">
+		<div class="col-md-1 text-muted form-text text-right">Прайслист</div>
+		<div class="col-md-2 form-text">
+			<a class="pointer" data-bind="text: app.utility.GetDisplay(Dictionaries.Pricelist, PricelistId), click: ViewPricelist"></a>
+		</div>
+
+		<div class="col-md-1 text-muted form-text text-right">Номер заявки</div>
+		<div class="col-md-3"><input data-bind="textInput: Order.RequestNumber" class="form-control" /></div>
+
+		<div class="col-md-1 text-muted text-right">Вес брутто</div>
+		<div class="col-md-1"><span data-bind="text: Order.GrossWeight"></span></div>
+
+		<div class="col-md-2 text-muted text-right">Рентабельность по заказу, %</div>
+		<div class="col-md-1 text-right" data-bind="css:{'text-danger':Rentability()<MinRentability()}"><span data-bind="text: app.utility.FormatDecimal(Rentability)"></span></div>
+	</div>
+
+	<div class="row row-v-padding">
+		<div class="col-md-1 text-muted form-text text-right"><span class="glyphicon glyphicon-info-sign pointer" data-bind="click: OpenOrderStatusHistory"></span> Статус</div>
+		<div class="col-md-2">
+			<button class="btn btn-button text-left" data-bind="click: function(){OpenChangeOrderStatus(Order.ContractId(), Order.OrderStatusId())}">
+				<span data-bind="text: app.utility.GetDisplay(Dictionaries.OrderStatus, Order.OrderStatusId)"></span>
+				<span data-bind="text: app.utility.FormatDate(Order.ClosedDate), visible: Order.OrderStatusId()==7"></span>
+			</button>
+		</div>
+
+		<div class="col-md-1 text-muted form-text text-right">Дата заявки</div>
+		<div class="col-md-3"><input data-bind="datepicker: Order.RequestDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+
+		<div class="col-md-1 text-muted text-right">Объем</div>
+		<div class="col-md-1"><span data-bind="text: app.utility.FormatDecimal(Order.Volume)"></span></div>
+
+		<div class="col-md-2 text-muted text-right">Рентабельность мин., %</div>
+		<div class="col-md-1 text-right"><span data-bind="text: app.utility.FormatDecimal(MinRentability)"></span></div>
+	</div>
+
+	<br />
+
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="#Cargo" data-toggle="tab">Груз <span data-bind="text: CargoSeatsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Route" data-toggle="tab">Маршрут <span data-bind="text: RoutePointsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Accountings" data-toggle="tab">Экономика <span data-bind="text: AccountingsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Matching" data-toggle="tab">Сопоставление</a>
+		</li>
+		<li>
+			<a href="#Workflow" data-toggle="tab">Метки</a>
+		</li>
+		<li>
+			<a href="#Documents" data-toggle="tab">Документы <span data-bind="text: DocumentsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Workgroup" data-toggle="tab">Участники</a>
+		</li>
+		<li>
+			<a href="#Request" data-toggle="tab">Заявка</a>
+		</li>
+		<li>
+			<a href="#Operations" data-toggle="tab">Операции</a>
+		</li>
+		<li>
+			<a href="#Events" data-toggle="tab">События</a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		@* блок информации о грузе *@
+		<div class="tab-pane active container-fluid" id="Cargo">
+			<br />
+
+			<div class="row row-v-padding">
+				<div class="col-md-2 text-muted text-right form-text">Коеффициент объемного веса</div>
+				<div class="col-md-2">
+					<select class="form-control" data-bind="options: Dictionaries.VolumetricRatio, optionsText: 'Display', optionsValue: 'ID', value: Order.VolumetricRatioId"></select>
+				</div>
+
+				<div class="col-md-2 text-muted text-right form-text">Оплачиваемый вес</div>
+				<div class="col-md-1"><span class="form-control" data-bind="text: Order.PaidWeight()?Order.PaidWeight():'Нет данных'"></span></div>			
+			</div>
+
+			<div class="row row-v-padding">
+				<!-- ko if: !IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text"><a href="#" class="btn-a" data-bind="click: ToggleEnVisible">&nbsp;&nbsp;english&nbsp;&nbsp;</a> &nbsp;&nbsp;&nbsp;&nbsp; Специальное хранение</div>
+				<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Order.SpecialCustody" /></div>
+				<!-- /ko-->
+				<!-- ko if: IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text bg-ghost"><a href="#" class="btn-a" data-bind="click: ToggleEnVisible">&nbsp;&nbsp;русский&nbsp;&nbsp;</a> &nbsp; Специальное хранение (en)</div>
+				<div class="col-md-2 bg-ghost"><input type="text" class="form-control" data-bind="textInput: Order.EnSpecialCustody" /></div>
+				<!-- /ko-->
+
+				<div class="col-md-2 text-muted text-right form-text">Стоимость груза</div>
+				<div class="col-md-1"><input type="text" class="form-control" data-bind="textInput: Order.InvoiceSum" /></div>
+				<div class="col-md-1">
+					<select class="form-control" data-bind="options: Dictionaries.Currency, optionsText: 'Display', optionsValue: 'ID', value: Order.InvoiceCurrencyId"></select>
+				</div>
+
+				<div class="col-md-1 text-muted text-right form-text">Инвойс №</div>
+				<div class="col-md-1"><input class="form-control" data-bind="textInput: Order.InvoiceNumber" /></div>
+				<div class="col-md-1 text-muted text-right form-text">Дата</div>
+				<div class="col-md-1"><input data-bind="datepicker: Order.InvoiceDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+			</div>
+
+			<div class="row row-v-padding">
+				<!-- ko if: !IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text">Опасность груза</div>
+				<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Order.Danger" /></div>
+				<!-- /ko-->
+				<!-- ko if: IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text bg-ghost">Опасность груза (en)</div>
+				<div class="col-md-2 bg-ghost"><input type="text" class="form-control" data-bind="textInput: Order.EnDanger" /></div>
+				<!-- /ko-->
+
+				<div class="col-md-2 text-muted text-right form-text">Тип страхования</div>
+				<div class="col-md-2">
+					<select class="form-control" data-bind="allowUnsetValue:true, options: Dictionaries.InsuranceType, optionsText: 'Display', optionsValue: 'ID', value: Order.InsuranceTypeId"></select>
+				</div>
+			</div>
+
+			<div class="row row-v-padding">
+				<!-- ko if: !IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text">Температурный режим</div>
+				<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Order.TemperatureRegime" /></div>
+				<!-- /ko-->
+				<!-- ko if: IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text bg-ghost">Температурный режим (en)</div>
+				<div class="col-md-2 bg-ghost"><input type="text" class="form-control" data-bind="textInput: Order.EnTemperatureRegime" /></div>
+				<!-- /ko-->
+
+				<div class="col-md-2 text-muted text-right form-text">Причина отсутствия страховки</div>
+				<div class="col-md-2">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.UninsuranceType, optionsText: 'Display', optionsValue: 'ID', value: Order.UninsuranceTypeId"></select>
+				</div>
+			</div>
+
+			<div class="row row-v-padding">
+				<!-- ko if: !IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text">Информация о грузе</div>
+				<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Order.CargoInfo" /></div>
+				<!-- /ko-->
+				<!-- ko if: IsEnVisible() -->
+				<div class="col-md-2 text-muted text-right form-text bg-ghost">Информация о грузе (en)</div>
+				<div class="col-md-2 bg-ghost"><input type="text" class="form-control" data-bind="textInput: Order.EnCargoInfo" /></div>
+				<!-- /ko-->
+
+				<div class="col-md-2 text-muted text-right form-text">Комментарий</div>
+				<div class="col-md-6"><input type="text" class="form-control" data-bind="textInput: Order.Comment" /></div>
+			</div>
+
+			<br />
+
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-3">Описание</th>
+						<th class="col-md-1" style="width:5%">Мест</th>
+						<th class="col-md-1" style="width:5%">Длина, м</th>
+						<th class="col-md-1" style="width:5%">Ширина, м</th>
+						<th class="col-md-1" style="width:5%">Высота, м</th>
+						<th class="col-md-1" style="width:5%">Объем, м<sup>3</sup></th>
+						<th class="col-md-1" style="width:5%">Вес брутто</th>
+						<th class="col-md-1" style="width:12%">Тип упаковки</th>
+						<th class="col-md-1">Штабелирование</th>
+						<th class="col-md-1 text-right"><a href="#" data-bind="click: OpenCargoSeatCreate"><strong>+место</strong></a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: CargoSeatsItems -->
+					<!-- ko if: !IsDeleted() -->
+					<tr>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.CargoDescription, CargoDescriptionId)"></td>
+						<td data-bind="text: SeatCount"></td>
+						<td data-bind="text: Length"></td>
+						<td data-bind="text: Width"></td>
+						<td data-bind="text: Height"></td>
+						<td data-bind="text: Volume"></td>
+						<td data-bind="text: GrossWeight"></td>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.PackageType, PackageTypeId)"></td>
+						<td data-bind="text: IsStacking()?'да':''"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenCargoSeatEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteCargoSeat" class="close">&times;</a></td>
+					</tr>
+					<!-- /ko -->
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок маршрута *@
+		<div class="tab-pane" id="Route">
+			<br />
+			<div class="panel panel-info">
+				<div class="panel-heading">Пункты <a href="#" class="pull-right" data-bind="click: OpenRoutePointCreate"><strong>+новый пункт</strong></a></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th style="width:2%">Номер</th>
+							<th class="col-md-1">Тип</th>
+							<th class="col-md-1">Место</th>
+							<th class="col-md-1">Дата (план)</th>
+							<th class="col-md-1">Дата (факт)</th>
+							<th class="col-md-2">Адрес</th>
+							<th class="col-md-2">ГО/ГП</th>
+							<th class="col-md-1">Комментарий</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: RoutePointsItems -->
+						<!-- ko if: !IsDeleted() -->
+						<tr>
+							<td>
+								<span data-bind="text: No"></span>
+								<a href="#" data-bind="click: $parent.MoveRoutePointUp">&uarr;</a>
+								<a href="#" data-bind="click: $parent.MoveRoutePointDown">&darr;</a>
+							</td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.RoutePointType, RoutePointTypeId)"></td>
+							<td data-bind="text: $parent.GetPlaceDisplay(PlaceId())"></td>
+							<td data-bind="text: app.utility.FormatDate(PlanDate)"></td>
+							<td data-bind="text: app.utility.FormatDate(FactDate)"></td>
+							<td data-bind="text: Address"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, ParticipantLegalId) "></td>
+							<td data-bind="text: ParticipantComment"></td>
+							<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenRoutePointEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteRoutePoint" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading">Сегменты <a href="#" class="pull-right" data-bind="click: RecalculateRoute"><strong>обновить</strong></a></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th style="width:2%">Номер</th>
+							<th class="col-md-1">Откуда</th>
+							<th class="col-md-1">Куда</th>
+							<th class="col-md-1">Транспорт</th>
+							<th class="col-md-1">После границы</th>
+							<th class="col-md-1">Длина</th>
+							<th class="col-md-1">ТС</th>
+							<th class="col-md-1">Номер ТС</th>
+							<th class="col-md-1">Водитель</th>
+							<th class="col-md-1">Телефон</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: RouteSegmentsItems -->
+						<!-- ko if: !IsDeleted() -->
+						<tr>
+							<td data-bind="text: No"></td>
+							<td data-bind="text: $parent.GetPointDisplay(FromRoutePointId)"></td>
+							<td data-bind="text: $parent.GetPointDisplay(ToRoutePointId)"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.TransportType, TransportTypeId)"></td>
+							<td data-bind="text: IsAfterBorder()?'да':'нет'"></td>
+							<td data-bind="text: Length"></td>
+							<td data-bind="text: Vehicle"></td>
+							<td data-bind="text: VehicleNumber"></td>
+							<td data-bind="text: DriverName"></td>
+							<td data-bind="text: DriverPhone"></td>
+							<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenRouteSegmentEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteRouteSegment" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<p style="padding-left:16px" data-bind="visible: Order.RouteLengthBeforeBoard">
+				<span>Маршрут до границы</span>: <strong data-bind="text: Order.RouteLengthBeforeBoard"></strong> км <span data-bind="text: Order.RouteBeforeBoard"></span>
+				<br />
+				<span>Маршрут после границы</span>: <strong data-bind="text: Order.RouteLengthAfterBoard"></strong> км <span data-bind="text: Order.RouteAfterBoard"></span>
+			</p>
+		</div>
+
+		@* блок экономики *@
+		<div class="tab-pane" id="Accountings">
+			<br />
+			<div data-bind="ifnot: SelectedAccounting">
+				<div>
+					&nbsp;&nbsp;
+					<button class="btn btn-success" data-bind="click: CreateOrderAccountingIncome">+доход</button>
+					&nbsp;
+					<button class="btn btn-danger" data-bind="click: CreateOrderAccountingExpense">+расход</button>
+				</div>
+				<table class="table table-condensed">
+					<thead>
+						<tr data-bind="with: AccountingSorter">
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('IsIncome')}, css: Css('IsIncome')">Тип</th>
+							<th class="col-md-1">Тип документа</th>
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('Number')},			css: Css('Number')">CarMan №</th>
+							<th class="col-md-2">Контрагент</th>
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceNumber')},	css: Css('InvoiceNumber')">Счет №</th>
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('ActDate')},		css: Css('ActDate')">Акт дата</th>
+							<th class="col-md-1">Статус</th>
+							<th class="col-md-1">Дата учета</th>
+							<th class="col-md-1">Валюта</th>
+							<th class="col-md-1">Сумма в валюте</th>
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('Sum')},			css: Css('Sum')">Сумма RUB</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: AccountingsItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedAccounting()}" class="pointer">
+							<td data-bind="text: IsIncome()?'Доход':'Расход', click: $parent.SelectAccounting"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.AccountingDocumentType, AccountingDocumentTypeId), click: $parent.SelectAccounting"></td>
+							<td data-bind="text: Number, click: $parent.SelectAccounting"></td>
+							<!-- ko if: IsIncome() -->
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId), click: $parent.SelectAccounting"></td>
+							<!-- /ko -->
+							<!-- ko if: !IsIncome() -->
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId), click: $parent.SelectAccounting"></td>
+							<!-- /ko -->
+							<td data-bind="text: InvoiceNumber, click: $parent.SelectAccounting"></td>
+							<td data-bind="text: app.utility.FormatDate(ActDate)"></td>
+							<td data-bind="text: $parent.GetAccountingMarkDisplay($data)"></td>
+							<td data-bind="text: $parent.GetAccountingDateDisplay($data)"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, AccountingCurrencyId)"></td>
+							<td data-bind="text: app.utility.FormatDecimal(OriginalSum)"></td>
+							<td>
+								<span data-bind="text: app.utility.FormatDecimal(Sum)"></span>
+								<a href="#" data-bind="click: $parent.DeleteAccounting" class="close">&times;</a>
+							</td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			@Html.Partial("_Accounting")
+		</div>
+
+		@* блок сопоставления *@
+		<div class="tab-pane" id="Matching">
+			<br />
+
+			<table class="table table-condensed">
+				<thead>
+					<tr data-bind="with: AccountingSorter">
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('IsIncome')}, css: Css('IsIncome')">Тип</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceNumber')},	css: Css('InvoiceNumber')">Счет №</th>
+						<th class="col-md-1">Контрагент</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('ActDate')},		css: Css('ActDate')">Акт дата</th>
+						<th class="col-md-1">Статус</th>
+						<th class="col-md-1">Дата учета</th>
+						<th class="col-md-1">Валюта</th>
+						<th class="col-md-1">Сумма в валюте</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Sum')},			css: Css('Sum')">Сумма RUB</th>
+						<th class="col-md-1">Оплачено в валюте</th>
+						<th class="col-md-1">Оплачено RUB</th>
+						<th class="col-md-1">Сопоставление</th>
+						<th class="col-md-1">Коммент</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: AccountingsItems -->
+					<tr data-bind="css:{success:$data==$parent.SelectedAccounting()}" class="pointer">
+						<td data-bind="text: IsIncome()?'Доход':'Расход', click: $parent.SelectAccounting"></td>
+						<td data-bind="text: InvoiceNumber, click: $parent.SelectAccounting"></td>
+						<!-- ko if: IsIncome() -->
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId), click: $parent.SelectAccounting"></td>
+						<!-- /ko -->
+						<!-- ko if: !IsIncome() -->
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId), click: $parent.SelectAccounting"></td>
+						<!-- /ko -->
+						<td data-bind="text: app.utility.FormatDate(ActDate)"></td>
+						<td data-bind="text: $parent.GetAccountingMarkDisplay($data)"></td>
+						<td data-bind="text: $parent.GetAccountingDateDisplay($data)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, AccountingCurrencyId)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(OriginalSum)"></td>
+						<td><span data-bind="text: app.utility.FormatDecimal(Sum)"></span></td>
+
+						<td></td>
+						<td></td>
+						<td></td>
+						<td>Внести</td>
+
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+
+			<br />
+			<br />
+			<br />
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">Расход №</th>
+						<th class="col-md-1">Cумма общая, руб</th>
+						<th class="col-md-1">Доход №</th>
+						<th class="col-md-1">Cумма общая, руб</th>
+						<th class="col-md-1">Cумма сопоставления, руб</th>
+						<th class="col-md-1">% сопоставлено</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: Matchings -->
+					<tr>
+						<td data-bind="text: $parent.GetExpenseAccountingName($data)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+						<td data-bind="html: $parent.GetIncomeAccountingNames($data)"></td>
+						<td data-bind="html: $parent.GetIncomeAccountingSums($data)"></td>
+						<td data-bind="html: $parent.GetIncomeSums($data)"></td>
+						<td data-bind="text: $parent.GetMatchingPercent($data)"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenMatchingEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок меток *@
+		<div class="tab-pane" id="Workflow">
+			<br />
+			<!-- ko if: AccountingsItems().length -->
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">Документ</th>
+						<th class="col-md-1">Тип</th>
+						<th class="col-md-1">Наименование</th>
+						<th class="col-md-2">Ок</th>
+						<th class="col-md-2">Проверен</th>
+						<th colspan="2">Отказан</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: MarksItems -->
+					<!-- ko if: $parent.IsAccountingIncome(AccountingId) -->
+					<tr>
+						<td><a href="#" data-bind="text: $parent.GetAccountingNumber(AccountingId), click: function(){$parent.GotoAccounting(AccountingId)}"></a></td>
+						<td>Доход</td>
+						<td>Счет</td>
+						<td>
+							@*<input data-bind="checked: IsInvoiceOk" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(InvoiceOkDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, InvoiceOkUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsInvoiceChecked" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(InvoiceCheckedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, InvoiceCheckedUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsInvoiceRejected" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(InvoiceRejectedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, InvoiceRejectedUserId)"></span>
+						</td>
+						<td><strong data-bind="text: InvoiceRejectedComment"></strong></td>
+					</tr>
+					<tr>
+						<td><a href="#" data-bind="text: $parent.GetAccountingNumber(AccountingId), click: function(){$parent.GotoAccounting(AccountingId)}"></a></td>
+						<td>Доход</td>
+						<td>Акт</td>
+						<td>
+							@*<input data-bind="checked: IsActOk" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(ActOkDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ActOkUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsActChecked" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(ActCheckedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ActCheckedUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsActRejected" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(ActRejectedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ActRejectedUserId)"></span>
+						</td>
+						<td><strong data-bind="text: ActRejectedComment"></strong></td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko ifnot: $parent.IsAccountingIncome(AccountingId) -->
+					<tr>
+						<td><a href="#" data-bind="text: $parent.GetAccountingNumber(AccountingId), click: function(){$parent.GotoAccounting(AccountingId)}"></a></td>
+						<td>Расход</td>
+						<td>Расход</td>
+						<td>
+							@*<input data-bind="checked: IsAccountingOk" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(AccountingOkDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, AccountingOkUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsAccountingChecked" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(AccountingCheckedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, AccountingCheckedUserId)"></span>
+						</td>
+						<td>
+							@*<input data-bind="checked: IsAccountingRejected" type="checkbox" disabled="disabled" />*@
+							<span data-bind="text: app.utility.FormatDateTime(AccountingRejectedDate)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, AccountingRejectedUserId)"></span>
+						</td>
+						<td><strong data-bind="text: AccountingRejectedComment"></strong></td>
+					</tr>
+					<!-- /ko -->
+					<!-- /ko -->
+				</tbody>
+			</table>
+			<!-- /ko -->
+		</div>
+
+		@* блок документов *@
+		<div class="tab-pane" id="Documents">
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr data-bind="with: JointDocumentSorter">
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('DocumentType')},	css: Css('DocumentType')">Тип документа</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('LegalId')},	css: Css('LegalId')">Контрагент</th>
+						<th class="sortable" style="width:7%" data-bind="click: function(){Sort('Number')},		css: Css('Number')">Документ №</th>
+						<th class="sortable" style="width:5%" data-bind="click: function(){Sort('Date')},		css: Css('Date')">Дата</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('UploadedDate')},		css: Css('UploadedDate')">Загружен</th>
+						<th class="sortable" data-bind="click: function(){Sort('IsPrint')},						css: Css('IsPrint')"><span class="glyphicon glyphicon-print" title="Вывод на печать"></span></th>
+						<th class="sortable" data-bind="click: function(){Sort('IsNipVisible')},				css: Css('IsNipVisible')"><span class="glyphicon glyphicon-tent" title="Вывод в NIP"></span></th>
+						<th class="sortable" data-bind="click: function(){Sort('OriginalSentDate')},			css: Css('OriginalSentDate')">Оригинал выслан</th>
+						<th class="sortable" data-bind="click: function(){Sort('OriginalReceivedDate')},		css: Css('OriginalReceivedDate')">Оригинал получен</th>
+						<th class="col-md-1">Накладная №</th>
+						<th class="col-md-1">Кем получен</th>
+						<th class="text-right"><a href="#" class="btn btn-default btn-sm" data-bind="click: $parent.OpenOrderDocumentCreate">+</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: JointDocumentsItems -->
+					<!-- ko if: IsDocument() && !IsDeleted() -->
+					<tr class="pointer">
+						<td class="overflowed"><span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.DocumentType, DocumentTypeId), click: $parent.ViewDocument"></span></td>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId), attr:{'title':app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId)}, click: $parent.ViewDocument" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+						<td data-bind="text: Number, click: $parent.ViewDocument"></td>
+						<td data-bind="text: app.utility.FormatDate(Date), click: $parent.ViewDocument"></td>
+						<td data-bind="text: app.utility.FormatDateTime(UploadedDate), click: $parent.ViewDocument"></td>
+						<td><a href="#" data-bind="text: IsPrint()?'да':'нет', click: $parent.ToggleDocumentIsPrint"></a></td>
+						<td><span data-bind="text: IsNipVisible()?'да':''"></span></td>
+						<td>
+							<!-- ko if: OriginalSentDate -->
+							<input type="checkbox" checked="checked" data-bind="click: $parent.ResetJointOriginalSent" />
+							<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalSentDate)"></span>
+							<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, OriginalSentBy)"></span>
+							<!-- /ko -->
+							<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalSentDate(), click:$parent.SetJointOriginalSent">установить</a>
+						</td>
+						<td>
+							<!-- ko if: OriginalReceivedDate -->
+							<input type="checkbox" checked="checked" data-bind="click: $parent.ResetJointOriginalReceived" />
+							<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalReceivedDate)"></span>
+							<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, OriginalReceivedBy)"></span>
+							<!-- /ko -->
+							<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalReceivedDate(), click:$parent.SetJointOriginalReceived">установить</a>
+						</td>
+
+						<td>
+							<a href="#" data-bind="click: $parent.OpenDocumentDeliveryNumberEdit">
+								<span data-bind="text: ReceivedNumber"></span>
+								<span data-bind="if: !ReceivedNumber()" class="text-muted">указать</span>
+							</a>
+						</td>
+
+						<td>
+							<a href="#" data-bind="click: $parent.OpenDocumentDeliveryEdit">
+								<span data-bind="text: ReceivedBy"></span>
+								<span data-bind="if: !ReceivedBy()" class="text-muted">указать</span>
+							</a>
+						</td>
+
+						<td class="text-right">
+							<button class="btn btn-default btn-xs" data-bind="click: $parent.OpenDocumentEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;
+							<span class="close" data-bind="click: $parent.DeleteDocument">&times;</span>
+						</td>
+					</tr>
+					<!-- /ko -->
+					<!-- ko ifnot: IsDocument() -->
+					<tr class="pointer">
+						@*<td data-bind="text: OrderAccountingName, click: $parent.ViewTemplatedDocument" class="pointer" style="color:#059"></td>*@
+						<td class="overflowed"><span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Template, TemplateId), click: $parent.ViewTemplatedDocument"></span></td>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId), attr:{'title':app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId)}, click: $parent.ViewTemplatedDocument" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+						<td data-bind="text: Number, click: $parent.ViewTemplatedDocument"></td>
+						<td data-bind="text: app.utility.FormatDate(Date), click: $parent.ViewTemplatedDocument"></td>
+						<td data-bind="text: app.utility.FormatDateTime(UploadedDate), click: $parent.ViewTemplatedDocument"></td>
+						<td data-bind="text: IsPrint()?'да':''"></td>
+						<td data-bind="text: IsNipVisible()?'да':''"></td>
+						<td>
+							<!-- ko if: OriginalSentDate -->
+							<input type="checkbox" checked="checked" data-bind="click: $parent.ResetJointOriginalSent" />
+							<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalSentDate)"></span>
+							<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, OriginalSentBy)"></span>
+							<!-- /ko -->
+							<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalSentDate(), click:$parent.SetJointOriginalSent">установить</a>
+						</td>
+						<td>
+							<!-- ko if: OriginalReceivedDate -->
+							<input type="checkbox" checked="checked" data-bind="click: $parent.ResetJointOriginalReceived" />
+							<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalReceivedDate)"></span>
+							<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, OriginalReceivedBy)"></span>
+							<!-- /ko -->
+							<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalReceivedDate(), click:$parent.SetJointOriginalReceived">установить</a>
+						</td>
+
+						<td>
+							<a href="#" data-bind="click: $parent.OpenDocumentDeliveryNumberEdit">
+								<span data-bind="text: ReceivedNumber"></span>
+								<span data-bind="if: !ReceivedNumber()" class="text-muted">указать</span>
+							</a>
+						</td>
+
+						<td>
+							<a href="#" data-bind="click: $parent.OpenDocumentDeliveryEdit">
+								<span data-bind="text: ReceivedBy"></span>
+								<span data-bind="if: !ReceivedBy()" class="text-muted">указать</span>
+							</a>
+						</td>
+
+						<td><span class="close" data-bind="click: $parent.DeleteTemplatedDocument">&times;</span></td>
+					</tr>
+					<!-- /ko -->
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок рабочей группы *@
+		<div class="tab-pane" id="Workgroup">
+			<br />
+			<table class="table table-condensed table-hover">
+				<thead>
+					<tr>
+						<th class="col-md-1">Роль</th>
+						<th class="col-md-2">Пользователь</th>
+						<th class="col-md-1">От</th>
+						<th class="col-md-1">До</th>
+						<th class="col-md-1">Ответственный</th>
+						<th class="col-md-1">Заместитель</th>
+						<th class="col-md-5 text-right"><a href="#" class="btn btn-default btn-sm" data-bind="click: OpenWorkgroupCreate">+</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: WorkgroupItems -->
+					<tr>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ParticipantRole, ParticipantRoleId)"></td>
+						<td><a data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, UserId), attr: { href: $parent.UserDetailsUrl(UserId()) }"></a></td>
+						<td data-bind="text: app.utility.FormatDate(FromDate)"></td>
+						<td data-bind="text: app.utility.FormatDate(ToDate)"></td>
+						<td data-bind="text: IsResponsible()?'да':''"></td>
+						<td data-bind="text: IsDeputy()?'да':''"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenWorkgroupEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteWorkgroup" class="close">&times;</a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок заявки *@
+		<div class="tab-pane" id="Request">
+			<br />
+			<div class="well">
+				<div class="row">
+					<div class="col-md-2 text-right form-text">Согласованная стоимость</div>
+					<div class="col-md-2"><input class="form-control" data-bind="textInput: Order.Cost" /></div>
+					<div class="col-md-1 text-right form-text">Комментарий</div>
+					<div class="col-md-2"><input class="form-control" data-bind="textInput: Order.Comment" /></div>
+					<div class="col-md-3"><button class="btn btn-primary" data-bind="click: CreateClaim">Создать заявку</button></div>
+				</div>
+			</div>
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-2">Форма документа</th>
+						<th class="col-md-2">Имя файла</th>
+						<th class="col-md-1">Создано</th>
+						<th class="col-md-2">Пользователем</th>
+						<th class="col-md-1">Изменено</th>
+						<th class="col-md-2">Пользователем</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: TemplatedDocumentsItems -->
+					<tr data-bind="click: $parent.ViewTemplatedDocument" class="pointer">
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Template, TemplateId)"></td>
+						<td data-bind="text: Filename"></td>
+						<td data-bind="text: app.utility.FormatDateTime(CreatedDate)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CreatedBy)"></td>
+						<td data-bind="text: app.utility.FormatDateTime(ChangedDate)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ChangedBy)"></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок операций *@
+		<div class="tab-pane" id="Operations">
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th>п/п</th>
+						<th>Операция</th>
+						<th>Статус</th>
+						<th>Ответственный</th>
+						<th>Начало план</th>
+						<th>Начало факт</th>
+						<th>Конец план</th>
+						<th>Конец факт</th>
+						<th>Срок план</th>
+						<th>Срок факт</th>
+						<th>Отклонение</th>
+						<th><a href="#" class="btn btn-default btn-sm" data-bind="click: OpenOperationCreate">+</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: OperationsItems -->
+					<tr>
+						<td data-bind="text: No"></td>
+						<td class="text-muted"><span data-bind="text: $parent.GetOperationKind(OrderOperationId)"></span> &rarr; <span style="color:#000" data-bind="text: Name"></span></td>
+						<td class="text-muted"><span class="glyphicon glyphicon-time" data-bind="visible:OperationStatusId()==1"></span><span class="glyphicon glyphicon-ok" data-bind="visible:OperationStatusId()==2"></span><span class="glyphicon glyphicon-calendar" data-bind="visible:OperationStatusId()==3"></span></td>
+						<td><a class="btn-a" href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ResponsibleUserId), click: $parent.ChangeResponsibleUser"></a></td>
+						<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(StartPlanDate), click:function(){$parent.OpenDateTimeEdit($data, StartPlanDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!StartPlanDate(), click:function(){$parent.OpenDateTimeEdit($data, StartPlanDate)}">указать</a></td>
+						<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(StartFactDate), click:function(){$parent.OpenDateTimeEdit($data, StartFactDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!StartFactDate(), click:function(){$parent.OpenDateTimeEdit($data, StartFactDate)}">указать</a></td>
+						<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(FinishPlanDate), click:function(){$parent.OpenDateTimeEdit($data, FinishPlanDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!FinishPlanDate(), click:function(){$parent.OpenDateTimeEdit($data, FinishPlanDate)}">указать</a></td>
+						<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(FinishFactDate), click:function(){$parent.OpenDateTimeEdit($data, FinishFactDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!FinishFactDate(), click:function(){$parent.OpenDateTimeEdit($data, FinishFactDate)}">указать</a></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td><span class="close" data-bind="click: $parent.DeleteOperation">&times;</span></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок событий *@
+		<div class="tab-pane" id="Events">
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">Дата</th>
+						<th class="col-md-4">Событие</th>
+						<th class="col-md-1">Внешнее</th>
+						<th class="col-md-2">Город</th>
+						<th class="col-md-4">Комментарий</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: OrderEventsItems -->
+					<tr>
+						<td data-bind="text: app.utility.FormatDateTime(Date)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Event, EventId)"></td>
+						<td data-bind="text: IsExternal()?'да':''"></td>
+						<td data-bind="text: City"></td>
+						<td data-bind="text: Comment"></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@Html.Partial("_ErrorModal")
+@Html.Partial("_ConfirmModal")
+@Html.Partial("_UserSelectModal")
+@Html.Partial("_CloneOrderModal")
+@Html.Partial("_ServiceEditModal")
+@Html.Partial("_MatchingEditModal")
+@Html.Partial("_DateTimeEditModal")
+@Html.Partial("_DocumentEditModal")
+@Html.Partial("_ActParamsEditModal")
+@Html.Partial("_CargoSeatEditModal")
+@Html.Partial("_OperationEditModal")
+@Html.Partial("_WorkgroupEditModal")
+@Html.Partial("_RoutePointEditModal")
+@Html.Partial("_ChangePayMethodModal")
+@Html.Partial("_RouteSegmentEditModal")
+@Html.Partial("_ChangeOrderStatusModal")
+@Html.Partial("_OrderStatusHistoryModal")
+@Html.Partial("_RouteSegmentSelectModal")
+@Html.Partial("_ChangeOrderTemplateModal")
+@Html.Partial("_DocumentDateTimeEditModal")
+@Html.Partial("_CurrencyRateDateEditModal")
+@Html.Partial("_DocumentDeliveryEditModal")
+@Html.Partial("_ChangeOrderContractorModal")
+@Html.Partial("_DocumentDeliveryNumberEditModal")

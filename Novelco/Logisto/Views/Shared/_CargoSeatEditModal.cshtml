@@ -1,0 +1,75 @@
+﻿
+<div class="modal" id="cargoSeatEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: CargoSeatEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Место <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новое место</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Описание груза</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.CargoDescription, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().CargoDescriptionId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Тип упаковки</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'',options: $parent.Dictionaries.PackageType, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().PackageTypeId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Количество мест</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().SeatCount" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Длина, м</div>
+						<div class="col-md-8"><input data-bind="value: CurrentItem().Length" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Ширина, м</div>
+						<div class="col-md-8"><input data-bind="value: CurrentItem().Width" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Высота, м</div>
+						<div class="col-md-8"><input data-bind="value: CurrentItem().Height" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Объем, м<sup>3</sup></div>
+						<div class="col-md-8"><input data-bind="value: CurrentItem().Volume" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Брутто</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().GrossWeight" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<div class="checkbox">
+								<label><input type="checkbox" data-bind="checked: CurrentItem().IsStacking" />Штабелирование</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

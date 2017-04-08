@@ -1,0 +1,494 @@
+﻿
+<div data-bind="with: SelectedAccounting">
+	<div class="panel" style="box-shadow: 0 0 16px 6px rgba(0,0,0,0.2);" data-bind="css: {'panel-success':IsIncome(),'panel-danger':!IsIncome(),}">
+		<div class="panel-heading">
+			<a href="#" data-bind="attr:{href: $parent.OrderAccountingDetailsUrl(ID())}">
+				<strong data-bind="text: IsIncome()?'Доход':'Расход'"></strong>
+				<strong data-bind="text: Number"></strong>
+			</a>
+			<a href="#" class="pull-right" data-bind="click: $parent.UnselectAccounting">Вернуться к списку</a>
+		</div>
+		<div class="panel-body">
+			@* общее (для дохода) *@
+			<!-- ko if: IsIncome() -->
+			<div class="container-fluid">
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text">Тип документа</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="options: $parent.AccountingDocumentTypeForIncome, optionsText: 'Display', optionsValue: 'ID', value:AccountingDocumentTypeId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Вид оплаты</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="options: $parent.Dictionaries.AccountingPaymentType, optionsText: 'Display', optionsValue: 'ID', value:AccountingPaymentTypeId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Курс пересчета</div>
+					<div class="col-md-1">
+						<div class="input-group">
+							<input style="display:inline-block; width:82px" data-bind="textInput: CurrencyRate,event: { blur: $parent.UpdateCurrencyRate }" class="form-control" />
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-default" data-bind="click: $parent.OpenCurrencyRateDateSelect"><span id="currencyRateDatepicker" class="glyphicon glyphicon-calendar"></span></button>
+							</span>
+						</div>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">План дата оплаты</div>
+					<div class="col-md-1"><span data-bind="text: app.utility.FormatDate(PaymentPlanDate)" class="form-control"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Сумма, <span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, ContractCurrencyId)"></span></div>
+					<div class="col-md-1 form-text"><span type="text" data-bind="text: app.utility.FormatDecimal(OriginalSum)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text">Счет от юрлица</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.OurLegal, optionsText: 'Display', optionsValue: 'ID', value: OurLegalId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Способ оплаты</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="options: $parent.Dictionaries.AccountingPaymentMethod, optionsText: 'Display', optionsValue: 'ID', value:AccountingPaymentMethodId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Номер счета</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: InvoiceNumber" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Дата счета</div>
+					<div class="col-md-1"><input type="text" data-bind="datepicker: InvoiceDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Сумма, руб</div>
+					<div class="col-md-1 form-text"><span type="text" data-bind="text: app.utility.FormatDecimal(Sum)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text">Плательщик</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="optionsCaption:'', options: $parent.ContractorLegalsItems, optionsText: 'DisplayName', optionsValue: 'ID', value: LegalId"></select>
+					</div>
+
+
+					<div class="col-md-offset-3 col-md-1 text-muted text-right form-text">Номер акта</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: ActNumber" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Дата акта</div>
+					<div class="col-md-1"><input type="text" data-bind="datepicker: ActDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">НДС, руб</div>
+					<div class="col-md-1 form-text"><span type="text" data-bind="text: app.utility.FormatDecimal(Vat)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+				</div>
+			</div>
+			<!-- /ko -->
+			@* общее (для расхода) *@
+			<!-- ko if: !IsIncome() -->
+			<div class="container-fluid">
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text">Тип документа</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="options: $parent.AccountingDocumentTypeForExpense, optionsText: 'Display', optionsValue: 'ID', value:AccountingDocumentTypeId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Вид оплаты</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="options: $parent.Dictionaries.AccountingPaymentType, optionsText: 'Display', optionsValue: 'ID', value:AccountingPaymentTypeId"></select>
+					</div>
+
+					<!-- ko if: IsHasVatInvoice -->
+					<div class="col-md-1 text-muted text-right form-text">Счет-фактура №</div>
+					<div class="col-md-1 form-text"><span data-bind="text: VatInvoiceNumber"></span></div>
+					<!-- /ko -->
+					<!-- ko ifnot: IsHasVatInvoice -->
+					<div class="col-md-2"></div>
+					<!-- /ko -->
+
+					<div class="col-md-1 text-muted text-right form-text">Дата заявки</div>
+					<div class="col-md-1"><input type="text" data-bind="datepicker: RequestDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Сумма, <span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, ContractCurrencyId)"></span></div>
+					<div class="col-md-1 form-text"><span data-bind="text: app.utility.FormatDecimal(OriginalSum)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text openable" data-bind="click: function(){$parent.ViewContractorById(ContractorId())}">Контрагент</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.Contractor, optionsText: 'Display', optionsValue: 'ID', value: ContractorId"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Метод оплаты</div>
+					<div class="col-md-2">
+						<button class="btn btn-button text-left" style="height:30px !important" data-bind="click: $parent.OpenChangePayMethod">
+							<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.PayMethod, PayMethodId)"></span>
+						</button>
+					</div>
+
+
+					<div class="col-md-1 text-muted text-right form-text">Счет №</div>
+					<div class="col-md-1 form-text"><span data-bind="text: InvoiceNumber"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Дата счета</div>
+					<div class="col-md-1 form-text"><span data-bind="text: app.utility.FormatDate(InvoiceDate)"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Сумма, руб</div>
+					<div class="col-md-1 form-text"><span data-bind="text: app.utility.FormatDecimal(Sum)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-1 text-muted text-right form-text openable" data-bind="click: function(){$parent.ViewContractById(ContractId())}">Договор</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="optionsCaption:'', options: ProviderContractsItems, optionsText: function(item) {return item.Number() + ' ' + $parent.GetContractCurrenciesDisplay(item) + ' ' + item.OurLegal() + ' - ' + item.Legal() + ' (от ' + app.utility.FormatDate(item.Date) + ')' }, optionsValue: 'ID', value: ContractId, optionsAfterRender: $parent.ContractOptionsAfterRender"></select>
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Юрлицо</div>
+					<div class="col-md-2 form-text"><span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId)"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Акт №</div>
+					<div class="col-md-1 form-text"><span text" data-bind="text: ActNumber"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Дата акта</div>
+					<div class="col-md-1 form-text"><span data-bind="text: app.utility.FormatDate(ActDate)"></span></div>
+
+					<div class="col-md-1 text-muted text-right form-text">НДС, руб</div>
+					<div class="col-md-1 form-text"><span data-bind="text: app.utility.FormatDecimal(Vat)"></span></div>
+				</div>
+
+				<div class="row row-v-padding">
+				</div>
+
+			</div>
+			<!-- /ko -->
+			@* Услуги *@
+			<div class="panel panel-info" style="margin-top:8px">
+				<div class="panel-heading">Услуги <a href="#" class="pull-right" data-bind="click: $parent.OpenServiceCreate"><strong>+новая</strong></a></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Детализация</th>
+							<th class="col-md-3">В финансовом документе</th>
+							<th class="col-md-1" style="width:5%">Кол во</th>
+							<th class="col-md-1" style="width:5%">Ед. изм.</th>
+							<th class="col-md-1" style="width:6%">Цена</th>
+							<th class="col-md-1" style="width:7%">Сумма в валюте</th>
+							<th class="col-md-1" style="width:6%">Сумма, руб.</th>
+							<th class="col-md-1" style="width:6%">Детализация</th>
+							<th class="col-md-1" style="width:4%"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: ServicesItems -->
+						<!-- ko if: !IsDeleted() -->
+						<tr class="pointer">
+							<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.ServiceType, ServiceTypeId), click: $parents[1].OpenServiceEdit"></td>
+							<td data-bind="text: $parents[1].GetServiceKind(ServiceTypeId), click: $parents[1].OpenServiceEdit"></td>
+							<td data-bind="click: $parents[1].OpenServiceEdit"><span data-bind="text: Count"></span></td>
+							<td data-bind="text: $parents[1].GetMeasureDisplay(ServiceTypeId)"></td>
+							<td data-bind="text: app.utility.FormatDecimal(Price), click: $parents[1].OpenServiceEdit"></td>
+							<td>
+								<span data-bind="text: app.utility.FormatDecimal(OriginalSum)"></span>
+								<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Currency, CurrencyId)"></span>
+							</td>
+							<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+							<td  data-bind="text: IsForDetalization()?'да':''"></td>
+							<td class="text-right"><button class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenServiceEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<a href="#" data-bind="click: $parents[1].DeleteService" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+
+			<!-- ko if: !IsIncome() &&  $parent.IsInsuranceContract(ContractId) -->
+			<div style="padding-bottom:8px">
+				@* только для расхода *@
+				<span class="text-muted">Грузоперевозчик:</span>
+				<select class="form-control" style="display:inline-block; width: 256px" data-bind="valueAllowUnset: true, optionsCaption:'', options: $parent.Dictionaries.LegalProvider, optionsText: 'Display', optionsValue: 'ID', value: CargoLegalId"></select>
+			</div>
+			<!-- /ko -->
+			@* Метки *@
+			<!-- ko if: IsIncome() -->
+			<div class="mark-row" data-bind="with: Marks">
+				<strong class="header">Счет</strong>
+				<span class="mark-block" data-bind="css:{active:IsInvoiceOk()}">
+					<span class="text-muted">Ok</span>
+					<input data-bind="checked: IsInvoiceOk, click: ToggleInvoiceOk" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(InvoiceOkDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, InvoiceOkUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block" data-bind="css:{active:IsInvoiceChecked()}">
+					<span class="text-muted">Проверен</span>
+					<input data-bind="checked: IsInvoiceChecked, click: ToggleInvoiceChecked" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(InvoiceCheckedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, InvoiceCheckedUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block" data-bind="css:{active:IsInvoiceRejected()}">
+					<span class="text-muted">Отказан</span>
+					<input data-bind="checked: IsInvoiceRejected, click: ToggleInvoiceRejected" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(InvoiceRejectedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, InvoiceRejectedUserId)"></span>
+				</span>
+				<span class="mark-block">
+					<input style="display:inline-block; height:30px; width:350px; border:1px solid #ddd" placeholder="по причине" type="text" data-bind="textInput: InvoiceRejectedComment, attr:{title: InvoiceRejectedComment}, enable:!IsInvoiceRejected()" />
+				</span>
+			</div>
+
+			<div class="mark-row" data-bind="with: Marks">
+				<strong class="header">Акт</strong>
+				<span class="mark-block" data-bind="css:{active:IsActOk()}">
+					<span class="text-muted">Ok</span>
+					<input data-bind="checked: IsActOk, click: ToggleActOk" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(ActOkDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, ActOkUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block" data-bind="css:{active:IsActChecked()}">
+					<span class="text-muted">Проверен</span>
+					<input data-bind="checked: IsActChecked, click: ToggleActChecked" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(ActCheckedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, ActCheckedUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block" data-bind="css:{active:IsActRejected()}">
+					<span class="text-muted">Отказан</span>
+					<input data-bind="checked: IsActRejected, click: ToggleActRejected" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(ActRejectedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, ActRejectedUserId)"></span>
+				</span>
+				<span class="mark-block">
+					<input style="display:inline-block; height:30px; width:350px; border:1px solid #ddd" placeholder="по причине" type="text" data-bind="textInput: ActRejectedComment, attr:{title: ActRejectedComment}, enable:!IsActRejected()" />
+				</span>
+			</div>
+			<!-- /ko -->
+			<!-- ko if: !IsIncome() -->
+			<div class="mark-row" data-bind="with: Marks">
+				<strong class="header">Расход</strong>
+				<span class="mark-block">
+					<span class="text-muted">Ok</span>
+					<input data-bind="checked: IsAccountingOk, click: ToggleAccountingOk" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(AccountingOkDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, AccountingOkUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block">
+					<span class="text-muted">Проверен</span>
+					<input data-bind="checked: IsAccountingChecked, click: ToggleAccountingChecked" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(AccountingCheckedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, AccountingCheckedUserId)"></span>
+				</span>
+				<span class="mark-divider">&nbsp;</span>
+				<span class="mark-block">
+					<span class="text-muted">Отказан</span>
+					<input data-bind="checked: IsAccountingRejected, click: ToggleAccountingRejected" type="checkbox" />
+					<span data-bind="text: app.utility.FormatDateTime(AccountingRejectedDate)"></span>
+					<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, AccountingRejectedUserId)"></span>
+				</span>
+				<span class="mark-block">
+					<input placeholder="по причине" type="text" data-bind="textInput: AccountingRejectedComment, enable:!IsAccountingRejected()" />
+				</span>
+			</div>
+			<!-- /ko -->
+
+			<br />
+
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#AccountingDocuments" data-toggle="tab">Документы</a>
+				</li>
+				<li>
+					<a href="#RouteSegments" data-toggle="tab">Этапы маршрута <span class="text-muted" data-bind="text: RouteSegmentsCount"></span></a>
+				</li>
+				<li>
+					<a href="#Errors" data-toggle="tab">Ошибки</a>
+				</li>
+				<li>
+					<a href="#Payments" data-toggle="tab">Оплаты <span class="text-muted" data-bind="text: PaymentsCount"></span></a>
+				</li>
+			</ul>
+
+			<div class="tab-content">
+				@* блок документов *@
+				<div class="tab-pane active" id="AccountingDocuments">
+					<div class="well well-sm text-right">
+						<a href="#" class="pull-left" style="padding-top: 8px;padding-left:8px" data-bind="click: function(){$parent.LoadAccountingJointDocuments($parent.SelectedAccounting())}"><span class="glyphicon glyphicon-refresh"></span></a>
+						<div class="btn-group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Создать <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li><a href="#" data-bind="click: $parent.CreateInvoice, visible: IsIncome()">Счет</a></li>
+								<li><a href="#" data-bind="click: $parent.CreateAct">Акт</a></li>
+								<li><a href="#" data-bind="click: $parent.CreateVatInvoice, visible: IsIncome()">Счет-фактуру</a></li>
+								<li><a href="#" data-bind="click: $parent.CreateDetailing, visible: IsIncome()">Детализацию по расстоянию</a></li>
+								<li><a href="#" data-bind="click: $parent.CreateAmpleDetailing, visible: IsIncome()">Детализацию по услугам</a></li>
+								<li><a href="#" data-bind="click: $parent.CreateRequest, visible: !IsIncome()">Заявку</a></li>
+							</ul>
+						</div>
+						<a href="#" class="btn btn-default" data-bind="click: $parent.OpenDocumentCreate">+документ</a>
+						<div class="btn-group" data-bind="visible: IsIncome()">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Документы <span class="caret"></span></button>
+							<ul class="dropdown-menu">
+								<li><a href="#" data-bind="visible: IsIncome(), click: $parent.OpenMergedAccountingDocuments"><span class="glyphicon glyphicon-download-alt"></span> для печати</a></li>
+								<li><a href="#" data-bind="visible: IsIncome(), click: $parent.OpenClientAccountingDocuments"><span class="glyphicon glyphicon-download-alt"></span> для клиента</a></li>
+							</ul>
+						</div>
+					</div>
+					<table class="table table-condensed">
+						<thead>
+							<tr data-bind="with: $parent.JointDocumentSorter">
+								<th class="col-md-1 sortable" data-bind="click: function(){Sort('OrderAccountingName')},	css: Css('OrderAccountingName')">Carman №</th>
+								<th class="col-md-1 overflowed">Тип документа</th>
+								<th class="col-md-1 overflowed sortable" data-bind="click: function(){Sort('LegalId')},	css: Css('LegalId')">Контрагент</th>
+								<th class="sortable" style="width:7%" data-bind="click: function(){Sort('Number')},		css: Css('Number')">Номер</th>
+								<th class="sortable" style="width:5%" data-bind="click: function(){Sort('Date')},		css: Css('Date')">Дата</th>
+								<th class="col-md-1">Имя файла</th>
+								<th class="col-md-1 sortable" data-bind="click: function(){Sort('UploadedDate')},		css: Css('UploadedDate')">Загружен</th>
+								<th class="sortable" data-bind="click: function(){Sort('IsPrint')},						css: Css('IsPrint')"><span class="glyphicon glyphicon-print" title="Вывод на печать"></span></th>
+								<th class="sortable" data-bind="click: function(){Sort('IsNipVisible')},				css: Css('IsNipVisible')"><span class="glyphicon glyphicon-tent" title="Вывод в NIP"></span></th>
+								<th class="sortable" data-bind="click: function(){Sort('OriginalSentDate')},			css: Css('OriginalSentDate')">Оригинал выслан</th>
+								<th class="sortable" data-bind="click: function(){Sort('OriginalReceivedDate')},		css: Css('OriginalReceivedDate')">Оригинал получен</th>
+								<th class="col-md-1">Кем получен</th>
+								<th class="col-md-1">Накладная №</th>
+								<th class="col-md-1" style="width:4%"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: JointDocumentsItems -->
+							<tr>
+								<td data-bind="text: OrderAccountingName, click: $parents[1].ViewJointDocument" class="pointer" style="color:#059"></td>
+								<!-- ko if: IsDocument() -->
+								<td class="overflowed" data-bind="attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.DocumentType, DocumentTypeId)}"><span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.DocumentType, DocumentTypeId)" data-container="body" data-toggle="tooltip" data-placement="bottom"></span></td>
+								<!-- /ko -->
+								<!-- ko ifnot: IsDocument() -->
+								<td class="overflowed" data-bind="attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.Template, TemplateId)}"><span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Template, TemplateId)"></span></td>
+								<!-- /ko -->
+								<td class="overflowed" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Legal, LegalId), attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.Legal, LegalId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+								<td data-bind="text: Number"></td>
+								<td data-bind="text: app.utility.FormatDate(Date)"></td>
+								<td data-bind="text: Filename"></td>
+								<td data-bind="text: app.utility.FormatDateTime(UploadedDate)"></td>
+								<!-- ko if: IsDocument() -->
+								<td><a href="#" data-bind="text: IsPrint()?'да':'нет', click: $parents[1].ToggleDocumentIsPrint"></a></td>
+								<!-- /ko -->
+								<!-- ko ifnot: IsDocument() -->
+								<td data-bind="text: IsPrint()?'да':''"></td>
+								<!-- /ko -->
+								<td data-bind="text: IsNipVisible()?'да':''"></td>
+								<td>
+									<!-- ko if: OriginalSentDate -->
+									<input type="checkbox" checked="checked" data-bind="click: $parents[1].ResetJointOriginalSent" />
+									<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalSentDate)"></span>
+									<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, OriginalSentBy)"></span>
+									<!-- /ko -->
+									<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalSentDate(), click:$parents[1].SetJointOriginalSent">установить</a>
+								</td>
+								<td>
+									<!-- ko if: OriginalReceivedDate -->
+									<input type="checkbox" checked="checked" data-bind="click: $parents[1].ResetJointOriginalReceived" />
+									<span style="font-size:smaller" data-bind="text: app.utility.FormatDateTime(OriginalReceivedDate)"></span>
+									<span style="font-size:smaller" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.User, OriginalReceivedBy)"></span>
+									<!-- /ko -->
+									<a class="btn-a text-muted" href="#" data-bind="visible:!OriginalReceivedDate(), click:$parents[1].SetJointOriginalReceived">установить</a>
+								</td>
+								<td>
+									<a href="#" data-bind="click: $parents[1].OpenDocumentDeliveryEdit">
+										<span data-bind="text: ReceivedBy"></span>
+										<span data-bind="if: !ReceivedBy()" class="text-muted">указать</span>
+									</a>
+								</td>
+								<td data-bind="text: ReceivedNumber"></td>
+								<!-- ko if: IsDocument() -->
+								<td class="text-right">
+									<button class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenDocumentEdit"><span class="glyphicon glyphicon-pencil"></span></button>
+									<span class="close" data-bind="click: $parents[1].DeleteDocument">&times;</span>
+								</td>
+								<!-- /ko -->
+								<!-- ko ifnot: IsDocument() -->
+								<td><span class="close" data-bind="click: $parents[1].DeleteTemplatedDocument">&times;</span></td>
+								<!-- /ko -->
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+
+				@* Плечи маршрут *@
+				<div class="tab-pane container-fluid" id="RouteSegments" style="padding:4px">
+					@*<!-- ko if: IsIncome() -->*@
+					<div class="panel panel-info">
+						<div class="panel-heading">Этапы маршрута <a href="#" class="pull-right" data-bind="click: $parent.OpenRouteSegmentsSelect"><strong>⋮выбрать</strong></a></div>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th class="col-md-1">Номер</th>
+									<th class="col-md-1">Транспорт</th>
+									<th class="col-md-1">Откуда</th>
+									<th class="col-md-1">Куда</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: RouteSegmentsItems -->
+								<!-- ko with: $parents[1].GetRouteSegmentLocal($data) -->
+								<tr>
+									<td data-bind="text: No"></td>
+									<td data-bind="text: app.utility.GetDisplay($parents[2].Dictionaries.TransportType, TransportTypeId)"></td>
+									<td data-bind="text: $parents[2].GetPointDisplay(FromRoutePointId)"></td>
+									<td data-bind="text: $parents[2].GetPointDisplay(ToRoutePointId)"></td>
+								</tr>
+								<!-- /ko -->
+								<!-- /ko -->
+							</tbody>
+						</table>
+					</div>
+					@* <!-- /ko -->*@
+				</div>
+
+				<div class="tab-pane" id="Errors" style="padding:4px">
+					<p data-bind="html: RejectHistory"></p>
+				</div>
+
+				@* Платежи *@
+				<div class="tab-pane" id="Payments" style="padding:4px">
+					<div class="panel panel-info">
+						<div class="panel-heading">Поступления <a href="#" class="pull-right" data-bind="click: $parent.DownloadPaymentsFile"><strong><span class="glyphicon glyphicon-download-alt"></span> excel</strong></a></div>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th class="col-md-1">Номер ПП</th>
+									<th class="col-md-1">Дата оплаты</th>
+									<th class="col-md-1">Сумма в валюте платежа</th>
+									<th class="col-md-1">Сумма в валюте счета</th>
+									<th class="col-md-1">Курс ЦБ РФ на дату оплаты</th>
+									<th class="col-md-1">Курс оплаты по договору</th>
+									<th class="col-md-8">Назначение платежа</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: PaymentsItems -->
+								<tr data-bind="css:{'text-success': IsIncome}">
+									<td data-bind="text: Number"></td>
+									<td data-bind="text: app.utility.FormatDate(Date)"></td>
+									<td><span data-bind="text: app.utility.FormatDecimal(OriginalSum)"></span> <span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Currency, CurrencyId)"></span></td>
+									<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+									<td data-bind="text: app.utility.FormatDecimal(CurrencyRateCB,4)"></td>
+									<td data-bind="text: app.utility.FormatDecimal(CurrencyRate,4)"></td>
+									<td data-bind="text: Description"></td>
+								</tr>
+								<!-- /ko -->
+								<tr>
+									<td class="text-muted">Итого</td>
+									<td></td>
+									<td data-bind="text: $parent.PaymentsItemsTotalOriginalSum"></td>
+									<td data-bind="text: $parent.PaymentsItemsTotalSum"></td>
+									<td></td>
+									<td></td>
+									<td></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

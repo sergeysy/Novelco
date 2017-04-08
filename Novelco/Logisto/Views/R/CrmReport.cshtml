@@ -1,0 +1,98 @@
+﻿@model Logisto.ViewModels.CrmViewModel
+@{
+	ViewBag.Title = "CRM";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetCallsItems", "R")";
+		app.urls.DownloadExcel = "@Url.Action("DownloadCrmReport", "R")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/CrmReport.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>Результаты продаж по неделям (CRM)</h2></div>
+		<div class="col-md-6 text-right"><a href="#" class="btn btn-a" style="margin-top:22px" data-bind="click: DownloadReport">Загрузить отчет</a></div>
+	</div>
+	<hr />
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-1">
+					<div class="text-right form-text">Даты от-до</div>
+				</div>
+				<div class="col-md-1">
+					<input type="text" class="form-control" data-bind="datepicker: Filter.From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1">
+					<input type="text" class="form-control" data-bind="datepicker: Filter.To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-2">
+					<button type="button" class="btn btn-default btn-sm dropdown-toggle" style="width:100%" data-toggle="dropdown">Пользователь <span class="caret"></span></button>
+					<ul id="statuses" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.ActiveUser -->
+						<li><a href="#" class="small" tabindex="-1"><input type="radio" name="user" data-bind="attr:{value:ID()}, checked: $parent.Filter.UserId, checkedValue: ID" />&nbsp;<span data-bind="text: Display"></span></a></li>
+						<!-- /ko -->
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<button type="button" class="btn btn-primary btn-sm" style="width:100%" data-bind="click: ApplyFilter">Применить</button>
+				</div>
+				<div class="col-md-6" style="background-color:#f0f9ff">
+					Всего звонков: <strong class="form-text" data-bind="text: TotalItemsCount"></strong>
+					длительность: <strong class="form-text" data-bind="text: TotalDuration"></strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<table class="table table-condensed table-hover" style="font-size:9pt;">
+		<thead>
+			<tr>
+				<th>Дата</th>
+				<th>Длительность</th>
+				<th>Номер</th>
+				<th>Направление</th>
+				<th>Файл</th>
+				<th>Менеджер</th>
+			</tr>
+		</thead>
+		<tbody style="word-wrap:break-word; word-break:break-all">
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: app.utility.FormatDate(Date)"></td>
+				<td data-bind="text: Duration"></td>
+				<td data-bind="text: Number"></td>
+				<td data-bind="text: Direction"></td>
+				<td data-bind="text: Filename"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, UserId)"></td>
+			</tr>
+			<!-- /ko -->
+
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+

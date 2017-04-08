@@ -1,0 +1,40 @@
+﻿
+<div class="modal" id="serviceKindEditModal" tabindex="-1">
+	<div class="modal-dialog" data-bind="with: ServiceKindEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Вид услуги <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый вид услуги</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Name"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование (en)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnName"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">НДС</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.Vat, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().VatId"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

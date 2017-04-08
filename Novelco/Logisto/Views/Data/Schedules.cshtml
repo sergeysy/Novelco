@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Logisto.Models.Schedule>
+@{
+	ViewBag.Title = "Расписание рассылок";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewSchedule = "@Url.Action("GetNewSchedule", "Data")";
+		app.urls.DeleteSchedule = "@Url.Action("DeleteSchedule", "Data")";
+		app.urls.SaveSchedule = "@Url.Action("SaveSchedule", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/Schedules.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Расписание рассылок</h2></div>
+		<div class="col-md-2 col-md-offset-5"><button class="btn btn-a" style="margin-top: 22px;" data-bind="click: OpenScheduleCreate">+новая</button></div>
+	</div>
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-2">
+			<table class="table table-condensed ">
+				<thead>
+					<tr>
+						<th class="col-md-3">Название</th>
+						<th class="col-md-2">День недели</th>
+						<th class="col-md-2">Время</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: Items -->
+					<tr>
+						<td data-bind="text: ReportName"></td>
+						<td data-bind="text: WeekdayDisplay"></td>
+						<td data-bind="text: TimeDisplay"></td>
+						<td>
+							<a class="btn btn-default btn-xs" data-bind="click: $parent.OpenScheduleEdit"><span class="glyphicon glyphicon-pencil"></span></a>
+							<a data-bind="click: $parent.DeleteSchedule"><span class="close">&times;</span></a>
+						</td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_ScheduleEditModal")

@@ -1,0 +1,269 @@
+﻿@model Logisto.ViewModels.ContractViewModel
+@{
+	ViewBag.Title = "Договор";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetBankAccountsByOurLegalItems = "@Url.Action("GetBankAccountsByOurLegal", "Contractors")";
+		app.urls.GetBankAccountsByLegalItems = "@Url.Action("GetBankAccountsByLegal", "Contractors")";
+		app.urls.GetDocumentsByContractItems = "@Url.Action("GetDocumentsByContract", "Orders")";
+		app.urls.GetContractMarksHistory = "@Url.Action("GetContractMarksHistory", "Contracts")";
+		app.urls.GetContractMarks = "@Url.Action("GetContractMarks", "Contracts")";
+		app.urls.OrderTemplates = "@Url.Action("OrderTemplates", "Contracts")";
+		app.urls.GetNewDocument = "@Url.Action("GetNewDocument", "Orders")";
+		app.urls.UploadDocument = "@Url.Action("UploadDocument", "Orders")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+
+		app.urls.ToggleContractOk = "@Url.Action("ToggleContractOk", "Contracts")";
+		app.urls.ToggleContractChecked = "@Url.Action("ToggleContractChecked", "Contracts")";
+		app.urls.ToggleContractBlocked = "@Url.Action("ToggleContractBlocked", "Contracts")";
+		app.urls.ToggleContractRejected = "@Url.Action("ToggleContractRejected", "Contracts")";
+
+		app.urls.SaveDocument = "@Url.Action("SaveDocument", "Orders")";
+		app.urls.SaveContract = "@Url.Action("SaveContract", "Contracts")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Contracts/EditContract.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Договор <span class="text-ghost">#<span data-bind="text: Contract.ID"></span></span></h2></div>
+		<div class="col-md-4"></div>
+		<div class="col-md-3">
+			<a href="#" class="btn btn-default" style="margin-top: 22px;" data-bind="attr:{href:OrderTemplatesUrl(Contract.ID())}" target="_blank">Шаблоны заказа <span class="label label-as-badge label-default">0</span></a>
+			<button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save, visible:IsDirty">Сохранить</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Между</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.OurLegal, optionsText: 'Display', optionsValue: 'ID', value: Contract.OurLegalId"></select>
+				</div>
+
+				<div class="col-md-2 form-text text-right">и</div>
+				<div class="col-md-4">
+					<input readonly="readonly" data-bind="textInput: app.utility.GetDisplay(Dictionaries.Legal, Contract.LegalId)" class="form-control" />
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Номер</div>
+				<div class="col-md-4"><input class="form-control" data-bind="textInput: Contract.Number" /></div>
+
+				<div class="col-md-2 form-text text-right">Дата договора</div>
+				<div class="col-md-4"><input class="form-control" data-bind="datepicker: Contract.Date, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Действует с</div>
+				<div class="col-md-4"><input class="form-control" data-bind="datepicker: Contract.BeginDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+				<div class="col-md-2 form-text text-right">по</div>
+				<div class="col-md-4"><input class="form-control" data-bind="datepicker: Contract.EndDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-4 col-md-offset-2">
+					<div class="checkbox">
+						<label><input type="checkbox" data-bind="checked: Contract.IsProlongation" />С пролонгацией</label> &nbsp;
+					</div>
+				</div>
+			</div>
+
+			<hr />
+			<!-- ko foreach: Dictionaries.Currency -->
+
+			<div class="row form-group">
+				<div class="col-md-1 col-md-offset-2 form-text text-right">
+					<div class="form-text">
+						<label><input type="checkbox" data-bind="checked: $parent.GetCurrency($data.ID()).IsChecked" /> <span data-bind="text: Display"></span></label>
+					</div>
+				</div>
+				<div class="col-md-1 form-text text-right">Наш Р/с</div>
+				<div class="col-md-3">
+					<select class="form-control" data-bind="optionsCaption:'', options: $parent.GetOurBankAccountsByCurrency($data.ID()), optionsText: 'Number', optionsValue: 'ID', value:$parent.GetCurrency($data.ID()).OurBankAccountId"></select>
+				</div>
+				<div class="col-md-2 form-text text-right">Р/с контрагента</div>
+				<div class="col-md-3">
+					<select class="form-control" data-bind="optionsCaption:'', options: $parent.GetBankAccountsByCurrency($data.ID()), optionsText: 'Number', optionsValue: 'ID', value: $parent.GetCurrency($data.ID()).BankAccountId"></select>
+				</div>
+			</div>
+
+			<!-- /ko -->
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Тип договора</div>
+				<div class="col-md-10">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Dictionaries.ContractType, optionsText: 'Display', optionsValue: 'ID', value: Contract.ContractTypeId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Вид договора</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.ContractServiceType, optionsText: 'Display', optionsValue: 'ID', value: Contract.ContractServiceTypeId"></select>
+				</div>
+
+				<!-- ko if: IsCurrencyRateUseVisible -->
+				<div class="col-md-2 text-right form-text">Применяемый курс</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="options: Dictionaries.CurrencyRateUse, optionsText: 'Display', optionsValue: 'ID', value: Contract.CurrencyRateUseId"></select>
+				</div>
+				<!-- /ko -->
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Наше юрлицо</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Dictionaries.ContractRole, optionsText: 'Display', optionsValue: 'ID', value: Contract.OurContractRoleId"></select>
+				</div>
+
+				<div class="col-md-2 form-text text-right">Контрагент</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Dictionaries.ContractRole, optionsText: 'Display', optionsValue: 'ID', value: Contract.ContractRoleId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Условия оплаты</div>
+				<div class="col-md-10">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Dictionaries.PaymentTerm, optionsText: 'Display', optionsValue: 'ID', value: Contract.PaymentTermsId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group" data-bind="visible: Contract.ContractServiceTypeId() > 1">
+				<div class="col-md-2 form-text text-right">Метод оплаты</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Dictionaries.PayMethod, optionsText: 'Display', optionsValue: 'ID', value: Contract.PayMethodId"></select>
+				</div>
+
+				<div class="col-md-2 form-text text-right">Агентские</div>
+				<div class="col-md-4"><input class="form-control" data-bind="textInput: Contract.AgentPercentage" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Комментарий</div>
+				<div class="col-md-10"><input class="form-control" data-bind="textInput: Contract.Comment" /></div>
+			</div>
+
+			@* Документы *@
+			<div class="panel panel-info">
+				<div class="panel-heading">Прикрепленные документы <a href="#" class="pull-right" data-bind="click: OpenContractDocumentCreate"><strong>+новый</strong></a></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-3">Тип документа</th>
+							<th class="col-md-1">Документ №</th>
+							<th class="col-md-1">Дата документа</th>
+							<th class="col-md-1">Вывод в NIP</th>
+							<th class="col-md-2">Имя файла</th>
+							<th class="col-md-2">Загружен</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: DocumentsItems -->
+						<tr>
+							<td><a data-bind="text: app.utility.GetDisplay($parent.Dictionaries.DocumentType, DocumentTypeId), click: $parent.ViewDocument"></a></td>
+							<td><a data-bind="text: Number, click: $parent.ViewDocument"></a></td>
+							<td data-bind="text: app.utility.FormatDate(Date)"></td>
+							<td data-bind="text: IsNipVisible()?'да':''"></td>
+							<td><a data-bind="text: Filename, click: $parent.ViewDocument"></a></td>
+							<td data-bind="text: app.utility.FormatDateTime(UploadedDate)"></td>
+							<td class="text-right"><button class="btn btn-default btn-xs" data-bind="click: $parent.OpenDocumentEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<a href="#" data-bind="click: $parent.DeleteDocument" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+
+			@* Метки *@
+			<div style="background-color:#fafcff" data-bind="with: CurrentContractMarks">
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-3"></th>
+							<th class="col-md-4"></th>
+							<th class="col-md-4"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>
+								<input data-bind="checked: IsContractOk, click: $parent.ToggleContractOk" type="checkbox" />
+								<span data-bind="css:{'text-strong': IsContractOk(), 'text-muted': !IsContractOk() }">Договор Ок</span>
+							</td>
+							<td>
+								<span data-bind="text: app.utility.FormatDateTime(ContractOkDate)"></span>
+								<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ContractOkUserId)"></span>
+							</td>
+							<td class="text-right"><span class="glyphicon glyphicon-info-sign text-muted pointer" data-bind="click: $parent.OpenContractMarksHistory"></span></td>
+						</tr>
+						<tr>
+							<td>
+								<input data-bind="checked: IsContractChecked, click: $parent.ToggleContractChecked" type="checkbox" />
+								<span data-bind="css:{'text-strong': IsContractChecked(), 'text-muted': !IsContractChecked() }">Договор проверен</span>
+							</td>
+							<td>
+								<span data-bind="text: app.utility.FormatDateTime(ContractCheckedDate)"></span>
+								<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ContractCheckedUserId)"></span>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td>
+								<input data-bind="checked: IsContractRejected, click: $parent.ToggleContractRejected" type="checkbox" />
+								<span data-bind="css:{'text-strong': IsContractRejected(), 'text-muted': !IsContractRejected() }">Договор отклонен</span>
+							</td>
+							<td>
+								<span data-bind="text: app.utility.FormatDateTime(ContractRejectedDate)"></span>
+								<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ContractRejectedUserId)"></span>по причине
+							</td>
+							<td>
+								<input class="form-control" type="text" data-bind="textInput: ContractRejectedComment, enable:!IsContractRejected()" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input data-bind="checked: IsContractBlocked, click: $parent.ToggleContractBlocked" type="checkbox" />
+								<span data-bind="css:{'text-strong': IsContractBlocked(), 'text-muted': !IsContractBlocked() }">Договор заблокирован</span>
+							</td>
+							<td>
+								<span data-bind="text: app.utility.FormatDateTime(ContractBlockedDate)"></span>
+								<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ContractBlockedUserId)"></span>по причине
+							</td>
+							<td>
+								<input class="form-control" type="text" data-bind="textInput: ContractBlockedComment, enable:!IsContractBlocked()" />
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+@Html.Partial("_DocumentEditModal")
+@Html.Partial("_ContractMarksHistoryModal")

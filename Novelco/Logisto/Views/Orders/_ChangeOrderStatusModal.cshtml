@@ -1,0 +1,43 @@
+﻿
+<div class="modal" id="changeOrderStatusModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ChangeOrderStatusModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close">&times;</button>
+				<h4 class="modal-title">Выбор статуса</h4>
+			</div>
+			<div class="modal-body">
+				<div class="container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Статус</div>
+						<div class="col-md-6">
+							<select class="form-control" data-bind="options: $parent.Dictionaries.OrderStatus, optionsText: 'Display', optionsValue: 'ID', value: SelectedStatus"></select>
+						</div>
+					</div>
+					<div class="row form-group" data-bind="visible: SelectedStatus()==1 || SelectedStatus()==8">
+						<div class="col-md-4 text-right form-text">Причина</div>
+						<div class="col-md-6">
+							<input class="form-control" type="text" data-bind="textInput: Reason" />
+						</div>
+					</div>
+					<div class="row form-group" data-bind="visible: SelectedStatus()==7">
+						<div class="col-md-4 text-right form-text">Дата закрытия</div>
+						<div class="col-md-6">
+							<input class="form-control" type="text" data-bind="datepicker: CloseDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+						</div>
+					</div>
+					<div class="row form-group" data-bind="visible: Errors().length>0">
+						<div class="alert alert-danger">
+							<ul style="padding-left: 16px;" data-bind="foreach: Errors()">
+								<li data-bind="text: $data"></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Сменить статус</button>
+			</div>
+		</div>
+	</div>
+</div>

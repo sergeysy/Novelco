@@ -1,0 +1,79 @@
+﻿
+<div class="modal" id="templateEditModal" tabindex="-1">
+	<div class="modal-dialog" data-bind="with: TemplateEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Шаблон <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый Шаблон</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Название</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Name"></div>
+					</div>
+
+					@*<div class="row form-group">
+						<div class="col-md-4">Источник данных</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().SqlDataSource"></div>
+					</div>*@
+
+					<div class="row form-group">
+						<div class="col-md-4">Суффикс</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Suffix"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Строка начала списка</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().ListRow"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Первый столбец списка</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().ListFirstColumn"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Последний столбец списка</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().ListLastColumn"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">xlfColumns</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().xlfColumns"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Имя файла</div>
+						<div class="col-md-8"><strong data-bind="text: CurrentItem().Filename"></strong></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Размер файла</div>
+						<div class="col-md-8"><span data-bind="text: CurrentItem().FileSize"></span></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<form enctype="multipart/form-data" method="post">
+								<input id="fileUpload" type="file" style="width:200px; display:inline-block;" />
+								<button id="upload" type="button" class="btn btn-default">Загрузить файл</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-bind="click: Download">Скачать файл</button>
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

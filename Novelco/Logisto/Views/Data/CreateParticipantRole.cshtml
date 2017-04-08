@@ -1,0 +1,43 @@
+﻿@model Logisto.Models.ParticipantRole
+@{
+	ViewBag.Title = "Новая роль участника";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.SaveRole = "@Url.Action("SaveParticipantRole", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/CreateParticipantRole.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Новая роль участника</h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+	<div class="row">
+
+		<div class="form-horizontal col-md-8 col-md-offset-2" data-bind="with: Role">
+			<div class="row form-group">
+				<div class="col-md-1 form-text text-right">Название</div>
+				<div class="col-md-3"><input data-bind="textInput: Name" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-1 form-text text-right">Описание</div>
+				<div class="col-md-3"><input data-bind="textInput: Description" class="form-control" /></div>
+			</div>
+		</div>
+	</div>
+</div>

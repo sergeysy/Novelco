@@ -1,0 +1,84 @@
+﻿@model Logisto.ViewModels.CreateOrderViewModel
+@{
+	ViewBag.Title = "Новый заказ";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+
+		.stale {
+			color: #b00;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.SaveOrder = "@Url.Action("CreateOrder", "Orders")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.GetContractsByContractorItems = "@Url.Action("GetContractsByContractor", "Orders")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/Create.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Новый заказ</h2></div>
+		<div class="col-md-2 col-md-offset-5"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="form-horizontal col-md-6 col-md-offset-2">
+			<div>
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Контрагент</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: Dictionaries.Contractor, optionsText: 'Display', optionsValue: 'ID', value: SelectedContractor"></select>
+					</div>
+				</div>
+
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Договор</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="css:{stale: IsDanger(SelectedContract)}, optionsCaption:'', options: ContractsItems, optionsText: function(item) {return item.Number() + ' ' @*+ GetContractCurrenciesDisplay(item)*@ + ' ' + item.OurLegal() + ' - ' + item.Legal() + ' - ' + item.Type()  }, optionsValue: 'ID', optionsAfterRender: ContractOptionsAfterRender, value: SelectedContract"></select>
+					</div>
+				</div>
+
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">ЦФО</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: FinRepCentersItems, optionsText: 'Name', optionsValue: 'ID', value: SelectedFinRepCenter"></select>
+					</div>
+				</div>
+
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Продукт</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: SelectedProduct"></select>
+					</div>
+				</div>
+
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Шаблон</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: OrderTemplatesItems, optionsText: 'Name', optionsValue: 'ID', value: SelectedOrderTemplate"></select>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

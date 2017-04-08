@@ -1,0 +1,57 @@
+﻿@model Logisto.ViewModels.OrdersRentabilityViewModel
+@{
+	ViewBag.Title = "Рентабельность заказов";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewOrderRentability= "@Url.Action("GetNewOrderRentability", "Data")";
+		app.urls.SaveOrderRentability = "@Url.Action("SaveOrderRentability", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/OrdersRentability.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Рентабельность заказов</h2></div>
+		<div class="col-md-3"></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-2"><button class="btn btn-a" style="margin-top: 22px;" data-bind="click: OpenOrderRentabilityCreate">+новый</button></div>
+	</div>
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2">Продукт</th>
+				<th class="col-md-2">Шаблон</th>
+				<th class="col-md-1">Год</th>
+				<th class="col-md-1">ЦФО</th>
+				<th class="col-md-1">Рентабельность</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId)"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OrderTemplate, OrderTemplateId)"></td>
+				<td data-bind="text: Year"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.FinRepCenter, FinRepCenterId)"></td>
+				<td data-bind="text: Rentability"></td>
+				<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenOrderRentabilityEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+
+@Html.Partial("_OrderRentabilityEditModal")

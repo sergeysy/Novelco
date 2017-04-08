@@ -1,0 +1,236 @@
+﻿@model IEnumerable<Logisto.Models.OurLegal>
+@{
+	ViewBag.Title = "Наши юрлица";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var modelDictionaries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Dictionaries));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetBankAccountsByLegalItems = "@Url.Action("GetBankAccountsByLegal", "Contractors")";
+		app.urls.GetEmployeesByLegalItems = "@Url.Action("GetEmployeesByLegal", "Contractors")";
+		app.urls.DownloadOurLegalSign = "@Url.Action("DownloadOurLegalSign", "Data")";
+		app.urls.UploadOurLegalSign = "@Url.Action("UploadOurLegalSign", "Data")";
+		app.urls.GetNewBankAccount = "@Url.Action("GetNewBankAccount", "Contractors")";
+		app.urls.SaveBankAccount = "@Url.Action("SaveBankAccount", "Contractors")";
+		app.urls.LegalDetails = "@Url.Action("LegalDetails", "Data")";
+		app.urls.SaveOurLegal = "@Url.Action("SaveOurLegal", "Data")";
+		app.urls.SaveLegal = "@Url.Action("SaveLegal", "Data")";
+		app.urls.GetLegal = "@Url.Action("GetLegal", "Ajax")";
+		app.urls.GetBanks = "@Url.Action("SearchBanks", "Ajax")";
+		app.urls.GetBank = "@Url.Action("GetBank", "Ajax")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/OurLegals.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Наши юрлица</h2></div>
+		<div class="col-md-2 col-md-offset-5 text-right"><a href="~/Data/CreateOurLegal" class="btn btn-a" style="margin-top: 22px;">+новое юридическое лицо</a></div>
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">Наши юрлица</div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Название</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: Items -->
+						<tr data-bind="css:{success:$data==$parent.SelectedOurLegal()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectOurLegal"></td>
+							<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenOurLegalEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	@* общее *@
+	<div data-bind="with: SelectedLegal">
+		<div class="panel panel-info">
+			<div class="panel-body">
+				<div class="clearfix"><span data-bind="text: ID" class="text-ghost"></span><button class="btn btn-success pull-right" data-bind="click: $parent.SaveLegal">Сохранить</button></div>
+				<br />
+
+				<div class="row row-v-padding">
+					<div class="col-md-7 col-md-offset-1 checkbox"><label><input type="checkbox" data-bind="checked: IsNotResident" />Нерезидент</label></div>
+
+					<div class="col-md-1 text-muted">ИНН</div>
+					<div class="col-md-2"><input data-bind="textInput: TIN" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Наименование</div>
+					<div class="col-md-5"><input data-bind="textInput: DisplayName" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">ОГРН</div>
+					<div class="col-md-2"><input data-bind="textInput: OGRN" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Кратко EN</div>
+					<div class="col-md-5"><input data-bind="textInput: EnShortName" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">КПП</div>
+					<div class="col-md-2"><input data-bind="textInput: KPP" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Наименование полное</div>
+					<div class="col-md-5"><input data-bind="textInput: Name" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">ОКПО</div>
+					<div class="col-md-2"><input data-bind="textInput: OKPO" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Наименование полное EN</div>
+					<div class="col-md-5"><input data-bind="textInput: EnName" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">ОКВЭД</div>
+					<div class="col-md-2"><input data-bind="textInput: OKVED" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Юр адрес</div>
+					<div class="col-md-5"><input data-bind="textInput: Address" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">Рабочее время</div>
+					<div class="col-md-2"><input data-bind="textInput: WorkTime" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Юр адрес EN</div>
+					<div class="col-md-5"><input data-bind="textInput: EnAddress" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">Создано</div>
+					<div class="col-md-2" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CreatedBy)"></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Факт адрес</div>
+					<div class="col-md-5"><input data-bind="textInput: AddressFact" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">Создано</div>
+					<div class="col-md-2" data-bind="text: app.utility.FormatDate(CreatedDate)"></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Факт адрес EN</div>
+					<div class="col-md-5"><input data-bind="textInput: EnAddressFact" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted">Обновлено</div>
+					<div class="col-md-2" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, UpdatedBy)"></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 col-md-offset-1 text-muted">Налоговый режим</div>
+					<div class="col-md-5">
+						<select class="form-control" data-bind="options: $parent.Dictionaries.TaxType, optionsText: 'Display', optionsValue: 'ID', value:TaxTypeId"></select>
+					</div>
+					
+					<div class="col-md-1 text-muted">Обновлено</div>
+					<div class="col-md-2" data-bind="text: app.utility.FormatDate(UpdatedDate)"></div>
+				</div>
+
+				@* банковские счета *@
+				<div class="panel panel-info">
+					<div class="panel-heading">Банковские счета <a href="#" class="pull-right" data-bind="click: $parent.OpenBankAccountCreate"><strong>+новый</strong></a></div>
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="col-md-1">Номер</th>
+								<th class="col-md-1">Валюта</th>
+								<th class="col-md-2">Банк</th>
+								<th class="col-md-1">БИК</th>
+								<th class="col-md-2">Ин.банк</th>
+								<th class="col-md-1">SWIFT ИБ</th>
+								<th class="col-md-1"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: $parent.BankAccountsItems -->
+							<!-- ko if: !IsDeleted() -->
+							<tr>
+								<td data-bind="text: Number"></td>
+								<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Currency, CurrencyId)"></td>
+								<td data-bind="text: BankName"></td>
+								<td data-bind="text: BIC"></td>
+								<td data-bind="text: CoBankName"></td>
+								<td data-bind="text: CoBankSWIFT"></td>
+								<td><button class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenBankAccountEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<a href="#" data-bind="click: $parents[1].DeleteBankAccount" class="close">&times;</a></td>
+							</tr>
+							<!-- /ko -->
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+
+				@* блок сотрудников *@
+				<div class="panel panel-info">
+					<div class="panel-heading">Сотрудники</div>
+					<div class="panel-body">
+						<div class="form-inline">
+							<span class="text-muted">Первая подпись (гендир):</span>
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.EmployeesItems, optionsText: 'Position', optionsValue: 'ID', value:DirectorId"></select>
+							<span data-bind="text: $parent.GetEmployeeName($parent.EmployeesItems, DirectorId)"></span>
+							<span class="text-muted" style="margin-left:16px">Вторая подпись (бух):</span>
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.EmployeesItems, optionsText: 'Position', optionsValue: 'ID', value:AccountantId"></select>
+							<span data-bind="text: $parent.GetEmployeeName($parent.EmployeesItems, AccountantId)"></span>
+						</div>
+					</div>
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="col-md-2">Отдел</th>
+								<th class="col-md-2">Должность</th>
+								@*<th class="col-md-2">Подпись</th>*@
+								<th class="col-md-2">ФИО</th>
+								<th class="col-md-2">Начало</th>
+								<th class="col-md-2">Конец</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: $parent.EmployeesItems -->
+							<tr>
+								<td data-bind="text: Department"></td>
+								<td data-bind="text: Position"></td>
+								@*<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.SigningAuthority, SigningAuthorityId)"></td>
+									<td data-bind="text: IsSigning"></td>*@
+								<td data-bind="text: Name"></td>
+								<td data-bind="text: app.utility.FormatDate(BeginDate)"></td>
+								<td data-bind="text: app.utility.FormatDate(EndDate)"></td>
+							</tr>
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+		</div>
+
+		<br />
+		<div id="sign"></div>
+		<br />
+
+	</div>
+</div>
+
+@Html.Partial("_OurLegalEditModal")
+@Html.Partial("_BankAccountEditModal")

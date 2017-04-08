@@ -1,0 +1,21 @@
+﻿
+<div class="modal" id="userSelectModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: UserSelectModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Выбор пользователя</h4>
+			</div>
+			<div class="modal-body">
+				<div class="list-group">
+					<!-- ko foreach: $parent.Dictionaries.ActiveUser -->
+					<a href="#" data-bind="text: Display, css:{'active':$parent.CurrentItem()==ID()}, click:$parent.Select(ID())" class="list-group-item"></a>
+					<!-- /ko -->
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

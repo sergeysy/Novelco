@@ -1,0 +1,152 @@
+﻿<div class="modal" id="routePointEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg" data-bind="with: RoutePointEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Маршрутный пункт <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый пункт</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-2 form-text text-right">Тип пункта</div>
+						<div class="col-md-4">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.RoutePointType, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().RoutePointTypeId"></select>
+						</div>
+
+						<div class="col-md-2 form-text text-right">Пункт</div>
+						<div class="col-md-4"><input id="placeAutocomplete" type="text" class="form-control" data-bind="textInput: CurrentPlace()?CurrentPlace().Name:''"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-2 form-text text-right">Плановая дата</div>
+						<div class="col-md-4"><input data-bind="datepicker: CurrentItem().PlanDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+						<div class="col-md-2 form-text text-right">Фактическая дата</div>
+						<div class="col-md-4"><input data-bind="datepicker: CurrentItem().FactDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<!-- ko if: !IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Комментарий</div>
+						<div class="col-md-10"><input data-bind="textInput: CurrentItem().ParticipantComment" class="form-control" /></div>
+						<!-- /ko-->
+						<!-- ko if: IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Комментарий (en)</div>
+						<div class="col-md-10"><input data-bind="textInput: CurrentItem().EnParticipantComment" class="form-control" /></div>
+						<!-- /ko-->
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 form-text text-right">Грузоотправитель/получатель</div>
+						<div class="col-md-4">
+							<select class="form-control" data-bind="valueAllowUnset: true, optionsCaption:'', options: $parent.ContractorLegalsItems, optionsText: 'DisplayName', optionsValue: 'ID', value: CurrentItem().ParticipantLegalId"></select>
+						</div>
+						<div class="col-md-2"><a class="btn btn-a" data-bind="click: $parent.CreateShortLegal">+юрлицо</a> &nbsp; <a class="btn btn-a" data-bind="click: function(){$parent.GetContractorLegals($parent.ContractorId)}"><span class="glyphicon glyphicon-refresh"></span></a></div>
+					</div>
+
+					<!-- ko if: CurrentLegal -->
+					<!-- ko if: !IsEnVisible() -->
+					<div class="row form-group no-bottom ro">
+						<div class="col-md-2 text-muted text-right">Наименование</div>
+						<div class="col-md-9"><strong data-bind="text: CurrentLegal().DisplayName"></strong></div>
+					</div>
+					<div class="row form-group no-bottom ro">
+						<div class="col-md-2 text-muted text-right">Полное наим.</div>
+						<div class="col-md-10"><span data-bind="text: CurrentLegal().Name"></span></div>
+					</div>
+					<!-- /ko-->
+					<!-- ko if: IsEnVisible() -->
+					<div class="row form-group no-bottom ro">
+						<div class="col-md-2 text-muted text-right">Наименование (en)</div>
+						<div class="col-md-9"><span data-bind="text: CurrentLegal().EnShortName"></span></div>
+					</div>
+					<div class="row form-group no-bottom ro">
+						<div class="col-md-2 text-muted text-right">Полное наим. (en)</div>
+						<div class="col-md-10"><span data-bind="text: CurrentLegal().EnName"></span></div>
+					</div>
+					<!-- /ko-->
+					<div class="row form-group no-bottom ro">
+						<div class="col-md-offset-1 col-md-1 text-muted text-right">ИНН</div>
+						<div class="col-md-2"><span data-bind="text: CurrentLegal().TIN"></span></div>
+					</div>
+					<div class="row form-group ro">
+						<div class="col-md-2 text-muted text-right">Рабочее время</div>
+						<div class="col-md-2"><span data-bind="text: CurrentLegal().WorkTime"></span></div>
+
+						<div class="col-md-2 text-muted text-right">Часовой пояс</div>
+						<div class="col-md-2"><span data-bind="text: CurrentLegal().TimeZone"></span></div>
+					</div>					
+					<!-- /ko -->
+
+					<div class="row form-group">
+						<div class="col-md-2 form-text text-right">Контакт</div>
+						<div class="col-md-4" data-bind="if: CurrentContacts().length">
+							<select class="form-control" data-bind="options: CurrentContacts, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().RouteContactID"></select>
+						</div>
+
+						<div class="col-md-6"><a data-bind="click: $parent.CreateRouteContact" class="btn btn-a">+контакт</a>  <a class="btn btn-a" data-bind="click: $parent.EditRouteContact">редактировать выбранный</a> <a class="btn btn-a" data-bind="click: LoadRouteContacts"><span class="glyphicon glyphicon-refresh"></span></a> </div>
+					</div>
+
+					<div class="row form-group no-bottom ro" data-bind="if: CurrentContact">
+						<div class="col-md-2 text-muted">Контакты</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().Contact"></span></div>
+						<div class="col-md-2 text-muted">Контакты (en)</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().EnContact"></span></div>
+					</div>
+					<div class="row form-group no-bottom ro" data-bind="if: CurrentContact">
+						<div class="col-md-2 text-muted">Телефоны</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().Phones"></span></div>
+						<div class="col-md-2 text-muted">Email</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().Email"></span></div>
+					</div>
+					<div class="row form-group ro" data-bind="if: CurrentContact">
+						<div class="col-md-2 text-muted">Адрес</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().Address"></span></div>
+						<div class="col-md-2 text-muted">Адрес (en)</div>
+						<div class="col-md-4"><span data-bind="text: CurrentContact().EnAddress"></span></div>
+					</div>
+
+					<div class="row form-group" data-bind="ifnot: CurrentItem().RouteContactID()">
+						<!-- ko if: !IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Контактное лицо</div>
+						<div class="col-md-4"><input data-bind="textInput: CurrentItem().Contact" class="form-control" /></div>
+						<!-- /ko-->
+						<!-- ko if: IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Контактное лицо (en)</div>
+						<div class="col-md-4"><input data-bind="textInput: CurrentItem().EnContact" class="form-control" /></div>
+						<!-- /ko-->
+					</div>
+
+					<div class="row form-group">
+						<!-- ko if: !IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Адрес</div>
+						<div class="col-md-10"><input data-bind="textInput: CurrentItem().Address" class="form-control" /></div>
+						<!-- /ko-->
+						<!-- ko if: IsEnVisible() -->
+						<div class="col-md-2 form-text text-right">Адрес (en)</div>
+						<div class="col-md-10"><input data-bind="textInput: CurrentItem().EnAddress" class="form-control" /></div>
+						<!-- /ko-->
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div>
+					<div class="pull-left">
+						<!-- ko if: !IsEnVisible() -->
+						<a href="#" class="bnt btn-a" data-bind="click: ToggleEnVisible">english</a>
+						<!-- /ko-->
+						<!-- ko if: IsEnVisible() -->
+						<a href="#" class="bnt btn-a" data-bind="click: ToggleEnVisible">русский</a>
+						<!-- /ko-->
+					</div>
+					<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

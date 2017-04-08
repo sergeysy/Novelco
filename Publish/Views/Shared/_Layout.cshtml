@@ -1,0 +1,189 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title</title>
+	@Styles.Render("~/Content/css/client")
+	@RenderSection("styles", required: false)
+</head>
+<body>
+	<div id="ko-root">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a href="@Url.Action("Index", "Home")">
+						<img src="~/img/carman.png" height="50" />
+					</a>
+				</div>
+				<div class="navbar-collapse collapse">
+					<ul class="nav navbar-nav">
+						<li><a href="~/Orders/">Заказы</a></li>
+						<li><a href="~/Operations/">Операции</a></li>
+						<li><a href="~/Requests/">Запросы</a></li>
+						<li><a href="~/Contractors/">Контрагенты</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Справочники <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Административные</a>
+									<ul class="dropdown-menu">
+										<li><a href="~/Employees/">Сотрудники</a></li>
+										<li><a href="@Url.Action("Templates", "Data")">Шаблоны печатных форм</a></li>
+										<li><a href="@Url.Action("CargoDescriptions", "Data")">Виды груза</a></li>
+										<li><a href="@Url.Action("PackageTypes", "Data")">Типы упаковки</a></li>
+										<li><a href="@Url.Action("Services", "Data")">Продукты - услуги</a></li>
+										<li><a href="@Url.Action("Places", "Data")">Страны - регионы</a></li>
+										<li><a href="@Url.Action("OrderOperations", "Data")">Операции</a></li>
+										<li><a href="@Url.Action("OrderTemplates", "Data")">Шаблоны заказов</a></li>
+										<li><a href="@Url.Action("PositionTemplates", "Data")">Шаблоны должностей</a></li>
+										<li><a href="@Url.Action("ParticipantPermissions", "Data")">Управление ролями</a></li>
+										<li><a href="@Url.Action("VolumetricRatios", "Data")">Коэффициенты объемного веса</a></li>
+										<li><a href="@Url.Action("DocumentTypes", "Data")">Типы документов</a></li>
+										<li><a href="@Url.Action("Schedules", "Data")">Расписание рассылок</a></li>
+									</ul>
+								</li>
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Финансовые</a>
+									<ul class="dropdown-menu">
+										<li><a href="@Url.Action("FinRepCenters", "Data")">ЦФО</a></li>
+										<li><a href="@Url.Action("Banks", "Data")">Банки</a></li>
+										<li><a href="@Url.Action("PaymentTerms", "Data")">Типы оплаты</a></li>
+										<li><a href="@Url.Action("CurrencyRates", "Data")">Курсы валют</a></li>
+										<li><a href="@Url.Action("CurrencyRateUses", "Data")">Применяемые курсы валют</a></li>
+										<li><a href="@Url.Action("CurrencyRateDiff", "Data")">Курсовые разницы</a></li>
+										<li><a href="@Url.Action("OrdersRentability", "Data")">Рентабельность заказов</a></li>
+										<li><a href="@Url.Action("AutoExpenses", "Data")">Авторасходы</a></li>
+										<li><a href="@Url.Action("Index", "Pricelists")">Прайслисты</a></li>
+										<li><a href="@Url.Action("PayMethods", "Data")">Методы оплаты</a></li>
+									</ul>
+								</li>
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Юридические</a>
+									<ul class="dropdown-menu">
+										<li><a href="@Url.Action("ContractRoles", "Data")">Стороны в договоре</a></li>
+										<li><a href="@Url.Action("ContractTypes", "Data")">Типы договоров</a></li>
+										<li><a href="@Url.Action("OurLegals", "Data")">Наши Юрлица</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Отчеты <span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Финансовые</a>
+									<ul class="dropdown-menu">
+										<li><a href="@Url.Action("CreateAccountingDetailedReport", "R")">Финрез детально</a></li>
+										<li><a href="@Url.Action("CreateAccountingPerOrderReport", "R")">Финрез позаказно</a></li>
+										<li><a href="@Url.Action("CreateAccountsReceivableReport", "R")">ДЗ</a></li>
+										<li><a href="@Url.Action("CreateDebtsReport", "R")">КЗ и ДЗ</a></li>
+										<li><a href="@Url.Action("Motivation", "R")">Мотивация</a></li>
+									</ul>
+								</li>
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Коммерческие</a>
+									<ul class="dropdown-menu">
+										<li><a href="@Url.Action("CrmReport", "R")">Результаты продаж по неделям (CRM)</a></li>
+										<li><a href="@Url.Action("CrmLegals", "R")">ИНН (CRM)</a></li>
+										<li><a href="@Url.Action("Clients", "R")">Клиенты</a></li>
+									</ul>
+								</li>
+								<li class="dropdown dropdown-submenu">
+									<a href="#">Производственные</a>
+									<ul class="dropdown-menu">
+										<li><a href="@Url.Action("Declarations", "R")">Отчет по ДТ</a></li>
+										<li><a href="@Url.Action("MailingLog", "R")">Лог рассылки</a></li>
+									</ul>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<form class="navbar-form navbar-left" action="~/Data/Search">
+								<div class="form-group">
+									<input name="Number" style="width:256px; border-color:#555; background-color: #222; color:#CCC" type="text" class="form-control" placeholder="найти по номеру">
+								</div>
+							</form>
+						</li>
+					</ul>
+					@Html.Partial("_LoginPartial")
+				</div>
+			</div>
+		</div>
+		<div class="container body-content">
+			@RenderBody()
+			<hr />
+			<footer>
+				<p style="font-size:smaller; color:#eee">&copy; 2016 NOVELCO LLC</p>
+			</footer>
+		</div>
+	</div>
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@Scripts.Render("~/bundles/client")
+
+	<script type="text/javascript">
+		var app = app || {};
+		app.currentBrowser = '@Request.Browser.Browser';
+
+		$(function () { app.utility.AjaxErrorHandler(); });
+
+		var perfData = window.performance.timing;
+		var pageLoadTime = perfData.loadEventEnd - perfData.navigationStart;
+
+		window.addEventListener("load", function() {
+			setTimeout(function() {
+				var timing = window.performance.timing;	// https://webperformance.ru/2011/08/22/navigation-timing-api/
+				console.log("userTime = "+(timing.loadEventEnd - timing.navigationStart));
+				console.log("fetchTime = "+(timing.responseEnd - timing.fetchStart));
+			}, 0);
+		}, false);
+
+	</script>
+
+	@RenderSection("scripts", required: false)
+</body>
+</html>
+
+<!--
+
+MMMMMMMMMMMMMMMMMMMNmhyso/^^"`````"^^\\osyhmNMMMMMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMNdy+:`                      `:+ydNMMMMMMMMMMMMMMM
+MMMMMMMMMMMMmdo/`                              `/odmMMMMMMMMMMMM
+MMMMMMMMMNmh:`                                    `:hmNMMMMMMMMM
+MMMMMMMNdo-                                          -odNMMMMMMM
+MMMMMMNy-          ....--::///!!BObbb::--....          -yNMMMMMM
+MMMMNh/`   /++oossssssssooooooooOOOOOOOObbbsssssoo++:   `/hNMMMM
+MMMms`     +soooooooooooooooooooOOOOOOOOOOOOOOOOOOOP+     `smMMM
+MMm+`      :yoooooooooooooooooooOOOOOOOOOOOOOOOOOOOy:      `+mMM
+Mmo`       .hooo----------------OOOOOOOOOOOOOOOOOOOy.       `omM
+Ns`        `yooo----------------OOOOOOOOOOOOOOOOOOOy`        `sN
+m+         `yooo---OOOOb--------OOOOOOOO:::::dOOOOOy`         +m
+m`          sooo---OOOOO--------OOOOOOOO:::::dOOOOOs          `m
+o           osoo---OOOOO--------OOOOOOOO:::::yOOOOPp           o
+-           !soo---OOOOO-----,--OP"OOOOO:::::yOOOOp!           -
+-           `yoo---OOOOO-----OOc.::OOOOO:::::sOOOOy`           -
+o            yooo--OOOOO-----OOO:::OOOOO:::::OOOOOs            o
+m.           ssoo--OOOOO-----OOO:::OOOOO:::::OOOOOs           .m
+m+           +soo--OOOOOO.---OOO:::OOOOp:::::OOOOs+           +m
+Ns.          !soo---^OOOOOOOOOOO:::^::::::::dOOOOs!          .sN
+Mmo.         -yoo-------^OOOOOOO::::::::dOOOOOOOOs-         .omM
+MMm+.        .yooo-----------^OO::::dOOOOOOOOOOOOy.        .+mMM
+MMMms.        :+ssooo-----------OOOOOOOOOOOOOOPP+:        .smMMM
+MMMMNh\          -+ssooo--------OOOOOOOOOOOOP/-          dhNMMMM
+MMMMMMNy-           ./ossooo----OOOOOOOOOp/`           -yNMMMMMM
+MMMMMMMMdo-            `:+ssooooOOOOOP+:`            -odMMMMMMMM
+MMMMMMMMMNmh:.             -/ssoOOP/-             .:hmNMMMMMMMMM
+MMMMMMMMMMMMmdo/.             `/P`             ./odmMMMMMMMMMMMM
+MMMMMMMMMMMMMMMNdy+:.                      .:+ydNMMMMMMMMMMMMMMM
+MMMMMMMMMMMMMMMMMMMNmhyso\:-........-//osyhmNMMMMMMMMMMMMMMMMMMM
+
+-->

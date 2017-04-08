@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Logisto.Models.PackageType>
+@{
+	ViewBag.Title = "Виды упаковки";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.SavePackageType = "@Url.Action("SavePackageType", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/PackageTypes.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Виды упаковки</h2></div>
+	</div>
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-2">Наименование</th>
+				<th class="col-md-3">Наименование (en)</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: Display"></td>
+				<td data-bind="text: EnDisplay"></td>
+				<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPackageTypeEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+
+@Html.Partial("_PackageTypeEditModal")

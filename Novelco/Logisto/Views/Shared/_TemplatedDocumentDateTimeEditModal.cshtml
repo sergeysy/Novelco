@@ -1,0 +1,26 @@
+﻿
+<div class="modal" id="templatedDocumentDatetimeEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: TemplatedDocumentDateTimeEditModal">
+		<div class="modal-content" data-bind="if: CurrentDate !== undefined">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Дата</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">					
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата</div>
+						<div class="col-md-8"><input class="form-control" data-bind="datepicker: CurrentDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>					
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Время</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentTime" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

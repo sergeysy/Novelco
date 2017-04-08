@@ -1,0 +1,142 @@
+﻿@model Logisto.ViewModels.PersonViewModel
+@{
+	ViewBag.Title = "Физическое лицо";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+
+		app.urls.GetNewPhone = "@Url.Action("GetNewPhone", "Contractors")";
+		app.urls.GetPhonesItems = "@Url.Action("GetPhones", "Contractors")";
+		app.urls.SavePerson = "@Url.Action("SavePerson", "Contractors")";
+
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Contractors/Person.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Физическое лицо <span class="text-ghost">#<span data-bind="text: Person.ID"></span></span></h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+	<div class="row">
+
+		<div class="form-horizontal col-md-8 col-md-offset-2" data-bind="with: Person">
+
+			<div class="row form-group">
+				<div class="col-md-6">
+					<div class="checkbox">
+						<label><input type="checkbox" data-bind="checked: IsNotResident" />Физическое лицо-нерезидент</label>
+					</div>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-1 form-text text-right">Фамилия</div>
+				<div class="col-md-3"><input data-bind="textInput: Family" class="form-control" /></div>
+
+				<div class="col-md-1 form-text text-right">Имя</div>
+				<div class="col-md-3"><input data-bind="textInput: Name" class="form-control" /></div>
+
+				<div class="col-md-1 form-text text-right">Отчество</div>
+				<div class="col-md-3"><input data-bind="textInput: Patronymic, disable: IsNotResident" class="form-control" /></div>
+			</div>
+
+			<div style="margin-bottom:4px">В родительном падеже</div>
+
+			<div class="row form-group">
+				<div class="col-md-1 form-text text-right">Фамилия</div>
+				<div class="col-md-3"><input data-bind="textInput: GenitiveFamily, disable: IsNotResident" class="form-control" /></div>
+
+				<div class="col-md-1 form-text text-right">Имя</div>
+				<div class="col-md-3"><input data-bind="textInput: GenitiveName, disable: IsNotResident" class="form-control" /></div>
+
+				<div class="col-md-1 form-text text-right">Отчество</div>
+				<div class="col-md-3"><input data-bind="textInput: GenitivePatronymic, disable: IsNotResident" class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Имя и фамилия (англ)</div>
+				<div class="col-md-10"><input data-bind="textInput: EnName" class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Адрес</div>
+				<div class="col-md-10"><input data-bind="textInput: Address" class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Email</div>
+				<div class="col-md-10"><input data-bind="textInput: Email" class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Дата рождения</div>
+				<div class="col-md-10"><input data-bind="datepicker: Birthday, datepickerOptions: { dateFormat: 'dd-mm-yy'} " class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-6">
+					<div class="checkbox">
+						<label><input type="checkbox" data-bind="checked: IsSubscribed" />По данном контакту клиента нужно рассылать документы</label>
+					</div>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Комментарий</div>
+				<div class="col-md-10"><input data-bind="textInput: Comment" class="form-control" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="panel panel-info">
+					<div class="panel-heading">Телефоны <a href="#" class="pull-right" data-bind="click: $parent.OpenPhoneCreate"><strong>+новый</strong></a></div>
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th class="col-md-2">Тип</th>
+								<th class="col-md-2">Номер</th>
+								<th class="col-md-3">Название</th>
+								<th class="col-md-1"></th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- ko foreach: $parent.PhonesItems -->
+							<!-- ko if: !IsDeleted() -->
+							<tr>
+								<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.PhoneType, TypeId)"></td>
+								<td data-bind="text: Number"></td>
+								<td data-bind="text: Name"></td>
+								<td><a class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenPhoneEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parents[1].DeletePhone" class="close">&times;</a></td>
+							</tr>
+							<!-- /ko -->
+							<!-- /ko -->
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+@Html.Partial("_PhoneEditModal")

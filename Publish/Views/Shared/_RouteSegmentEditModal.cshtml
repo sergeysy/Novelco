@@ -1,0 +1,80 @@
+﻿
+<div class="modal" id="routeSegmentEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: RouteSegmentEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Сегмент маршрута <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">№ п/п</div>
+						<div class="col-md-8 form-text"><span data-bind="text: CurrentItem().No"></span></div>
+					</div>
+
+					<!-- ko if: FromRoutePoint -->
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Из пункта</div>
+						<div class="col-md-8 form-text"><span data-bind="text: FromRoutePoint().Place"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Адрес отправки</div>
+						<div class="col-md-8 form-text"><span data-bind="text: FromRoutePoint().Address"></span></div>
+					</div>
+					<!-- /ko -->
+					<!-- ko if: ToRoutePoint -->
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">В пункт</div>
+						<div class="col-md-8 form-text"><span data-bind="text: ToRoutePoint().Place"></span></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Адрес назначения</div>
+						<div class="col-md-8 form-text"><span data-bind="text: ToRoutePoint().Address"></span></div>
+					</div>
+					<!-- /ko -->
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Расстояние</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Length" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<div class="checkbox">
+								<label><input type="checkbox" data-bind="checked: CurrentItem().IsAfterBorder" />После границы</label>
+							</div>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Вид транспорта</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="valueAllowUnset: true, options: $parent.Dictionaries.TransportType, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().TransportTypeId"></select>
+						</div>
+					</div>
+					<!-- ko if: CurrentItem().TransportTypeId() == 1 -->
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Номер ТС</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().VehicleNumber" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">ФИО водителя</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().DriverName" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Телефон водителя</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().DriverPhone" class="form-control" /></div>
+					</div>
+					<!-- /ko -->
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Комментарий</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Vehicle" class="form-control" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

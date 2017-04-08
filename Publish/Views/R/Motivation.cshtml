@@ -1,0 +1,134 @@
+﻿@model Logisto.ViewModels.OrdersViewModel
+@{
+	ViewBag.Title = "Мотивация";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "R")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.ContractDetails = "@Url.Action("Edit", "Contracts")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/Motivation.js"></script>
+}
+
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Мотивация</h2></div>
+	</div>
+	<hr />
+
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-1 col-md-offset-4">
+					<button style="display:block;width:100%" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">Роль <span class="caret"></span></button>
+					<ul id="roles" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.ParticipantRole -->
+						<li><a href="#" class="small" tabindex="-1"><input type="checkbox" data-bind="attr:{value:ID}, checkedValue: ID, checked: $parent.Filter.Statuses" />&nbsp;<span data-bind="text: Name"></span></a></li>
+						<!-- /ko -->
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<div class="text-right form-text">Даты от-до</div>
+				</div>
+				<div class="col-md-1">
+					<input type="text" class="form-control" data-bind="datepicker: Filter.From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1">
+					<input type="text" class="form-control" data-bind="datepicker: Filter.To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-2">
+					<button type="button" class="btn btn-default btn-sm dropdown-toggle" style="width:100%" data-toggle="dropdown">Пользователь <span class="caret"></span></button>
+					<ul id="statuses" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.ActiveUser -->
+						<li><a href="#" class="small" tabindex="-1"><input type="radio" name="user" data-bind="attr:{value:ID}, checked: $parent.Filter.UserId" />&nbsp;<span data-bind="text: Display"></span></a></li>
+						<!-- /ko -->
+					</ul>
+				</div>
+				<div class="col-md-1">
+					<button type="button" class="btn btn-primary btn-sm" style="width:100%" data-bind="click: ApplyFilter">Применить</button>
+				</div>
+				<div class="col-md-1">
+					<strong class="form-text" data-bind="text: app.utility.FormatDecimal(TotalItemsSum)"></strong>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<table class="table table-condensed table-hover" style="font-size:9pt;">
+		<thead>
+			<tr>
+				<th class="overflowed sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='OurLegal'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='OurLegal'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('OurLegal')}">Наше Юрлицо</a>
+				</th>
+				<th class=" sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='Number'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Number'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Number')}">Заказ №</a>
+				</th>
+				<th class=" sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('CreatedDate')}">Заказ Дата</a>
+				</th>
+				<th class="overflowed sortable" style="width:7%" data-bind="css:{'asc-sorted':Filter.Sort()=='OrderStatusId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='OrderStatusId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('OrderStatusId')}">Статус</a>
+				</th>
+				<th style="width:12%" class="sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ProductId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ProductId')}">Продукт</a>
+				</th>
+				<th class="overflowed sortable" style="width:10%" data-bind="css:{'asc-sorted':Filter.Sort()=='Contractor'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Contractor'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Contractor')}">Контрагент</a>
+				</th>
+				<th class="overflowed sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ContractId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ContractId')}">Договор</a>
+				</th>
+				<th class="overflowed sortable" style="width:19%" data-bind="css:{'asc-sorted':Filter.Sort()=='Legal'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Legal'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Legal')}">Юрлицо</a>
+				</th>
+				<th>Дата мотивации</th>
+				<th>Доход</th>
+				<th>Расход</th>
+				<th>Прибыль</th>
+			</tr>
+		</thead>
+		<tbody style="word-wrap:break-word; word-break:break-all">
+			<!-- ko foreach: Items -->
+			<tr>
+				<td>Новелко</td>
+				<td><a data-bind="text: Number, attr: { href: $parent.OrderDetailsUrl(ID()) }"></a></td>
+				<td data-bind="text: app.utility.FormatDate(CreatedDate), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OrderStatus, OrderStatusId()), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractorByOrder, ID), click: $parent.GotoOrderDetails"></td>
+				<td class="overflowed"><a href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Contract, ContractId), attr: {href: $parent.ContractDetailsUrl(ContractId()) }"></a></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId), click: $parent.GotoOrderDetails, attr:{'title':app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+				<td data-bind="text: app.utility.FormatDate(ClosedDate), click: $parent.GotoOrderDetails"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Income), click: $parent.GotoOrderDetails"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Expense), click: $parent.GotoOrderDetails"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Balance), click: $parent.GotoOrderDetails"></td>
+			</tr>
+			<!-- /ko -->
+
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+

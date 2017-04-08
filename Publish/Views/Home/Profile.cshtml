@@ -1,0 +1,131 @@
+﻿@model Logisto.ViewModels.ProfileViewModel
+@{
+	ViewBag.Title = "Профайл";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		.form-group {
+			margin-bottom: 6px !important;
+		}
+
+			.form-group.no-bottom {
+				margin-bottom: 0 !important;
+			}
+
+		.form-control {
+			height: 30px;
+		}
+
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+
+		app.urls.SavePerson = "@Url.Action("SavePerson", "Contractors")";
+
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Home/Profile.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Профайл</h2></div>
+		<div class="col-md-3"></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-2"><a href="~/Home/ChangePassword" class="btn btn-default" style="margin-top: 22px;">Поменять пароль</a></div>
+	</div>
+
+	<hr />
+	<div class="row">
+
+		<div class="form-horizontal col-md-8 col-md-offset-2" data-bind="with: Profile">
+			<div class="row form-group">
+				<div class="col-md-2">Логин</div>
+				<div class="col-md-10"><span data-bind="text: Login" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Имя пользователя</div>
+				<div class="col-md-10"><span data-bind="text: UserName" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Email</div>
+				<div class="col-md-10"><span data-bind="text: Email" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Роль</div>
+				<div class="col-md-10"><span data-bind="text: Roles" class="form-control"></span></div>
+			</div>
+
+
+			<h3>Привязанное физлицо</h3>
+			<div class="row form-group">
+				<div class="col-md-6">
+					<div class="checkbox">
+						<label><input type="checkbox" data-bind="checked: IsNotResident" />Физическое лицо-нерезидент</label>
+					</div>
+				</div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-1">Фамилия</div>
+				<div class="col-md-3"><span data-bind="text: Family" class="form-control"></span></div>
+
+				<div class="col-md-1">Имя</div>
+				<div class="col-md-3"><span data-bind="text: Name" class="form-control"></span></div>
+
+				<div class="col-md-1">Отчество</div>
+				<div class="col-md-3"><span data-bind="text: Patronymic" class="form-control"></span></div>
+			</div>
+			<div style="margin-bottom:4px">В родительном падеже</div>
+
+			<div class="row form-group">
+				<div class="col-md-1">Фамилия</div>
+				<div class="col-md-3"><span data-bind="text: GenitiveFamily" class="form-control"></span></div>
+
+				<div class="col-md-1">Имя</div>
+				<div class="col-md-3"><span data-bind="text: GenitiveName" class="form-control"></span></div>
+
+				<div class="col-md-1">Отчество</div>
+				<div class="col-md-3"><span data-bind="text: GenitivePatronymic" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-3">Имя и фамилия по английски</div>
+				<div class="col-md-9"><span data-bind="text: EnName" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Адрес</div>
+				<div class="col-md-10"><span data-bind="text: Address" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Email</div>
+				<div class="col-md-10"><span data-bind="text: Email" class="form-control"></span></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2">Комментарий</div>
+				<div class="col-md-10"><span data-bind="text: Comment" class="form-control"></span></div>
+			</div>
+		</div>
+	</div>
+</div>

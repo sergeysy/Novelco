@@ -1,0 +1,124 @@
+﻿
+<div class="modal" id="requestEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: RequestEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Запрос <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый запрос</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Клиент</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().ClientName, attr:{readonly:IsLocked}" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Дата запроса</div>
+						<div class="col-md-8">
+							<!-- ko if: IsLocked -->
+							<span class="form-control" data-bind="text: app.utility.FormatDate(CurrentItem().Date())"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: IsLocked -->
+							<input data-bind="datepicker: CurrentItem().Date, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" />
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Дата ответа</div>
+						<div class="col-md-8">
+							<!-- ko if: IsLocked -->
+							<span class="form-control" data-bind="text: app.utility.FormatDate(CurrentItem().ResponseDate())"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: IsLocked -->
+							<input data-bind="datepicker: CurrentItem().ResponseDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" />
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Продукт</div>
+						<div class="col-md-8">
+							<!-- ko if: IsLocked -->
+							<span class="form-control" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, CurrentItem().ProductId)"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: IsLocked -->
+							<select class="form-control" data-bind="optionsCaption:'',options: $parent.Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().ProductId"></select>
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Создано</div>
+						<div class="col-md-8">
+							<!-- ko if: IsLocked -->
+							<span class="form-control" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CurrentItem().SalesUserId)"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: IsLocked -->
+							<select class="form-control" data-bind="optionsCaption:'',options: $parent.Dictionaries.ActiveUser, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().SalesUserId"></select>
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Ответственный</div>
+						<div class="col-md-8">
+							<!-- ko if: IsLocked -->
+							<span class="form-control" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CurrentItem().AccountUserId)"></span>
+							<!-- /ko -->
+							<!-- ko ifnot: IsLocked -->
+							<select class="form-control" data-bind="optionsCaption:'',options: $parent.Dictionaries.ActiveUser, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().AccountUserId"></select>
+							<!-- /ko -->
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Запрос</div>
+						<div class="col-md-8"><textarea class="form-control" rows="3" data-bind="textInput: CurrentItem().Text, attr:{readonly:IsLocked}"></textarea></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Информация о грузе</div>
+						<div class="col-md-8"><textarea class="form-control" rows="3" data-bind="textInput: CurrentItem().CargoInfo, attr:{readonly:IsLocked}"></textarea></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Маршрут</div>
+						<div class="col-md-8"><textarea class="form-control" rows="3" data-bind="textInput: CurrentItem().Route, attr:{readonly:IsLocked}"></textarea></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Контактная информация</div>
+						<div class="col-md-8"><textarea class="form-control" rows="3" data-bind="textInput: CurrentItem().Contacts, attr:{readonly:IsLocked}"></textarea></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Комментарий</div>
+						<div class="col-md-8"><textarea class="form-control" rows="5" data-bind="textInput: CurrentItem().Comment, attr:{readonly:IsLocked}"></textarea></div>
+					</div>
+
+					<div class="row form-group" data-bind="if: CurrentItem().Filename()">
+						<div class="col-md-4 form-text text-right">Приложенный файл</div>
+						<div class="col-md-8"><a href="#" data-bind="text: CurrentItem().Filename, click: $parent.OpenRequestFile"></a></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Приложенный файл</div>
+						<div class="col-md-8"><input id="fileUpload" type="file" /></div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

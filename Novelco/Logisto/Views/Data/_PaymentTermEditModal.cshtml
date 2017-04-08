@@ -1,0 +1,80 @@
+﻿
+<div class="modal" id="paymentTermEditModal" tabindex="-1">
+	<div class="modal-dialog" data-bind="with: PaymentTermEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Тип оплаты по договору <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый тип оплаты</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Display"></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4">Наименование (en)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnName"></div>
+					</div>
+					<hr />
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Процент</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition1_Percent"></div>
+						<div class="col-md-2 form-text">От даты</div>
+						<div class="col-md-3">
+							<select class="form-control" data-bind="value: CurrentItem().Condition1_From">
+								<option value="1">счета</option>
+								<option value="2">акта</option>
+							</select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Дней</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition1_Days"></div>
+						<div class="col-md-3 form-text">Банковские дни <input data-bind="checked: CurrentItem().Condition1_BankDays" type="checkbox"></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Для заказов с</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition1_OrdersFrom"></div>
+						<div class="col-md-1 form-text">по</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition1_OrdersTo"></div>
+					</div>
+
+					<hr />
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Процент</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition2_Percent"></div>
+						<div class="col-md-2 form-text">От даты</div>
+						<div class="col-md-3">
+							<select class="form-control" data-bind="value: CurrentItem().Condition2_From">
+								<option value="1">счета</option>
+								<option value="2">акта</option>
+							</select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Дней</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition2_Days"></div>
+						<div class="col-md-3 form-text">Банковские дни <input data-bind="checked: CurrentItem().Condition2_BankDays" type="checkbox"></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 form-text">Для заказов с</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition2_OrdersFrom"></div>
+						<div class="col-md-1 form-text">по</div>
+						<div class="col-md-4"><input class="form-control" data-bind="textInput: CurrentItem().Condition2_OrdersTo"></div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

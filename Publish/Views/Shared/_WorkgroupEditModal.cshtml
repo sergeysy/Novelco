@@ -1,0 +1,62 @@
+﻿
+<div class="modal" id="workgroupEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: WorkgroupEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Участник <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый участник</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Роль</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.ParticipantRole, optionsText: 'Name', optionsValue: 'ID', value: CurrentItem().ParticipantRoleId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Пользователь</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.ActiveUser, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().UserId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">От</div>
+						<div class="col-md-3"><input class="form-control" data-bind="datepicker: CurrentItem().FromDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+
+						<div class="col-md-1 form-text text-right">До</div>
+						<div class="col-md-4"><input class="form-control" data-bind="datepicker: CurrentItem().ToDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>
+
+
+					<div class="row form-group">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<div class="checkbox">
+								<label><input type="checkbox" data-bind="checked: CurrentItem().IsResponsible" />Ответственный</label>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<div class="checkbox">
+								<label><input type="checkbox" data-bind="checked: CurrentItem().IsDeputy" />Заместитель</label>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

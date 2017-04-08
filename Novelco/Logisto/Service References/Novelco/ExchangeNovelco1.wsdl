@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd1="http://localhost/novelco" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:soapbind="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12bind="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsd2="NOVELCO" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:tns="http://localhost/novelco" name="ExchangeNovelco" targetNamespace="http://localhost/novelco" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xs:schema xmlns:tns="NOVELCO" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="NOVELCO" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:complexType name="ConsignmentNote">
+        <xs:sequence>
+          <xs:element name="DeliverValueNumber" type="xs:string" />
+          <xs:element name="DeliverValueDate" type="xs:dateTime" />
+          <xs:element name="BankAccount" type="xs:string" />
+          <xs:element name="BIK" nillable="true" type="xs:string" />
+          <xs:element name="Swift" nillable="true" type="xs:string" />
+          <xs:element name="Currensy" type="xs:string" />
+          <xs:element name="TIN" nillable="true" type="xs:string" />
+          <xs:element name="RGC" nillable="true" type="xs:string" />
+          <xs:element name="PartnerName" type="xs:string" />
+          <xs:element name="CreateInvoice" type="xs:boolean" />
+          <xs:element maxOccurs="unbounded" name="ServicesList" nillable="true" type="tns:ServicesList" />
+          <xs:element name="ContractNumber" nillable="true" type="xs:string" />
+          <xs:element name="ContractDate" nillable="true" type="xs:dateTime" />
+          <xs:element name="ThisSelling" type="xs:boolean" />
+          <xs:element name="IncomingDocumentNumber" nillable="true" type="xs:string" />
+          <xs:element name="InvoiceNumber" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ConsignmentNoteResponseStructure">
+        <xs:sequence>
+          <xs:element name="ResultString" type="xs:string" />
+          <xs:element name="Succesfully" type="xs:boolean" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PaymentDocument">
+        <xs:sequence>
+          <xs:element name="DocumentID" type="xs:string" />
+          <xs:element name="DocumentType" type="xs:string" />
+          <xs:element name="BaseDocumentNumber" type="xs:string" />
+          <xs:element name="BankAccount" type="xs:string" />
+          <xs:element name="BIK_Swift" type="xs:string" />
+          <xs:element name="Description" type="xs:string" />
+          <xs:element name="Currency" type="xs:string" />
+          <xs:element name="TIN" type="xs:string" />
+          <xs:element name="RGC" type="xs:string" />
+          <xs:element name="Amount" type="xs:float" />
+          <xs:element name="MarkingRemoval" type="xs:boolean" />
+          <xs:element name="PaymentDate" type="xs:date" />
+          <xs:element name="IncomingDocumentNumber" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="PaymentDocumentsList">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PaymentDocument" nillable="true" type="tns:PaymentDocument" />
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="ServicesList">
+        <xs:sequence>
+          <xs:element name="ServiceName" type="xs:string" />
+          <xs:element name="Price" type="xs:float" />
+          <xs:element name="VAT" nillable="true" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+    <xs:schema xmlns:xs2="http://localhost/novelco" xmlns:xs1="NOVELCO" elementFormDefault="qualified" targetNamespace="http://localhost/novelco" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:import namespace="NOVELCO" />
+      <xs:element name="SetDeliverValue">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ConsignmentNote" type="xs1:ConsignmentNote" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="SetDeliverValueResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs1:ConsignmentNoteResponseStructure" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPaymentDocumentsList">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="Date" type="xs:dateTime" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="GetPaymentDocumentsListResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs1:PaymentDocumentsList" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UnregisterChanges">
+        <xs:complexType>
+          <xs:sequence />
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="UnregisterChangesResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="return" type="xs:boolean" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </types>
+  <message name="SetDeliverValueRequestMessage">
+    <part name="parameters" element="tns:SetDeliverValue" />
+  </message>
+  <message name="SetDeliverValueResponseMessage">
+    <part name="parameters" element="tns:SetDeliverValueResponse" />
+  </message>
+  <message name="GetPaymentDocumentsListRequestMessage">
+    <part name="parameters" element="tns:GetPaymentDocumentsList" />
+  </message>
+  <message name="GetPaymentDocumentsListResponseMessage">
+    <part name="parameters" element="tns:GetPaymentDocumentsListResponse" />
+  </message>
+  <message name="UnregisterChangesRequestMessage">
+    <part name="parameters" element="tns:UnregisterChanges" />
+  </message>
+  <message name="UnregisterChangesResponseMessage">
+    <part name="parameters" element="tns:UnregisterChangesResponse" />
+  </message>
+  <portType name="ExchangeNovelcoPortType">
+    <operation name="SetDeliverValue">
+      <input message="tns:SetDeliverValueRequestMessage" />
+      <output message="tns:SetDeliverValueResponseMessage" />
+    </operation>
+    <operation name="GetPaymentDocumentsList">
+      <input message="tns:GetPaymentDocumentsListRequestMessage" />
+      <output message="tns:GetPaymentDocumentsListResponseMessage" />
+    </operation>
+    <operation name="UnregisterChanges">
+      <input message="tns:UnregisterChangesRequestMessage" />
+      <output message="tns:UnregisterChangesResponseMessage" />
+    </operation>
+  </portType>
+  <binding name="ExchangeNovelcoSoapBinding" type="tns:ExchangeNovelcoPortType">
+    <soapbind:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="SetDeliverValue">
+      <soapbind:operation soapAction="http://localhost/novelco#ExchangeNovelco:SetDeliverValue" style="document" />
+      <input>
+        <soapbind:body use="literal" />
+      </input>
+      <output>
+        <soapbind:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetPaymentDocumentsList">
+      <soapbind:operation soapAction="http://localhost/novelco#ExchangeNovelco:GetPaymentDocumentsList" style="document" />
+      <input>
+        <soapbind:body use="literal" />
+      </input>
+      <output>
+        <soapbind:body use="literal" />
+      </output>
+    </operation>
+    <operation name="UnregisterChanges">
+      <soapbind:operation soapAction="http://localhost/novelco#ExchangeNovelco:UnregisterChanges" style="document" />
+      <input>
+        <soapbind:body use="literal" />
+      </input>
+      <output>
+        <soapbind:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <binding name="ExchangeNovelcoSoap12Binding" type="tns:ExchangeNovelcoPortType">
+    <soap12bind:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="SetDeliverValue">
+      <soap12bind:operation soapAction="http://localhost/novelco#ExchangeNovelco:SetDeliverValue" style="document" />
+      <input>
+        <soap12bind:body use="literal" />
+      </input>
+      <output>
+        <soap12bind:body use="literal" />
+      </output>
+    </operation>
+    <operation name="GetPaymentDocumentsList">
+      <soap12bind:operation soapAction="http://localhost/novelco#ExchangeNovelco:GetPaymentDocumentsList" style="document" />
+      <input>
+        <soap12bind:body use="literal" />
+      </input>
+      <output>
+        <soap12bind:body use="literal" />
+      </output>
+    </operation>
+    <operation name="UnregisterChanges">
+      <soap12bind:operation soapAction="http://localhost/novelco#ExchangeNovelco:UnregisterChanges" style="document" />
+      <input>
+        <soap12bind:body use="literal" />
+      </input>
+      <output>
+        <soap12bind:body use="literal" />
+      </output>
+    </operation>
+  </binding>
+  <service name="ExchangeNovelco">
+    <port name="ExchangeNovelcoSoap" binding="tns:ExchangeNovelcoSoapBinding">
+      <documentation>
+        <wsi:Claim xmlns:wsi="http://ws-i.org/schemas/conformanceClaim/" conformsTo="http://ws-i.org/profiles/basic/1.1" />
+      </documentation>
+      <soapbind:address location="http://nvl016.corp.local:9500/Accounting/ws/ExchangeNovelco" />
+    </port>
+    <port name="ExchangeNovelcoSoap12" binding="tns:ExchangeNovelcoSoap12Binding">
+      <soap12bind:address location="http://nvl016.corp.local:9500/Accounting/ws/ExchangeNovelco" />
+    </port>
+  </service>
+</definitions>

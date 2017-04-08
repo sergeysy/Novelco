@@ -1,0 +1,80 @@
+﻿@model Logisto.ViewModels.DocumentViewModel
+@{
+	ViewBag.Title = "Просмотр прикрепленного документа";
+}
+
+@section Styles{
+	<style>
+		.rotated90 {
+			transform: rotate(90deg);
+		}
+
+		.rotated180 {
+			transform: rotate(180deg);
+		}
+
+		.rotated270 {
+			transform: rotate(270deg);
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetDocumentPreview = "@Url.Action("OpenDocumentPreview", "Orders")";
+		app.urls.GetDocumentData = "@Url.Action("OpenDocument", "Orders")";
+		app.urls.GetPrintDocument = "@Url.Action("OpenPrintDocument", "Orders")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/Document.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Прикрепленный документ <span class="text-ghost">#<span data-bind="text: Document.ID"></span></span></h2></div>
+		<div class="col-md-2 col-md-offset-5 text-right">
+			<button class="btn btn-default" style="margin-top: 22px;" data-bind="visible: IsPdf(), click: Print"><span class="glyphicon glyphicon-print"></span></button>
+			<button class="btn btn-primary" style="margin-top: 22px;" data-bind="click: Download">Скачать</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-3">
+			<span class="text-muted">Тип документа:</span>
+			<span data-bind="text: app.utility.GetDisplay(Dictionaries.DocumentType, Document.DocumentTypeId)"></span>
+		</div>
+
+		<div class="col-md-2">
+			<span class="text-muted">Документ №:</span>
+			<span data-bind="text: Document.Number"></span>
+		</div>
+
+		<div class="col-md-1">
+			<span class="text-muted">Дата:</span>
+			<span data-bind="text: app.utility.FormatDate(Document.Date)"></span>
+		</div>
+
+		<div class="col-md-3">
+			<span class="text-muted">Имя файла:</span>
+			<span data-bind="text: Document.Filename"></span>
+		</div>
+
+		<div class="col-md-3">
+			<span class="text-muted">Загружен:</span>
+			<span data-bind="text: app.utility.FormatDate(Document.UploadedDate)"></span>
+			<span data-bind="text: app.utility.GetDisplay(Dictionaries.User, Document.UploadedBy)"></span>
+		</div>
+	</div>
+
+	<hr />
+
+	<div id="unsupported" style="display:none; text-align:center"><h2 style="color:#ddd">Просмотр документа этого типа пока не поддерживается.<br /> Вы можете скачать его и открыть на своём компьютере.</h2></div>
+	<div id="documentContent"></div>
+</div>

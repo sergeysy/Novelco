@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Logisto.Models.PayMethod>
+@{
+	ViewBag.Title = "Методы оплаты";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewPayMethod = "@Url.Action("GetNewPayMethod", "Data")";
+		app.urls.SavePayMethod = "@Url.Action("SavePayMethod", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/PayMethods.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Методы оплаты</h2></div>
+		<div class="col-md-2 col-md-offset-5"><button class="btn btn-a" style="margin-top: 22px;" data-bind="click: OpenPayMethodCreate">+новый</button></div>
+	</div>
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-2">
+			<table class="table table-condensed ">
+				<thead>
+					<tr>
+						<th class="col-md-2">Название</th>
+						<th class="col-md-2">Начало</th>
+						<th class="col-md-2">Конец</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: Items -->
+					<tr>
+						<td data-bind="text: Display"></td>
+						<td data-bind="text: app.utility.FormatDate(From)"></td>
+						<td data-bind="text: app.utility.FormatDate(To)"></td>
+						<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPayMethodEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_PayMethodEditModal")

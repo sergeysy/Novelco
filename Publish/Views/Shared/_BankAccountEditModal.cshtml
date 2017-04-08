@@ -1,0 +1,74 @@
+﻿
+<div class="modal" id="bankAccountEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: BankAccountEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Расчетный счет <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый расчетный счет</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Номер</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Number" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Валюта</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: $parent.Dictionaries.Currency, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().CurrencyId"></select>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">БИК</div>
+						<div class="col-md-8">
+							<input id="bicAutocomplete" type="text" class="form-control" data-bind="value: CurrentItem().BIC">
+						</div>
+					</div>
+					<div class="row form-group" data-bind="with: CurrentBank">
+						<div class="col-md-4">&nbsp;</div>
+						<div class="col-md-8">
+							<div class="alert alert-warning">
+								<span>ID</span>: <strong data-bind="text: ID"></strong>
+								<span>БИК</span>: <strong data-bind="text: BIC"></strong>
+								<p>
+									<span>Название</span>: <strong data-bind="text: Name"></strong>
+								</p>
+								<p>
+									<span>NNP</span>: <strong data-bind="text: NNP"></strong>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Зарубеж. банк</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().CoBankName" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Зарубеж. адрес</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().CoBankAddress" class="form-control" /></div>
+					</div>	
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Зарубеж. счет</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().CoBankAccount" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Зарубеж. SWIFT</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().CoBankSWIFT" class="form-control" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Зарубеж. IBAN</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().CoBankIBAN" class="form-control" /></div>
+					</div>					
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,90 @@
+﻿@model Logisto.ViewModels.TemplatesViewModel
+@{
+	ViewBag.Title = "Шаблоны";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetTemplateFieldsItems = "@Url.Action("GetTemplateFields", "Data")";
+		app.urls.UploadTemplate = "@Url.Action("UploadTemplate", "Data")";
+		app.urls.GetTemplateData = "@Url.Action("OpenTemplate", "Data")";
+		app.urls.SaveTemplate = "@Url.Action("SaveTemplate", "Data")";
+		app.urls.SaveTemplateField = "@Url.Action("SaveTemplateField", "Data")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/Templates.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Шаблоны</h2></div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Шаблоны</div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Файл</th>
+							<th class="col-md-3">Название</th>
+							@*<th class="col-md-2">Источник данных</th>*@
+							<th class="col-md-1">Суффикс</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: Items -->
+						<tr data-bind="css:{success:$data==$parent.SelectedTemplate()}" class="pointer">
+							<td data-bind="text: Filename, click: $parent.SelectTemplate"></td>
+							<td data-bind="text: Name, click: $parent.SelectTemplate"></td>
+							@*<td data-bind="text: SqlDataSource, click: $parent.SelectTemplate"></td>*@
+							<td data-bind="text: Suffix, click: $parent.SelectTemplate"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenTemplateEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-6" style="display:none">
+			<div class="panel panel-info">
+				<div class="panel-heading">Поля подстановки <span data-bind="if: SelectedTemplate">для: <span data-bind="text: SelectedTemplate().Name"></span></span></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Наименование</th>
+							<th class="col-md-2">Поле в запросе</th>
+							<th class="col-md-2">Диапазон вставки</th>
+							<th class="col-md-2">Поле таблицы</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: FieldsItems -->
+						<tr>
+							<td data-bind="text: Name"></td>
+							<td data-bind="text: FieldName"></td>
+							<td data-bind="text: Range"></td>
+							<td data-bind="text: IsAtable()?'да':''"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenTemplateFieldEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_TemplateEditModal")
+@Html.Partial("_TemplateFieldEditModal")

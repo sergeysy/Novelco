@@ -1,0 +1,74 @@
+﻿@{
+	ViewBag.Title = "Cargo Manager";
+	Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title</title>
+	@Styles.Render("~/Content/css/client")
+	@Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+	<div id="ko-root">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+			</div>
+		</div>
+		<div class="container body-content">
+			<div>
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<h2>Cargo Manager</h2>
+				<hr />
+
+				<div class="form-horizontal">
+					<div class="row form-group">
+						<span class="col-md-offset-4 col-md-6">У вас нет прав на просмотр запрашиваемой страницы. Обратитесь к администратору.</span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<ul id="Hint" class="col-md-offset-4"></ul>
+			</div>
+			<hr />
+			<footer>
+				<p style="font-size:smaller; color:#eee">&copy; 2016 ShulapovMax</p>
+			</footer>
+		</div>
+	</div>
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@Scripts.Render("~/bundles/client")
+
+	@if (ViewBag.ActionId != null)
+	{
+		<script type="text/javascript">
+			$(function ()
+			{
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("GetActionHint", "Ajax")",
+					data: { ActionId: @ViewBag.ActionId },
+					success: function (response) { $("#Hint").html(response); }
+				});
+			});
+		</script>
+	}
+</body>
+</html>
+
+
+
+
+
+

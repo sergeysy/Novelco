@@ -1,0 +1,87 @@
+﻿@model Logisto.ViewModels.LoginViewModel
+@{
+	ViewBag.Title = "Вход в Cargo Manager";
+	Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>@ViewBag.Title</title>
+	@Styles.Render("~/Content/css/client")
+	@Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+	<div id="ko-root">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="container">
+			</div>
+		</div>
+		<div class="container body-content">
+			<div>
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<br />
+				<h2>Cargo Manager</h2>
+				<hr />
+				@using (Html.BeginForm("Login", "Home", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post))
+				{
+					<div class="form-horizontal">
+						<div class="row form-group">
+							<div class="col-md-1 col-md-offset-4">Логин</div>
+							<div class="col-md-2">
+								@Html.TextBoxFor(m => m.Login, new { @class = "form-control" })
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-1 col-md-offset-4">Пароль</div>
+							<div class="col-md-2">
+								@Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-2 col-md-offset-5">
+								<input type="submit" value="Войти" class="btn btn-primary" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-md-4 col-md-offset-4">
+								<span class="text-danger">@Html.ValidationSummary()</span>
+							</div>
+						</div>
+					</div>
+				}
+
+			</div>
+			<hr />
+			<footer>
+				<p style="font-size:smaller; color:#eee">&copy; 2016 NOVELCO LLC</p>
+			</footer>
+		</div>
+	</div>
+
+	@Scripts.Render("~/bundles/jquery")
+	@Scripts.Render("~/bundles/bootstrap")
+	@Scripts.Render("~/bundles/client")
+
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		$(function(){
+			$("input").eq(0).focus();
+		});
+	</script>
+</body>
+</html>
+
+
+
+
+
+

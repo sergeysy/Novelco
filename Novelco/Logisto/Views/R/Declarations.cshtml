@@ -1,0 +1,100 @@
+﻿@model Logisto.ViewModels.DeclarationOrdersViewModel
+@{
+	ViewBag.Title = "Отчет по ДТ";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetDeclarationOrdersItems", "R")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+		app.urls.DownloadExcel = "@Url.Action("DownloadDeclarationOrdersReport", "R")";
+		app.urls.ContractDetails = "@Url.Action("View", "Contracts")";
+		app.urls.ToggleDocumentIsWeekend = "@Url.Action("ToggleDocumentIsWeekend", "R")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/Declarations.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>Отчет по ДТ</h2></div>
+		<div class="col-md-4 text-right"><a href="#" class="btn btn-a" style="margin-top:22px" data-bind="click: DownloadReport">Загрузить отчет</a></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="sortable col-md-1" style="width:6%" data-bind="css:{'asc-sorted':Filter.Sort()=='OrderNumber'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='OrderNumber'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('OrderNumber')}">Заказ №</a>
+				</th>
+				<th class="sortable col-md-1" style="width:6%" data-bind="css:{'asc-sorted':Filter.Sort()=='OrderStatus'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='OrderStatus'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('OrderStatus')}">Статус заказа</a>
+				</th>
+				<th class="sortable col-md-1" style="width:6%" data-bind="css:{'asc-sorted':Filter.Sort()=='MotivationDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='MotivationDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('MotivationDate')}">Мотивация дата</a>
+				</th>
+				<th class="sortable col-md-2" data-bind="css:{'asc-sorted':Filter.Sort()=='LegalName'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='LegalName'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('LegalName')}">Компания</a>
+				</th>
+				<th class="sortable col-md-1" data-bind="css:{'asc-sorted':Filter.Sort()=='ContractNumber'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ContractNumber'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ContractNumber')}">Договор №</a>
+				</th>
+				<th class="sortable col-md-1" data-bind="css:{'asc-sorted':Filter.Sort()=='ContractType'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='ContractType'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('ContractType')}">Тип договора</a>
+				</th>
+				<th class="sortable col-md-2" data-bind="css:{'asc-sorted':Filter.Sort()=='DeclarationNumber'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='DeclarationNumber'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('DeclarationNumber')}">ДТ №</a>
+				</th>
+				<th class="sortable col-md-1" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='IsWeekend'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='IsWeekend'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('IsWeekend')}">Выходные</a>
+				</th>
+				<th class="sortable col-md-1" data-bind="css:{'asc-sorted':Filter.Sort()=='WeekendMarkUser'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='WeekendMarkUser'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('WeekendMarkUser')}">ФИО</a>
+				</th>
+				<th class="sortable col-md-1" data-bind="css:{'asc-sorted':Filter.Sort()=='WeekendMarkDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='WeekendMarkDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('WeekendMarkDate')}">Дата метки</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td><a href="#" data-bind="text: OrderNumber, attr:{href:$parent.OrderDetailsUrl(OrderId())}"></a></td>
+				<td data-bind="text: OrderStatus"></td>
+				<td data-bind="text: app.utility.FormatDate(MotivationDate)"></td>
+				<td data-bind="text: LegalName" class="overflowed"></td>
+				<td><a href="#" data-bind="text: ContractNumber, attr:{href:$parent.ContractDetailsUrl(ContractId())}"></a></td>
+				<td data-bind="text: ContractType" class="overflowed"></td>
+				<td data-bind="text: DeclarationNumber, click: $parent.ViewDocument" class="text-primary pointer"></td>
+				<td>
+					<span data-bind="text: IsWeekend()?'да':''"></span>
+					<a class="pointer" data-bind="text: IsWeekend()?'':'установить', click:$parent.ToggleDocumentIsWeekend"></a>
+				</td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, WeekendMarkUserId)"></td>
+				<td data-bind="text: app.utility.FormatDate(WeekendMarkDate)"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+

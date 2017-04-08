@@ -1,0 +1,31 @@
+﻿
+<div class="modal" id="pricelistSelectModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-lg" data-bind="with: PricelistSelectModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<h4 class="modal-title">Выбор прайслиста</h4>
+			</div>
+			<div class="modal-body">
+				<div class="list-group">
+					<!-- ko foreach: Pricelists -->
+					<a href="#" class="list-group-item" data-bind="click:$parent.Select">
+						<div class="row">
+							<span class="col-md-2" data-bind="text: Name"></span>
+							<span class="col-md-2" data-bind="text: app.utility.FormatDate(From)"></span>
+							<span class="col-md-2" data-bind="text: app.utility.FormatDate(To)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.FinRepCenter, FinRepCenterId)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Product, ProductId)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.ContractorByContract, ContractId)"></span>
+							<span data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Contract, ContractId)"></span>
+						</div>
+					</a>
+					<!-- /ko -->
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

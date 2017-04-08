@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Logisto.Models.OrderOperation>
+@{
+	ViewBag.Title = "Операции";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var modelDictionaries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Dictionaries));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetNewOrderOperation = "@Url.Action("GetNewOrderOperation", "Data")";
+		app.urls.SaveOrderOperation = "@Url.Action("SaveOrderOperation", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/OrderOperations.js"></script>
+}
+
+<div>
+	<div class="row">
+		<h2>Операции</h2>
+	</div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">Операции <strong class="pull-right" data-bind="click: OpenOrderOperationCreate">+новая</strong></div>
+		<table class="table table-condensed table-hover">
+			<thead>
+				<tr>
+					<th>Группа</th>
+					<th>Наименование</th>
+					<th>Наименование (en)</th>
+					<th>Событие старта</th>
+					<th>Событие финиша</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- ko foreach: Items -->
+				<tr>
+					<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OperationKind, OperationKindId)"></td>
+					<td data-bind="text: Name"></td>
+					<td data-bind="text: EnName"></td>
+					<td data-bind="text: StartFactEventId"></td>
+					<td data-bind="text: FinishFactEventId"></td>
+					<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenOrderOperationEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+				</tr>
+				<!-- /ko -->
+			</tbody>
+		</table>
+	</div>
+
+</div>
+
+
+@Html.Partial("_OrderOperationEditModal")

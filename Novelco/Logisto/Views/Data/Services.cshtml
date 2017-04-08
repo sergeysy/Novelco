@@ -1,0 +1,141 @@
+﻿@model IEnumerable<Logisto.Models.Product>
+@{
+	ViewBag.Title = "Продукты и услуги";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var modelDictionaries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Dictionaries));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetOrderTemplatesItems = "@Url.Action("GetOrderTemplatesByProduct", "Data")";
+		app.urls.GetServiceKindsItems = "@Url.Action("GetServiceKinds", "Data")";
+		app.urls.GetServiceTypesItems = "@Url.Action("GetServiceTypes", "Data")";
+		app.urls.SaveServiceKind = "@Url.Action("SaveServiceKind", "Data")";
+		app.urls.SaveServiceType = "@Url.Action("SaveServiceType", "Data")";
+		app.urls.GetNewServiceKind = "@Url.Action("GetNewServiceKind", "Data")";
+		app.urls.GetNewServiceType = "@Url.Action("GetNewServiceType", "Data")";
+		app.urls.GetNewProduct = "@Url.Action("GetNewProduct", "Data")";
+		app.urls.SaveProduct = "@Url.Action("SaveProduct", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/Services.js"></script>
+}
+
+<div>
+	<div class="row">
+		<h2>Продукты и услуги</h2>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default center-block">
+				<div class="panel-heading">Продукты <a href="#" class="pull-right" data-bind="click: OpenProductCreate"><strong>+новый</strong></a></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Наименование</th>
+							<th>Менеджер</th>
+							<th>Заместитель</th>
+							<th>Работают</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: ProductsItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedProduct()}" class="pointer">
+							<td data-bind="text: Display, click: $parent.SelectProduct"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ManagerUserId), click: $parent.SelectProduct"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, DeputyUserId), click: $parent.SelectProduct"></td>
+							<td data-bind="text: IsWorking()?'да':'нет'"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenProductEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Шаблоны <span data-bind="if: SelectedProduct">для: <span data-bind="text: SelectedProduct().Display"></span></span></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Наименование</th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: OrderTemplatesItems -->
+						<tr>
+							<td data-bind="text: Name"></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Базовые услуги <span data-bind="if: SelectedProduct">для: <span data-bind="text: SelectedProduct().Display"></span></span><a href="#" class="pull-right" data-bind="click: OpenServiceKindCreate"><strong>+новый</strong></a></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Наименование</th>
+							<th>Наименование en</th>
+							<th>НДС</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: ServiceKindsItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedServiceKind()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectServiceKind"></td>
+							<td data-bind="text: EnName, click: $parent.SelectServiceKind"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Vat, VatId)"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenServiceKindEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Услуги <span data-bind="if: SelectedServiceKind">для: <span data-bind="text: SelectedServiceKind().Name"></span></span><a href="#" class="pull-right" data-bind="click: OpenServiceTypeCreate"><strong>+новая</strong></a></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Наименование</th>
+							<th>Цена</th>
+							<th>Ед. изм.</th>
+							<th>Количество</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: ServiceTypesItems -->
+						<tr>
+							<td data-bind="text: Name"></td>
+							<td data-bind="text: Price"></td>
+							<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Measure, MeasureId)"></td>
+							<td data-bind="text: Count"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenServiceTypeEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+@Html.Partial("_ProductEditModal")
+@Html.Partial("_ServiceKindEditModal")
+@Html.Partial("_ServiceTypeEditModal")

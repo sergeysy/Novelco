@@ -1,0 +1,46 @@
+﻿@model Logisto.ViewModels.DataViewModel
+@{
+	ViewBag.Title = "Отчеты";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.CreateAccountingDetailedReport = "@Url.Action("CreateAccountingDetailedReport", "R")";
+		app.urls.CreateAccountingPerOrderReport = "@Url.Action("CreateAccountingPerOrderReport", "R")";
+		app.urls.CreateDebtsReport = "@Url.Action("CreateDebtsReport", "R")";
+	</script>
+
+	<script src="~/Scripts/R/Index.js"></script>
+}
+
+<div>
+	<h2>Отчеты</h2>
+	<hr />
+
+	<h3>Финансовые</h3>
+
+	<div class="row">
+		<a href="#" data-bind="click: CreateAccountingDetailedReport" class="col-md-3 datatile datatile-blue">
+			<div>
+				<h4 style="line-height:80px;">Финрез детально</h4>
+			</div>
+		</a>
+		<a href="#" data-bind="click: CreateAccountingPerOrderReport" class="col-md-3 datatile datatile-blue">
+			<div>
+				<h4 style="line-height:80px;">Финрез позаказно</h4>
+			</div>
+		</a>
+		<a href="#" data-bind="click: CreateDebtsReport" class="col-md-3 datatile datatile-blue">
+			<div>
+				<h4 style="line-height:80px;">КЗ и ДЗ</h4>
+			</div>
+		</a>
+	</div>
+</div>

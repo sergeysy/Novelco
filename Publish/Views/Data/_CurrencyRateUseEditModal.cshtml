@@ -1,0 +1,40 @@
+﻿
+<div class="modal" id="currencyRateUseEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: CurrencyRateUseEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Применяемый курс валют <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый применяемый курс валют</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Display"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Значение</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Value"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-5 сol-md-5 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsDocumentDate" />На день документа</label>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

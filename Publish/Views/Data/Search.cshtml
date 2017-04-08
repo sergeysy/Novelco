@@ -1,0 +1,215 @@
+﻿@model string
+@{
+	ViewBag.Title = "Поиск по номеру";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var modelDictionaries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Dictionaries));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetContractors = "@Url.Action("SearchContractorsGetItems", "Data")";
+		app.urls.GetLegals= "@Url.Action("SearchLegalsGetItems", "Data")";
+		app.urls.GetOrders= "@Url.Action("SearchOrdersGetItems", "Data")";
+		app.urls.GetRequests= "@Url.Action("SearchRequestsGetItems", "Data")";
+		app.urls.GetDocuments= "@Url.Action("SearchDocumentsGetItems", "Data")";
+		app.urls.GetPayments= "@Url.Action("SearchPaymentsGetItems", "Data")";
+		app.urls.GetContracts= "@Url.Action("SearchContractsGetItems", "Data")";
+		app.urls.ContractorDetails= "@Url.Action("Details", "Contractors")";
+		app.urls.AccountingDetails= "@Url.Action("AccountingDetails", "Orders")";
+		app.urls.OrderDetails= "@Url.Action("Details", "Orders")";
+		app.urls.RequestDetails= "@Url.Action("Index", "Requests")";
+		app.urls.ViewTemplatedDocument = "@Url.Action("ViewTemplatedDocument", "Orders")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+		app.urls.ViewPayment = "@Url.Action("ViewPayment", "Orders")";
+		app.urls.ContractDetails = "@Url.Action("View", "Contracts")";
+	</script>
+
+	<script src="~/Scripts/Data/Search.js"></script>
+}
+
+<h2>Результаты поиска по "<span data-bind="text: Number"></span>"</h2>
+
+<div id="contractors">
+	<h4>Контрагенты</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-10">Название</th>
+				<th class="col-md-2">Блокирован</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: ContractorsItems -->
+			<tr data-bind="click: $parent.GotoContractor" class="pointer">
+				<td data-bind="text: Name"></td>
+				<td data-bind="text: IsLocked()?'да':''"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="legals">
+	<h4>Юридические лица</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-4">Название</th>
+				<th class="col-md-4">Название (en)</th>
+				<th class="col-md-1">ИНН</th>
+				<th class="col-md-1">ОГРН</th>
+				<th class="col-md-2">Нерезидент</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: LegalsItems -->
+			<tr data-bind="click: $parent.GotoLegal" class="pointer">
+				<td data-bind="text: Name"></td>
+				<td data-bind="text: EnName"></td>
+				<td data-bind="text: TIN"></td>
+				<td data-bind="text: OGRN"></td>
+				<td data-bind="text: IsNotResident()?'да':''"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="orders">
+	<h4>Заказы</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1">Номер</th>
+				<th class="col-md-1">Дата</th>
+				<th class="col-md-1">Статус</th>
+				<th class="col-md-2">Откуда</th>
+				<th class="col-md-7">Куда</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: OrdersItems -->
+			<tr data-bind="click: $parent.GotoOrder" class="pointer">
+				<td data-bind="text: Number"></td>
+				<td data-bind="text: app.utility.FormatDate(CreatedDate)"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OrderStatus, OrderStatusId)"></td>
+				<td data-bind="text: From"></td>
+				<td data-bind="text: To"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="documents">
+	<h4>Документы</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1">Номер</th>
+				<th class="col-md-1">Дата</th>
+				<th class="col-md-1">Загружен</th>
+				<th class="col-md-2">Файл</th>
+				<th class="col-md-1">Печать</th>
+				<th class="col-md-1">NIP</th>
+				<th class="col-md-6">Заказ</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: DocumentsItems -->
+			<tr class="pointer">
+				<td data-bind="text: Number, click: $parent.ViewJointDocument"></td>
+				<td data-bind="text: app.utility.FormatDate(Date), click: $parent.ViewJointDocument"></td>
+				<td data-bind="text: app.utility.FormatDate(UploadedDate), click: $parent.ViewJointDocument"></td>
+				<td data-bind="text: Filename, click: $parent.ViewJointDocument"></td>
+				<td data-bind="text: IsPrint()?'да':''"></td>
+				<td data-bind="text: IsNipVisible()?'да':''"></td>
+				<!-- ko if: OrderId() -->
+				<td class="text-primary" data-bind="text: OrderNumber, click:$parent.GotoOrder"></td>
+				<!-- /ko -->
+				<!-- ko if: AccountingId() -->
+				<td class="text-primary" data-bind="text: OrderNumber, click:$parent.GotoAccounting"></td>
+				<!-- /ko -->
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="requests">
+	<h4>Запросы</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1">Номер</th>
+				<th class="col-md-2">Клиент</th>
+				<th class="col-md-9">Текст</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: RequestsItems -->
+			<tr data-bind="click: $parent.GotoRequest" class="pointer">
+				<td data-bind="text: ID"></td>
+				<td data-bind="text: ClientName"></td>
+				<td data-bind="text: Text"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="contracts">
+	<h4>Договоры</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1">Номер</th>
+				<th class="col-md-1">Дата</th>
+				<th class="col-md-10">Комментарий</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: ContractsItems -->
+			<tr data-bind="click: $parent.GotoContract" class="pointer">
+				<td data-bind="text: Number"></td>
+				<td data-bind="text: app.utility.FormatDate(Date)"></td>
+				<td data-bind="text: Comment"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+
+<div id="payments">
+	<h4>Платежи</h4>
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1"></th>
+				<th class="col-md-1">Номер</th>
+				<th class="col-md-1">Сумма</th>
+				<th class="col-md-1">Дата</th>
+				<th class="col-md-1">Основание</th>
+				<th class="col-md-7">Комментарий</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: PaymentsItems -->
+			<tr class="pointer">
+				<td><a href="#" data-bind="text: AccountingId, attr:{href:'/orders/accountingDetails/'+$data.AccountingId()}"></a></td>
+				<td data-bind="text: Number, click: $parent.ViewPayment"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Sum), click: $parent.ViewPayment"></td>
+				<td data-bind="text: app.utility.FormatDate(Date), click: $parent.ViewPayment"></td>
+				<td data-bind="text: BaseNumber, click: $parent.ViewPayment"></td>
+				<td data-bind="text: Description, click: $parent.ViewPayment"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>

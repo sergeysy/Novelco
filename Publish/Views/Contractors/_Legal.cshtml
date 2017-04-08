@@ -1,0 +1,290 @@
+﻿
+<div data-bind="with: SelectedLegal">
+	<div class="panel panel-primary" style="box-shadow: 0 0 16px 6px rgba(0,0,0,0.2);">
+		<div class="panel-heading">
+			<a href="#" data-bind="attr:{ href:$parent.LegalDetailsUrl(ID()) }"><strong data-bind="text: DisplayName"></strong>&nbsp;</a>
+			<a href="#" class="pull-right" data-bind="click: function(){$parent.SelectedLegal(null)}">Вернуться к списку</a>
+			<span class="pull-right" style="color:#000; padding-right:16px;">
+				Создано
+				<span data-bind="text: app.utility.FormatDateTime(CreatedDate)"></span>
+				<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CreatedBy)"></span>
+				Изменено
+				<span data-bind="text: app.utility.FormatDateTime(UpdatedDate)"></span>
+				<span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, UpdatedBy)"></span>
+			</span>
+		</div>
+		<div class="panel-body">
+			@* общее *@
+			<div>
+				<div class="row row-v-padding">
+					<div class="col-md-1 form-text"><label style="font-weight:normal"><input type="checkbox" data-bind="checked: IsNotResident" /> Нерезидент</label></div>
+					<div class="col-md-1 text-muted text-right form-text">
+						<!-- ko ifnot: IsNotResident -->
+						Налогообложение
+						<!-- /ko -->
+					</div>
+					<div class="col-md-3">
+						<!-- ko ifnot: IsNotResident -->
+						<select class="form-control" data-bind="options: $parent.Dictionaries.TaxType, optionsText: 'Display', optionsValue: 'ID', value:TaxTypeId"></select>
+						<!-- /ko -->
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">Рабочее время</div>
+					<div class="col-md-2"><input type="text" data-bind="textInput: WorkTime" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">Часовой пояс</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="valueAllowUnset: true, options: $parent.Dictionaries.TimeZone, optionsText: 'Display', optionsValue: 'ID', value:TimeZone"></select>
+					</div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">ИНН</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: TIN" class="form-control" /></div>
+
+					<!-- ko ifnot: IsNotResident -->
+					<div class="col-md-1 text-muted text-right form-text">КПП</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: KPP" class="form-control" /></div>
+
+					<div class="col-md-1 text-muted text-right form-text">ОКВЭД</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: OKVED" class="form-control" /></div>
+
+					<div class="col-md-2 text-right form-text">
+						<span class="text-muted" style="padding-right:16px">ОГРН</span>
+						<input style="display:inline-block; width:150px" type="text" data-bind="textInput: OGRN" class="form-control" />
+					</div>
+
+					<div class="col-md-1 text-muted text-right form-text">ОКПО</div>
+					<div class="col-md-1"><input type="text" data-bind="textInput: OKPO" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">Наименование</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: DisplayName" class="form-control" /></div>
+
+					<!-- ko if: IsNotResident -->
+					<div class="col-md-2 text-muted text-right form-text">Наименование EN</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: EnShortName" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">Наименование полное</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: Name" class="form-control" /></div>
+
+					<!-- ko if: IsNotResident -->
+					<div class="col-md-2 text-muted text-right form-text">Наименование полное EN</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: EnName" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">Юр адрес</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: Address" class="form-control" /></div>
+
+					<!-- ko if: IsNotResident -->
+					<div class="col-md-2 text-muted text-right form-text">Юр адрес EN</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: EnAddress" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">Факт адрес</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: AddressFact" class="form-control" /></div>
+
+					<!-- ko if: IsNotResident -->
+					<div class="col-md-2 text-muted text-right form-text">Факт адрес EN</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: EnAddressFact" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-2 text-muted text-right form-text">Почтовый адрес</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: PostAddress" class="form-control" /></div>
+
+					<!-- ko if: IsNotResident -->
+					<div class="col-md-2 text-muted text-right form-text">Почтовый адрес EN</div>
+					<div class="col-md-4"><input type="text" data-bind="textInput: EnPostAddress" class="form-control" /></div>
+					<!-- /ko -->
+				</div>
+			</div>
+
+			<br />
+
+			@* блок договоров *@
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					Договоры
+					<a href="#" style="padding-left:8px" data-bind="click: function(){$parent.LoadContractsByLegal($parent.SelectedLegal())}"><span class="glyphicon glyphicon-refresh"></span></a>
+					<a href="#" class="pull-right" data-bind="click: $parent.CreateContract"><strong>+новый</strong></a>
+				</div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="col-md-2">Наше юрлицо</th>
+							<th class="col-md-1">Номер</th>
+							<th class="col-md-1">Дата</th>
+							<th class="col-md-1">Действует до</th>
+							<th class="col-md-1">Пролонгация</th>
+							<th class="col-md-1 overflowed">Тип</th>
+							<th class="col-md-2">Вид</th>
+							<th class="col-md-1">Валюта</th>
+							<th class="col-md-1">Метки</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: ContractsItems -->
+						<!-- ko if: !IsDeleted() -->
+						<tr data-bind="css:{'text-danger':!IsActive()}" class="pointer">
+							<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.OurLegal, OurLegalId), click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: Number, click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: app.utility.FormatDate(Date), click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: app.utility.FormatDate(EndDate), click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: IsProlongation()?'да':'', click: $parents[1].OpenContractInfo"></td>
+							<td class="overflowed" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.ContractType, ContractTypeId), click: $parents[1].OpenContractInfo,attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.ContractType, ContractTypeId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+							<td class="overflowed" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.ContractServiceType, ContractServiceTypeId), click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: $parents[1].GetContractCurrenciesDisplay($data), click: $parents[1].OpenContractInfo"></td>
+							<td data-bind="text: Marks, click: $parents[1].OpenContractInfo"></td>
+							<td><a href="#" data-bind="click: $parents[1].DeleteContract" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#Accounts" data-toggle="tab">Банковские счета</a>
+				</li>
+				<li>
+					<a href="#LegalEmployees" data-toggle="tab">Сотрудники</a>
+				</li>
+				<li>
+					<a href="#Payments" data-toggle="tab">Баланс</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				@* банковские счета *@
+				<div class="tab-pane active" id="Accounts">
+					<div class="panel panel-info">
+						<div class="panel-heading">Банковские счета <a href="#" class="pull-right" data-bind="click: $parent.OpenBankAccountCreate"><strong>+новый</strong></a></div>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th class="col-md-1">Номер</th>
+									<th class="col-md-1">Валюта</th>
+									<th class="col-md-2">Банк</th>
+									<th class="col-md-1">БИК</th>
+									<th class="col-md-2">Ин.банк</th>
+									<th class="col-md-1">SWIFT ИБ</th>
+									<th class="col-md-1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: BankAccountsItems -->
+								<!-- ko if: !IsDeleted() -->
+								<tr>
+									<td data-bind="text: Number"></td>
+									<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Currency, CurrencyId)"></td>
+									<td data-bind="text: BankName"></td>
+									<td data-bind="text: BIC"></td>
+									<td data-bind="text: CoBankName"></td>
+									<td data-bind="text: CoBankSWIFT"></td>
+									<td class="text-right"><button class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenBankAccountEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<a href="#" data-bind="click: $parents[1].DeleteBankAccount" class="close">&times;</a></td>
+								</tr>
+								<!-- /ko -->
+								<!-- /ko -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				@* блок сотрудников *@
+				<div class="tab-pane" id="LegalEmployees">
+					<div class="panel panel-info">
+						<div class="panel-heading">Сотрудники <a href="#" class="pull-right" data-bind="click: $parent.OpenEmployeeCreate"><strong>+новый</strong></a></div>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th class="col-md-2">ФИО</th>
+									<th class="col-md-2">Отдел</th>
+									<th class="col-md-2">Должность</th>
+									<th class="col-md-2">Подпись</th>
+									<th class="col-md-1">Email</th>
+									<th class="col-md-1">Тел. моб.</th>
+									<th class="col-md-1">Тел. раб.</th>
+									<th class="col-md-1"></th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: EmployeesItems -->
+								<!-- ko if: !IsDeleted() -->
+								<tr>
+									<td data-bind="text: Name"></td>
+									<td data-bind="text: Department"></td>
+									<td data-bind="text: Position"></td>
+									<td><span data-bind="if: $parent.DirectorId() == $data.ID()">да</span></td>
+									<td data-bind="text: Email"></td>
+									<td data-bind="text: PhoneMobile"></td>
+									<td data-bind="text: PhoneWork"></td>
+									<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parents[1].OpenEmployeeEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parents[1].DeleteEmployee" class="close">&times;</a></td>
+								</tr>
+								<!-- /ko -->
+								<!-- /ko -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+				@* блок экономики *@
+				<div class="tab-pane" id="Payments">
+					<div class="panel panel-info">
+						<div class="panel-heading">Баланс <a href="#" class="pull-right" data-bind="click: $parent.DownloadAccountingsFile"><strong><span class="glyphicon glyphicon-download-alt"></span> excel</strong></a></div>
+						<table class="table table-condensed">
+							<thead>
+								<tr data-bind="with: $parent.LegalAccountingSorter">
+									<th class="col-md-1 sortable" style="width:8%" data-bind="click: function(){Sort('OurLegalId')},		css: Css('OurLegalId')">Наше юрлицо</th>
+									<th class="col-md-1 sortable" data-bind="click: function(){Sort('OrderNumber')},	css: Css('OrderNumber')">Номер заказа</th>
+									<th class="col-md-1 sortable" data-bind="click: function(){Sort('AccountingDocumentTypeId')}, css: Css('AccountingDocumentTypeId')">Документ</th>
+									<th class="col-md-1 sortable" data-bind="click: function(){Sort('Number')},			css: Css('Number')">Номер</th>
+									<th class="col-md-1 sortable" data-bind="click: function(){Sort('ContractNumber')},	css: Css('ContractNumber')">Договор</th>
+									<th class="col-md-1 sortable" style="width:10%" data-bind="click: function(){Sort('LegalId')},		css: Css('LegalId')">Контрагент</th>
+									<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceNumber')},	css: Css('InvoiceNumber')">Номер счета</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('InvoiceDate')},	css: Css('InvoiceDate')">Дата счета</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('ActDate')},		css: Css('ActDate')">Дата акта</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('InvoiceCurrency')},css: Css('InvoiceCurrency')">Валюта</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('OriginalSum')},	css: Css('OriginalSum')">Сумма счета</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('Sum')},			css: Css('Sum')">Сумма, руб</th>
+									<th class="col-md-1 sortable" style="width:5%" data-bind="click: function(){Sort('Vat')},			css: Css('Vat')">НДС</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- ko foreach: AccountingsItems -->
+								<tr>
+									<td class="overflowed" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Legal, OurLegalId), attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.Legal, OurLegalId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+									<td><a data-bind="text: OrderNumber, attr: { href: $parents[1].OrderDetailsUrl(OrderId()) }"></a></td>
+									<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.AccountingDocumentType, AccountingDocumentTypeId)"></td>
+									<td data-bind="text: Number"></td>
+									@*<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.ContractorByLegal, LegalId)"></td>*@
+									<td><span data-bind="text: ContractNumber"></span></td>
+									<td class="overflowed" data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Legal, LegalId),attr:{'title':app.utility.GetDisplay($parents[1].Dictionaries.Legal, LegalId)}" data-container="body" data-toggle="tooltip" data-placement="bottom"></td>
+									<td data-bind="text: InvoiceNumber"></td>
+									<td data-bind="text: app.utility.FormatDate(InvoiceDate)"></td>
+									<td data-bind="text: app.utility.FormatDate(ActDate)"></td>
+									<td data-bind="text: app.utility.GetDisplay($parents[1].Dictionaries.Currency, AccountingCurrencyId)"></td>
+									<td data-bind="text: app.utility.FormatDecimal(OriginalSum)"></td>
+									<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+									<td data-bind="text: app.utility.FormatDecimal(Vat)"></td>
+								</tr>
+								<!-- /ko -->
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

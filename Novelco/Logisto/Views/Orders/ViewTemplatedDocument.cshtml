@@ -1,0 +1,75 @@
+﻿@model Logisto.ViewModels.TemplatedDocumentViewModel
+@{
+	ViewBag.Title = "Просмотр сформированного документа";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetTemplatedDocumentPreview = "@Url.Action("OpenTemplatedDocumentPreview", "Orders")";
+		app.urls.GetTemplatedDocumentData = "@Url.Action("OpenTemplatedDocument", "Orders")";
+		app.urls.GetPrintTemplatedDocument = "@Url.Action("OpenPrintTemplatedDocument", "Orders")";
+		app.urls.AccountingDetails = "@Url.Action("AccountingDetails", "Orders")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/TemplatedDocument.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Финансовый документ <span class="text-ghost">#<span data-bind="text: TemplatedDocument.ID"></span></span></h2></div>
+		<div class="col-md-3 col-md-offset-4 text-right">
+
+			<div class="btn-group" style="margin-top: 22px;" data-bind="visible: TemplatedDocument.HasPdf">
+				<button data-bind="click: PrintPdf" type="button" class="btn btn-default"><span class="glyphicon glyphicon-print"></span></button>
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="#" data-bind="click: PrintCleanPdf, visible: TemplatedDocument.HasCleanPdf">PDF без подписи</a></li>
+					<li><a href="#" data-bind="click: PrintCutPdf, visible: TemplatedDocument.HasCutPdf">PDF без ФИО</a></li>
+				</ul>
+			</div>
+
+			<div class="btn-group" style="margin-top: 22px;">
+				<button class="btn btn-primary" data-bind="click: DownloadPdf, visible: TemplatedDocument.HasPdf"><span class="glyphicon glyphicon-download-alt"></span> PDF</button>
+				<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Другие варианты <span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="#" data-bind="click: DownloadCleanPdf, visible: TemplatedDocument.HasCleanPdf">PDF без подписи</a></li>
+					<li><a href="#" data-bind="click: DownloadCutPdf, visible: TemplatedDocument.HasCutPdf">PDF без ФИО</a></li>
+					<li><a href="#" data-bind="click: Download">Excel</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<hr />
+
+	<div>
+		<strong class="text-muted">Тип документа:</strong>
+		<span data-bind="text: app.utility.GetDisplay(Dictionaries.Template, TemplatedDocument.TemplateId)"></span> &nbsp;
+		<strong class="text-muted" style="margin-left:4px;">Номер:</strong>
+		<a href="#" data-bind="text: TemplatedDocument.AccountingNumber, attr:{href:AccountingUrl(TemplatedDocument.AccountingId())}"></a> &nbsp;
+		<strong class="text-muted" style="margin-left:4px;">Дата:</strong>
+		<span data-bind="text: app.utility.FormatDate(TemplatedDocument.Date)"></span> &nbsp;
+		<strong class="text-muted" style="margin-left:4px;">Имя файла:</strong>
+		<span data-bind="text: TemplatedDocument.Filename"></span> &nbsp;
+
+		<strong class="text-muted">Создан:</strong>
+		<span data-bind="text: app.utility.FormatDateTime(TemplatedDocument.CreatedDate)"></span>
+		<span data-bind="text: app.utility.GetDisplay(Dictionaries.User, TemplatedDocument.CreatedBy)"></span> &nbsp;
+		<strong class="text-muted" data-bind="if: TemplatedDocument.ChangedDate()">Изменен:</strong>
+		<span data-bind="text: app.utility.FormatDateTime(TemplatedDocument.ChangedDate)"></span>
+		<span data-bind="text: app.utility.GetDisplay(Dictionaries.User, TemplatedDocument.ChangedBy)"></span>
+	</div>
+
+	<hr />
+
+	<div id="unsupported" style="display:none; text-align:center"><h2 style="color:#ddd">Просмотр документа этого типа пока не поддерживается.<br /> Вы можете скачать его и открыть на своём компьютере.</h2></div>
+	<div id="documentContent"></div>
+</div>

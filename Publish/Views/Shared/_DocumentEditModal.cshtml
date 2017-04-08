@@ -1,0 +1,84 @@
+﻿
+<div class="modal" id="documentEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: DocumentEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Документ <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый документ</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Тип документа</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.DocumentType, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().DocumentTypeId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Номер документа</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Number" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата документа</div>
+						<div class="col-md-8"><input data-bind="datepicker: CurrentItem().Date, datepickerOptions: { dateFormat: 'dd-mm-yy'}" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsPrint" />Выводить на печать</label>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsNipVisible" />Выводить в NIP</label>
+						</div>
+					</div>
+
+					<div class="fileDropable">
+						<div class="row form-group">
+							<div class="col-md-4 text-right form-text">Имя файла</div>
+							<div class="col-md-8 form-text"><strong data-bind="text: CurrentItem().Filename"></strong></div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 text-right form-text">Размер файла, МБ</div>
+							<div class="col-md-8 form-text"><span data-bind="text: FileSize"></span></div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 text-right form-text">Загружен</div>
+							<div class="col-md-8 form-text"><span data-bind="text: app.utility.FormatDateTime(CurrentItem().UploadedDate)"></span></div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4 text-right form-text">Загрузил</div>
+							<div class="col-md-8 form-text"><span data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CurrentItem().UploadedBy)"></span></div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-md-4"></div>
+							<div class="col-md-8">
+								<form enctype="multipart/form-data" method="post">
+									<input id="documentUpload" type="file" style="width:350px; display:inline-block;" />
+									<br />
+									<span class="text-muted">Выберите файл или перетащите его сюда.</span>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

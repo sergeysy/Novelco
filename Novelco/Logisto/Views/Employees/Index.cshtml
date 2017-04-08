@@ -1,0 +1,117 @@
+﻿@model Logisto.ViewModels.EmployeesViewModel
+@{
+	ViewBag.Title = "Сотрудники";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetUser = "@Url.Action("GetIdentityUser", "Ajax")";
+		app.urls.SaveUser = "@Url.Action("SaveUser", "Identity")";
+		app.urls.GetRoles = "@Url.Action("GetRoles", "Identity")";
+		app.urls.GetItems = "@Url.Action("GetItems", "Employees")";
+		app.urls.GetPerson = "@Url.Action("GetPerson", "Ajax")";
+		app.urls.GetPersons = "@Url.Action("SearchPersons", "Ajax")";
+		app.urls.GetNewUser = "@Url.Action("GetNewUser", "Identity")";
+		app.urls.UploadSign = "@Url.Action("UploadSign", "Employees")";
+		app.urls.EditPerson = "@Url.Action("EditPerson", "Contractors")";
+		app.urls.DeleteUser = "@Url.Action("DeleteUser", "Identity")";
+		app.urls.UploadPhoto = "@Url.Action("UploadPhoto", "Employees")";
+		app.urls.CreatePerson = "@Url.Action("CreatePerson", "Contractors")";
+		app.urls.SaveEmployee = "@Url.Action("SaveEmployee", "Employees")";
+		app.urls.GetUserRoles = "@Url.Action("GetUserRoles", "Identity")";
+		app.urls.GetSignImage = "@Url.Action("GetSign", "Employees")";
+		app.urls.GetNewEmployee = "@Url.Action("GetNewEmployee", "Contractors")";
+		app.urls.CreateEmployee = "@Url.Action("Create", "Employees")";
+		app.urls.UpdateUserRoles = "@Url.Action("UpdateUserRoles", "Identity")";
+		app.urls.ResetUserPassword = "@Url.Action("ResetUserPassword", "Identity")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Employees/Employees.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Сотрудники</h2></div>
+		<div class="col-md-5">
+			<a href="#" class="btn btn-a" style="margin-top:22px;" data-bind="attr:{href: CreateEmployeeUrl()}" target="_blank"><strong>+новый пользователь и сотрудник</strong></a>
+			<a href="#" class="btn btn-a" style="margin-top:22px;" data-bind="click: OpenEmployeeCreate" target="_blank"><strong>+добавить сотрудника</strong></a>
+		</div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+
+	<hr />
+
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">ФИО</a>
+				</th>
+				<th class="col-md-1">Компания</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='EmployeeStatusId'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='EmployeeStatusId'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('EmployeeStatusId')}">Статус</a>
+				</th>
+				<th class="col-md-1 sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='BeginDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='BeginDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('BeginDate')}">Дата приема на работу</a>
+				</th>
+				<th class="col-md-1 sortable" style="width:5%" data-bind="css:{'asc-sorted':Filter.Sort()=='EndDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='EndDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('EndDate')}">Дата увольнения</a>
+				</th>
+				<th class="col-md-1">Должность</th>
+				<th class="col-md-1" style="width:3%">Код должности</th>
+				<th class="col-md-1" style="width:3%">Дата открытия должности</th>
+				<th class="col-md-1" style="width:3%">Дата закрытия должности</th>
+				<th class="col-md-1" style="width:3%">История должностей</th>
+				<th class="col-md-1" style="width:3%">Фикс</th>
+				<th class="col-md-1" style="width:3%">ЗП1</th>
+				<th class="col-md-1" style="width:3%">KPI</th>
+				<th class="col-md-1" style="width:3%">%</th>
+				<th class="col-md-1" style="width:3%">Ответст<wbr>венный по клиентам</th>
+				<th class="col-md-1" style="width:5%"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td class="overflowed"><a href="#" data-bind="text: Name, click: $parent.OpenUserEdit"></a></td>
+				<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId)"></td>
+				<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.EmployeeStatus, EmployeeStatusId)"></td>
+				<td data-bind="text: app.utility.FormatDate(BeginDate)"></td>
+				<td data-bind="text: app.utility.FormatDate(EndDate)"></td>
+				<td class="overflowed" data-bind="text: Position"></td>
+				<td data-bind="text: PositionCode"></td>
+				<td data-bind="text: PositionStartDate"></td>
+				<td data-bind="text: PositionEndDate"></td>
+				<td data-bind="text: PositionHistory"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class="text-right"><button class="btn btn-default btn-xs" data-bind="click: $parent.OpenEmployeeEdit"><span class="glyphicon glyphicon-pencil"></span></button>&nbsp;<a href="#" data-bind="click: $parent.DeleteEmployee" class="close">&times;</a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+
+@Html.Partial("_EmployeeEditModal")
+@Html.Partial("_UserEditModal")

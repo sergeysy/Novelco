@@ -1,0 +1,156 @@
+﻿@model Logisto.ViewModels.PricelistViewModel
+@{
+	ViewBag.Title = "Прайслист";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetContractorByContract = "@Url.Action("GetContractorByContract", "Ajax")";
+		app.urls.UploadPricelistData = "@Url.Action("UploadFile", "Pricelists")";
+		app.urls.GetPricelistData = "@Url.Action("GetPricelistData", "Pricelists")";
+		app.urls.ImportPricelist = "@Url.Action("ImportPricelist", "Pricelists")";
+		app.urls.GetPricelists = "@Url.Action("GetItems", "Pricelists")";
+		app.urls.SavePriceKind = "@Url.Action("SavePriceKind", "Pricelists")";
+		app.urls.SavePricelist = "@Url.Action("SavePricelist", "Pricelists")";
+		app.urls.GetContracts = "@Url.Action("GetContractsByContractor", "Orders")";
+		app.urls.GetPrices = "@Url.Action("GetPrices", "Pricelists")";
+		app.urls.SavePrice = "@Url.Action("SavePrice", "Pricelists")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Pricelists/Edit.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Прайслист <span class="text-ghost">#<span data-bind="text: Pricelist.ID"></span></span></h2></div>
+		<div class="col-md-5 text-right">
+			<button class="btn btn-default" style="margin-top: 22px;" data-bind="click: ImportPricelist">Загрузить данные из другого прайслиста</button>
+			<button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save, visible:IsDirty">Сохранить</button>
+		</div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Наименование</div>
+				<div class="col-md-4"><input class="form-control" data-bind="textInput: Pricelist.Name" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Действует с</div>
+				<div class="col-md-4"><input class="form-control" data-bind="datepicker: Pricelist.From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+				<div class="col-md-2 form-text text-right">по</div>
+				<div class="col-md-4"><input class="form-control" data-bind="datepicker: Pricelist.To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 text-right form-text">ЦФО</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.FinRepCenter, optionsText: 'Name', optionsValue: 'ID', value: Pricelist.FinRepCenterId"></select>
+				</div>
+
+				<div class="col-md-2 text-right form-text">Продукт</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: Pricelist.ProductId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 text-right form-text">Контрагент</div>
+				<div class="col-md-4">
+					<select class="form-control" data-bind="optionsCaption:'', options: Dictionaries.Contractor, optionsText: 'Display', optionsValue: 'ID', value: ContractorId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 text-right form-text">Договор</div>
+				<div class="col-md-10">
+					<select class="form-control" data-bind="valueAllowUnset: true, options: Contracts, optionsText: function(item) {return item.Number() + ' ' + GetContractCurrenciesDisplay(item) + ' ' + item.OurLegal() + ' - ' + item.Legal() + ' - ' + item.Type()  }, optionsValue: 'ID', value: Pricelist.ContractId"></select>
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-md-2 form-text text-right">Комментарий</div>
+				<div class="col-md-10"><input class="form-control" data-bind="textInput: Pricelist.Comment" /></div>
+			</div>
+
+			<div class="row form-group fileDropable">
+				<div class="col-md-2 text-right form-text">Скан документа</div>
+				<div class="col-md-10 form-tex">
+					<form enctype="multipart/form-data" method="post">
+						<input id="dataUpload" type="file" style="width:400px;height:28px; display:inline-block;" />
+						<span class="text-muted">Выберите файл или перетащите его сюда.</span>
+					</form>
+				</div>
+			</div>
+
+			<table class="table table-condensed">
+				<thead>
+					<tr data-bind="with: PriceSorter">
+						<th class="col-md-7 sortable" data-bind="click: function(){Sort('Name')},	css: Css('Name')">Услуга</th>
+						<th class="col-md-1">Валюта</th>
+						<th class="col-md-1">НДС</th>
+						<th class="col-md-1">Количество</th>
+						<th class="col-md-1">Цена</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: Pricelist.Prices -->
+					<tr>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Service, ServiceId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, CurrencyId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Vat, VatId)"></td>
+						<td><span data-bind="text: Count"></span> <span data-bind="text: $parent.GetMeasureDisplay(ServiceId)"></span> </td>
+						<td data-bind="text: Sum"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPriceEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+
+			<h4>Базовые</h4>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-7">Название</th>
+						<th class="col-md-4">Название En</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: Pricelist.PriceKinds -->
+					<tr>
+						<td data-bind="text: Name"></td>
+						<td data-bind="text: EnName"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPriceKindEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@Html.Partial("_PriceEditModal")
+@Html.Partial("_PriceKindEditModal")
+@Html.Partial("_PricelistSelectModal")

@@ -1,0 +1,140 @@
+﻿@model Logisto.ViewModels.OperationsViewModel
+@{
+	ViewBag.Title = "Операции";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+	<style>
+		.ui-autocomplete {
+			z-index: 5000;	/* FIX: jQueryUI autocomplete in Bootstrap modal displaying underneath modal */
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "Operations")";
+		app.urls.GetPlaces = "@Url.Action("SearchPlaces", "Ajax")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.SaveOperation= "@Url.Action("SaveOperation", "Orders")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Operations/Operations.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-8"><h2>Операции</h2></div>
+		<div class="col-md-4"></div>
+	</div>
+	<hr />
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="row">
+				<div class="col-md-1" style="padding:2px; width:6%">
+					<span>Заказ</span>
+					<input type="text" class="form-control" data-bind="textInput: Filter.OrderNumber" />
+				</div>
+				<div class="col-md-5" style="padding:2px; width:33%">
+					<span>Операция</span>
+					<input type="text" class="form-control" data-bind="textInput: Filter.Context" />
+				</div>
+				<div class="col-md-1" style="padding:2px; width:7%">
+					<span style="color:#fff">.</span>
+					<button style="display:block;width:100%" type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">Статус <span class="caret"></span></button>
+					<ul id="statuses" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.OperationStatus -->
+						<li><a href="#" class="small" tabindex="-1"><input type="checkbox" data-bind="attr:{value:ID}" />&nbsp;<span data-bind="text: Name"></span></a></li>
+						<!-- /ko -->
+					</ul>
+				</div>
+				<div class="col-md-1" style="padding:2px; width:7%">
+					<span>Начало план</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.StartPlanFrom, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.StartPlanTo, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1" style="padding:2px; width:7%">
+					<span>Начало факт</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.StartFactFrom, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.StartFactTo, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1" style="padding:2px; width:7%">
+					<span>Конец план</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.FinishPlanFrom, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.FinishPlanTo, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1" style="padding:2px; width:7%">
+					<span>Конец факт</span>
+					<input type="text" class="form-control" data-bind="datepicker: Filter.FinishFactFrom, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+					<input type="text" class="form-control" data-bind="datepicker: Filter.FinishFactTo, datepickerOptions: { dateFormat: 'dd-mm-yy'}" />
+				</div>
+				<div class="col-md-1" style="padding:2px; width:17%">
+					<span style="color:#fff">.</span>
+					<button type="button" class="btn btn-default btn-sm dropdown-toggle" style="width:100%" data-toggle="dropdown">Ответственный <span class="caret"></span></button>
+					<ul id="users" class="dropdown-menu">
+						<!-- ko foreach: Dictionaries.ActiveUser -->
+						<li><a href="#" class="small" tabindex="-1"><input type="checkbox" data-bind="attr:{value:ID}, checked:$parent.Filter.Responsibles().indexOf(ID())>=0" />&nbsp;<span data-bind="text: Display"></span></a></li>
+						<!-- /ko -->
+					</ul>
+
+					<button type="button" class="btn btn-primary btn-sm" style="width:100%" data-bind="click: ApplyFilter">Применить</button>
+				</div>
+				<div class="col-md-1" style="padding:2px; width:5%">
+					<a href="#" class="btn" style="font-size:x-large" data-bind="click: Collapse">&mdash;</a>
+				</div>
+			</div>
+			<a href="#" style="display:none;width:100%" class="btn" data-bind="click: Expand">Развернуть фильтр</a>
+		</div>
+	</div>
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-1" style="width:5%">Заказ</th>
+				<th class="col-md-4">Операция</th>
+				<th class="col-md-1" style="width:3%">Статус</th>
+				<th class="col-md-1" style="width:7%">Начало план</th>
+				<th class="col-md-1" style="width:7%">Начало факт</th>
+				<th class="col-md-1" style="width:7%">Конец план</th>
+				<th class="col-md-1" style="width:7%">Конец факт</th>
+				<th class="col-md-1" style="width:7%">Город</th>
+				<th style="width:10%">Отвественный</th>
+				<th style="width:5%">Откл.</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td><a href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Order, OrderId), attr:{href: $parent.OrderDetailsUrl(OrderId())}" target="_blank"></a></td>
+				<td class="text-muted overflowed"><span data-bind="text: $parent.GetOperationKind(OrderOperationId)"></span> &rarr; <span style="color:#000;font-size:12px" data-bind="text: Name"></span></td>
+				<td class="text-muted"><span class="glyphicon glyphicon-time" data-bind="visible:OperationStatusId()==1"></span><span class="glyphicon glyphicon-ok" data-bind="visible:OperationStatusId()==2"></span><span class="glyphicon glyphicon-calendar" data-bind="visible:OperationStatusId()==3"></span></td>
+				<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(StartPlanDate), click:function(){$parent.OpenDateTimeEdit($data, StartPlanDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!StartPlanDate(), click:function(){$parent.OpenDateTimeEdit($data, StartPlanDate)}">указать</a></td>
+				<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(StartFactDate), click:function(){$parent.OpenDateTimeEdit($data, StartFactDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!StartFactDate(), click:function(){$parent.OpenDateTimeEdit($data, StartFactDate)}">указать</a></td>
+				<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(FinishPlanDate), click:function(){$parent.OpenDateTimeEdit($data, FinishPlanDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!FinishPlanDate(), click:function(){$parent.OpenDateTimeEdit($data, FinishPlanDate)}">указать</a></td>
+				<td><a class="btn-a" href="#" data-bind="text: app.utility.FormatDateTime(FinishFactDate), click:function(){$parent.OpenFinishDateTimeEdit($data, FinishFactDate)}"></a><a class="text-muted btn-a" href="#" data-bind="visible:!FinishFactDate(), click:function(){$parent.OpenFinishDateTimeEdit($data, FinishFactDate)}">указать</a></td>
+				<td></td>
+				<td><a class="btn-a" href="#" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, ResponsibleUserId), click: $parent.ChangeResponsibleUser"></a></td>
+				<td></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+
+@Html.Partial("_DateTimeEditModal")
+@Html.Partial("_FinishOperationDateTimeEditModal")

@@ -1,0 +1,473 @@
+﻿@model Logisto.ViewModels.ContractorViewModel
+@{
+	ViewBag.Title = "Контрагент";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		label.btn > input[type='radio'] {
+			display: none;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetLegalsItems = "@Url.Action("GetLegalsByContractor", "Contractors")";
+		app.urls.GetOrdersItems = "@Url.Action("GetOrdersByContractor", "Ajax")";
+		app.urls.GetPaymentsItems = "@Url.Action("GetPaymentsByContractor", "Contractors")";
+		app.urls.GetWorkgroupItems = "@Url.Action("GetWorkgroupByContractor", "Ajax")";
+		app.urls.GetContractsItems = "@Url.Action("GetContractsByContractor", "Contractors")";
+		app.urls.GetPricelistsItems = "@Url.Action("GetPricelistsByContractor", "Ajax")";
+		app.urls.GetAccountingsItems = "@Url.Action("GetAccountingsByContractor", "Contractors")";
+		app.urls.GetContractsByLegalItems = "@Url.Action("GetContractsByLegal", "Contractors")";
+		app.urls.GetEmployeesByLegalItems = "@Url.Action("GetEmployeesByLegal", "Contractors")";
+		app.urls.GetAccountingsByLegalItems = "@Url.Action("GetAccountingsByLegal", "Contractors")";
+		app.urls.GetBankAccountsByLegalItems = "@Url.Action("GetBankAccountsByLegal", "Contractors")";
+		app.urls.GetDocumentsByContractItems = "@Url.Action("GetDocumentsByContract", "Orders")";
+		app.urls.GetEmployeesByContractorItems = "@Url.Action("GetEmployeesByContractor", "Ajax")";
+
+		app.urls.EditPerson = "@Url.Action("EditPerson", "Contractors")";
+		app.urls.UserDetails = "@Url.Action("View", "Users")";
+		app.urls.OrderDetails = "@Url.Action("Details", "Orders")";
+		app.urls.LegalDetails = "@Url.Action("LegalDetails", "Orders")";
+		app.urls.ViewDocument = "@Url.Action("ViewDocument", "Orders")";
+		app.urls.OrderTemplates = "@Url.Action("OrderTemplates", "Contracts")";
+		app.urls.EmployeeDetails = "@Url.Action("Details", "Employees")";
+		app.urls.ContractDetails = "@Url.Action("Edit", "Contracts")";
+		app.urls.CalculateBalance = "@Url.Action("CalculateBalance", "Contractors")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+
+		app.urls.ToggleIsLocked = "@Url.Action("ToggleContractorIsLocked", "Contractors")";
+
+		app.urls.GetBank = "@Url.Action("GetBank", "Ajax")";
+		app.urls.GetActionHint = "@Url.Action("GetActionHint", "Ajax")";
+		app.urls.GetBanks = "@Url.Action("SearchBanks", "Ajax")";
+		app.urls.GetPerson = "@Url.Action("GetPerson", "Ajax")";
+		app.urls.GetPersons = "@Url.Action("SearchPersons", "Ajax")";
+		app.urls.GetNewLegal = "@Url.Action("GetNewLegal", "Contractors")";
+		app.urls.GetNewContract = "@Url.Action("GetNewContract", "Contractors")";
+		app.urls.GetNewEmployee = "@Url.Action("GetNewEmployee", "Contractors")";
+		app.urls.GetNewWorkgroup = "@Url.Action("GetNewParticipant", "Contractors")";
+		app.urls.GetNewBankAccount = "@Url.Action("GetNewBankAccount", "Contractors")";
+		app.urls.GetContractCurrencies = "@Url.Action("GetContractCurrencies", "Contractors")";
+		app.urls.DownloadAccountingsFile = "@Url.Action("GetAccountingsFile", "Contractors")";
+		app.urls.ChangeEmployeePassword = "@Url.Action("ChangeEmployeePassword", "Home")";
+		app.urls.GetLockingContractorInfo = "@Url.Action("GetLockingContractorInfo", "Contractors")";
+
+		app.urls.SaveBankAccount = "@Url.Action("SaveBankAccount", "Contractors")";
+		app.urls.CreateContract = "@Url.Action("Create", "Contracts")";
+		app.urls.SaveContractor = "@Url.Action("SaveContractor", "Contractors")";
+		app.urls.SaveWorkgroup = "@Url.Action("SaveParticipant", "Contractors")";
+		app.urls.SaveDocument = "@Url.Action("SaveDocument", "Orders")";
+		app.urls.SaveEmployee = "@Url.Action("SaveEmployee", "Contractors")";
+		app.urls.SaveContract = "@Url.Action("SaveContract", "Contracts")";
+		app.urls.CreatePerson = "@Url.Action("CreatePerson", "Contractors")";
+		app.urls.SaveLegal = "@Url.Action("SaveLegal", "Contractors")";
+
+		app.urls.ViewPricelist = "@Url.Action("View", "Pricelists")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Contractors/Contractor.js"></script>
+
+	@if (ViewBag.ActivePart != null)
+	{
+		<text>
+			<script type="text/javascript">
+				// установка нужного таба
+				$(function () {	$('.nav li a[href="' + '#@ViewBag.ActivePart' + '"]').trigger('click', true); });
+			</script>
+		</text>
+	}
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Контрагент <span class="text-ghost">#<span data-bind="text: Contractor.ID"></span></span></h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="visible: IsDirty, click: Save">Сохранить</button></div>
+	</div>
+	<hr />
+
+	<div class="row">
+		<div class="col-md-1 form-text text-right">Название</div>
+		<div class="col-md-5"><input data-bind="textInput: Contractor.Name" class="form-control" /></div>
+		<div class="col-md-2">
+			<span class="glyphicon glyphicon-lock" data-bind="visible:Contractor.IsLocked()" style="display:none"></span>
+			<a href="#" class="btn btn-a" style="display:none" data-bind="click: ToggleLock, visible:!Contractor.IsLocked()">Зафиксировать</a>
+			<a href="#" class="btn btn-a" style="display:none" data-bind="click: ToggleLock, visible:Contractor.IsLocked()">Разблокировать</a>
+		</div>
+		<div class="col-md-4 form-text">
+			<span class="text-muted">Создано</span>
+			<span data-bind="text: app.utility.FormatDateTime(Contractor.CreatedDate)"></span>
+			<span class="text-muted">пользователем</span>
+			<a data-bind="text: app.utility.GetDisplay(Dictionaries.User, Contractor.CreatedBy), attr: { href: UserDetailsUrl(Contractor.CreatedBy()) }"></a>
+		</div>
+	</div>
+
+	<br />
+
+	<ul class="nav nav-tabs">
+		<li class="active">
+			<a href="#Contracts" data-toggle="tab">Договоры <span data-bind="text: ContractsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Workgroup" data-toggle="tab">Участники <span data-bind="text: WorkgroupCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Employees" data-toggle="tab">Сотрудники <span data-bind="text: EmployeesCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Legals" data-toggle="tab">Юридические лица <span data-bind="text: LegalsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Accountings" data-toggle="tab">Баланс <span data-bind="text: AccountingsCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Orders" data-toggle="tab">Заказы <span data-bind="text: OrdersCount" class="text-muted"></span></a>
+		</li>
+		<li>
+			<a href="#Pricelists" data-toggle="tab">Прайслисты</a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		@* блок договоров *@
+		<div class="tab-pane active" id="Contracts">
+			<div class="clearfix" style="padding: 16px;">
+				<div class="btn-group pull-right">
+					<label class="btn btn-default" data-bind="css: { 'active': ContractsSelectedFilter() === 'All' }">
+						<input type="radio" name="options" id="option1" data-bind="checked: ContractsSelectedFilter, checkedValue: 'All'">Все
+					</label>
+					<label class="btn btn-default" data-bind="css: { 'active': ContractsSelectedFilter() === 'AsProvider' }">
+						<input type="radio" name="options" id="option2" data-bind="checked: ContractsSelectedFilter, checkedValue: 'AsProvider'">Как поставщик
+					</label>
+					<label class="btn btn-default" data-bind="css: { 'active': ContractsSelectedFilter() === 'AsClient' }">
+						<input type="radio" name="options" id="option3" data-bind="checked: ContractsSelectedFilter, checkedValue: 'AsClient'">Как клиент
+					</label>
+				</div>
+			</div>
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr data-bind="with: ContractSorter">
+						<th class="sortable" data-bind="click: function(){Sort('OurLegalId')},		css: Css('OurLegalId')">Наше юрлицо</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('LegalId')},		css: Css('LegalId')">Их юрлицо</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('ContractServiceTypeId')}, css: Css('ContractServiceTypeId')">Вид</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('ContractTypeId')}, css: Css('ContractTypeId')">Тип</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Number')},			css: Css('Number')">Номер</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Date')},			css: Css('Date')">Дата</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('BeginDate')},		css: Css('BeginDate')">Дата начала</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('EndDate')},		css: Css('EndDate')">Дата конца</th>
+						<th>Валюта</th>
+						<th class="sortable" data-bind="click: function(){Sort('IsProlongation')}, css: Css('IsProlongation')">Пролонгация</th>
+						<th class="col-md-1">Комментарий</th>
+						<th class="col-md-1">Метки</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: ContractsItems -->
+					@*					<!-- ko if: ($parent.ContractsSelectedFilter() === 'All' || $data.ContractServiceTypeId() == 3 || ($parent.ContractsSelectedFilter() === 'AsProvider' && $data.ContractServiceTypeId() == 2) || ($parent.ContractsSelectedFilter() === 'AsClient' && $data.ContractServiceTypeId() == 1)) -->*@
+					<!-- ko if: ($parent.ContractsSelectedFilter() === 'All' || $data.ContractServiceTypeId == 3 || ($parent.ContractsSelectedFilter() === 'AsProvider' && $data.ContractServiceTypeId == 2) || ($parent.ContractsSelectedFilter() === 'AsClient' && $data.ContractServiceTypeId == 1)) -->
+					@*<tr data-bind="style:{color:IsActive()?'#000':'#900'}">*@
+					<tr data-bind="style:{color:IsActive?'#000':'#900'}">
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, OurLegalId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId)" class="overflowed"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractServiceType, ContractServiceTypeId)" class="overflowed"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractType, ContractTypeId)" class="overflowed"></td>
+						<td data-bind="text: Number"></td>
+						<td data-bind="text: app.utility.FormatDate(Date)"></td>
+						<td data-bind="text: app.utility.FormatDate(BeginDate)"></td>
+						<td data-bind="text: app.utility.FormatDate(EndDate)"></td>
+						<td data-bind="text: $parent.GetContractCurrenciesDisplay($data)" class="overflowed"></td>
+						@*<td data-bind="text: IsProlongation()?'да':''"></td>*@
+						<td data-bind="text: IsProlongation?'да':''"></td>
+						<td data-bind="text: Comment"></td>
+						<td data-bind="text: Marks"></td>
+					</tr>
+					<!-- /ko -->
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок рабочей группы *@
+		<div class="tab-pane" id="Workgroup">
+			<br />
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-2">Пользователь</th>
+						<th class="col-md-2">Роль</th>
+						<th class="col-md-2">От</th>
+						<th class="col-md-2">До</th>
+						<th class="col-md-1">Ответственный</th>
+						<th class="col-md-1">Заместитель</th>
+						<th class="col-md-1 text-right"><a href="#" class="btn btn-default btn-sm" data-bind="click: OpenWorkgroupCreate">+</a></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: WorkgroupItems -->
+					<tr>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, UserId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ParticipantRole, ParticipantRoleId)"></td>
+						<td data-bind="text: app.utility.FormatDate(FromDate)"></td>
+						<td data-bind="text: app.utility.FormatDate(ToDate)"></td>
+						<td data-bind="text: IsResponsible()?'да':''"></td>
+						<td data-bind="text: IsDeputy()?'да':''"></td>
+						<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenWorkgroupEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteWorkgroup" class="close">&times;</a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок сотрудников *@
+		<div class="tab-pane" id="Employees">
+			<br />
+
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">Должность</th>
+						<th class="col-md-1">Должность (р.п.)</th>
+						<th class="col-md-1">Должность (en)</th>
+						<th class="col-md-1">Действует на основании</th>
+						<th class="col-md-1">ФИО</th>
+						<th class="col-md-1">Дата начала</th>
+						<th class="col-md-1">Дата окончания</th>
+						<th class="col-md-1">Отдел</th>
+						<th class="col-md-1">Комментарий</th>
+						@*<th class="col-md-1 text-right"><a href="#" data-bind="click: OpenContractorEmployeeCreate"><strong>+новый</strong></a></th>*@
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: EmployeesItems -->
+					<tr>
+						<td data-bind="text: Position"></td>
+						<td data-bind="text: GenitivePosition" class="overflowed"></td>
+						<td data-bind="text: EnPosition"></td>
+						<td data-bind="text: Basis"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Person, PersonId)"></td>
+						<td data-bind="text: app.utility.FormatDate(BeginDate)"></td>
+						<td data-bind="text: app.utility.FormatDate(EndDate)"></td>
+						<td data-bind="text: Department"></td>
+						<td data-bind="text: Comment"></td>
+						@*<td class="text-right"><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenEmployeeEdit"><span class="glyphicon glyphicon-pencil"></span></a>&nbsp;<a href="#" data-bind="click: $parent.DeleteEmployee" class="close">&times;</a></td>*@
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок юрлиц *@
+		<div class="tab-pane" id="Legals">
+			<div data-bind="ifnot: SelectedLegal">
+				<div class="clearfix" style="padding: 16px;">
+					<button class="btn btn-primary pull-right" data-bind="click: CreateLegal" style="margin-left:8px">+новое юрлицо</button>
+
+					<div class="btn-group pull-right">
+						<label class="btn btn-default" data-bind="css: { 'active': LegalsSelectedFilter() === 'All' }">
+							<input type="radio" name="options" id="option1" data-bind="checked: LegalsSelectedFilter, checkedValue: 'All'">Все
+						</label>
+						<label class="btn btn-default" data-bind="css: { 'active': LegalsSelectedFilter() === 'WContract' }">
+							<input type="radio" name="options" id="option2" data-bind="checked: LegalsSelectedFilter, checkedValue: 'WContract'">С договором
+						</label>
+						<label class="btn btn-default" data-bind="css: { 'active': LegalsSelectedFilter() === 'WoContract' }">
+							<input type="radio" name="options" id="option3" data-bind="checked: LegalsSelectedFilter, checkedValue: 'WoContract'">Без договора
+						</label>
+					</div>
+				</div>
+
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr data-bind="with: LegalSorter">
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('DisplayName')},css: Css('DisplayName')">Название</th>
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('EnName')},		css: Css('EnName')">Название (англ)</th>
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('TIN')},		css: Css('TIN')">ИНН</th>
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('OGRN')},		css: Css('OGRN')">ОГРН</th>
+							<th class="col-md-1 sortable" data-bind="click: function(){Sort('IsNotResident')},css: Css('IsNotResident')">Нерезидент</th>
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('Balance')},	css: Css('Balance')">Баланс</th>
+							<th class="col-md-2 sortable" data-bind="click: function(){Sort('PaymentBalance')},css: Css('PaymentBalance')">Баланс ПП</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: LegalsItems -->
+						<!-- ko if: !IsDeleted() -->
+						<!-- ko if: ($parent.LegalsSelectedFilter() === 'All' || ($parent.LegalsSelectedFilter() === 'WContract' && $data.ContractCount() > 0) || ($parent.LegalsSelectedFilter() === 'WoContract' && $data.ContractCount() == 0)) -->
+						<tr data-bind="css:{success:$data==$parent.SelectedLegal()}" class="pointer">
+							<td data-bind="text: DisplayName, click: $parent.SelectLegal"></td>
+							<td data-bind="text: EnName, click: $parent.SelectLegal"></td>
+							<td data-bind="text: TIN, click: $parent.SelectLegal"></td>
+							<td data-bind="text: OGRN, click: $parent.SelectLegal"></td>
+							<td data-bind="text: IsNotResident()?'да':''"></td>
+							<td data-bind="text: app.utility.FormatDecimal(Balance)"></td>
+							<td data-bind="text: app.utility.FormatDecimal(PaymentBalance)"></td>
+							<td><a href="#" data-bind="click: $parent.DeleteLegal" class="close">&times;</a></td>
+						</tr>
+						<!-- /ko -->
+						<!-- /ko -->
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+			<br />
+			@Html.Partial("_Legal")
+		</div>
+
+		@* блок учета *@
+		<div class="tab-pane" id="Accountings">
+			<br />
+			<div class="well well-sm">
+				@*Доход obs: <strong data-bind="text: app.utility.FormatDecimal(Contractor.Income)"></strong>*@
+				Доход: <strong data-bind="text: app.utility.FormatDecimal(ContractorIncome)"></strong>
+				@*Расход obs: <strong data-bind="text: app.utility.FormatDecimal(Contractor.Expense)"></strong>*@
+				Расход: <strong data-bind="text: app.utility.FormatDecimal(ContractorExpense)"></strong>
+				@*Баланс obs: <strong data-bind="text: app.utility.FormatDecimal(Contractor.Balance)"></strong>*@
+				Баланс: <strong data-bind="text: app.utility.FormatDecimal(ContractorBalance)"></strong>
+				Поступило: <strong data-bind="text: app.utility.FormatDecimal(Contractor.PaymentIncome)"></strong>
+				Оплачено: <strong data-bind="text: app.utility.FormatDecimal(Contractor.PaymentExpense)"></strong>
+				Баланс ПП: <strong data-bind="text: app.utility.FormatDecimal(Contractor.PaymentBalance)"></strong>
+			</div>
+			<table class="table table-condensed">
+				<thead>
+					<tr data-bind="with: AccountingSorter">
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('OurLegalId')},		css: Css('OurLegalId')">Наше юрлицо</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('OrderNumber')},	css: Css('OrderNumber')" style="width:7%">Номер заказа</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('AccountingDocumentTypeId')}, css: Css('AccountingDocumentTypeId')" style="width:5%">Документ</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Number')},			css: Css('Number')">Номер</th>
+						<th>Контрагент</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('ContractNumber')},	css: Css('ContractNumber')">Договор</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('LegalId')},		css: Css('LegalId')">Исполнитель</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceNumber')},	css: Css('InvoiceNumber')">Номер счета</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceDate')},	css: Css('InvoiceDate')" style="width:5%">Дата счета</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('ActDate')},		css: Css('ActDate')" style="width:5%">Дата акта</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('InvoiceCurrency')},css: Css('InvoiceCurrency')" style="width:5%">Валюта</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('OriginalSum')},	css: Css('OriginalSum')">Сумма счета</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Sum')},			css: Css('Sum')">Сумма, руб</th>
+						<th class="col-md-1 sortable" data-bind="click: function(){Sort('Vat')},			css: Css('Vat')" style="width:8%">НДС</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: AccountingsList -->
+					<tr>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, OurLegalId)"></td>
+						<td><a data-bind="text: OrderNumber, attr: { href: $parent.OrderDetailsUrl(OrderId) }"></a></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.AccountingDocumentType, AccountingDocumentTypeId)"></td>
+						<td data-bind="text: Number"></td>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.ContractorByLegal, LegalId)"></td>
+						<td><span data-bind="text: ContractNumber"></span></td>
+						<td class="overflowed" data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Legal, LegalId)"></td>
+						<td data-bind="text: InvoiceNumber"></td>
+						<td data-bind="text: app.utility.FormatDate(InvoiceDate)"></td>
+						<td data-bind="text: app.utility.FormatDate(ActDate)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, AccountingCurrencyId)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(OriginalSum)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Vat)"></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+
+			<br />
+			<h4>Платежи</h4>
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">Документ №</th>
+						<th class="col-md-1">Дата оплаты</th>
+						<th class="col-md-1">Сумма</th>
+						<th class="col-md-1">Валюта</th>
+						<th class="col-md-8">Описание ПП</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: PaymentsItems -->
+					<tr data-bind="css:{'text-success': IsIncome}">
+						<td data-bind="text: Number"></td>
+						<td data-bind="text: app.utility.FormatDate(Date)"></td>
+						<td data-bind="text: app.utility.FormatDecimal(Sum)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Currency, CurrencyId)"></td>
+						<td data-bind="text: Description"></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок заказов *@
+		<div id="Orders" class="tab-pane">
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th>Номер</th>
+						<th>Дата</th>
+						<th>Статус</th>
+						<th>Юрлицо</th>
+						<th>Договор</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: OrdersItems -->
+					<tr>
+						<td><a href="#" data-bind="text: Number, attr:{href: $parent.OrderDetailsUrl(ID)}"></a></td>
+						<td data-bind="text: app.utility.FormatDate(CreatedDate)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.OrderStatus, OrderStatusId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.LegalByContract, ContractId)"></td>
+						<td><a href="#" data-bind="text: $parent.GetContractDisplay(ContractId), click: function(){$parent.OpenContractInfoById(ContractId)}"></a></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+
+		@* блок прайслистов *@
+		<div id="Pricelists" class="tab-pane">
+			<table class="table table-condensed">
+				<thead>
+					<tr>
+						<th class="col-md-1">С</th>
+						<th class="col-md-1">По</th>
+						<th class="col-md-2">Наименование</th>
+						<th class="col-md-1">ЦФО</th>
+						<th class="col-md-1">Продукт</th>
+						<th class="col-md-1">Договор</th>
+						<th class="col-md-4">Комментарий</th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- ko foreach: PricelistsItems -->
+					<tr class="pointer" data-bind="click: $parent.GotoPricelist">
+						<td data-bind="text: app.utility.FormatDate(From)"></td>
+						<td data-bind="text: app.utility.FormatDate(To)"></td>
+						<td data-bind="text: Name" class="overflowed"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.FinRepCenter, FinRepCenterId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Product, ProductId)"></td>
+						<td data-bind="text: app.utility.GetDisplay($parent.Dictionaries.Contract, ContractId)"></td>
+						<td data-bind="text: Comment" class="overflowed"></td>
+						<td></td>
+					</tr>
+					<!-- /ko -->
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+@Html.Partial("_ErrorModal")
+@Html.Partial("_EmployeeEditModal")
+@Html.Partial("_ContractInfoModal")
+@Html.Partial("_DocumentEditModal")
+@Html.Partial("_WorkgroupEditModal")
+@Html.Partial("_BankAccountEditModal")

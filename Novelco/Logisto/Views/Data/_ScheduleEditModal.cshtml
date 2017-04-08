@@ -1,0 +1,42 @@
+﻿
+<div class="modal" id="scheduleEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ScheduleEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Расписание <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новое расписание</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">Наименование рассылки</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Reports, optionsText: 'Display', optionsValue: 'ID', value: CurrentReportId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">День недели</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Weekdays, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().Weekday"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Время</div>
+						<div class="col-md-2"><input class="form-control" data-bind="textInput: CurrentItem().Hour" /></div>
+						<div class="col-md-2"><input class="form-control" data-bind="textInput: CurrentItem().Minute" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

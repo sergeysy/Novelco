@@ -1,0 +1,61 @@
+﻿@model Logisto.Models.ListFilter
+@{
+	ViewBag.Title = "Курсы валют";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("CurrencyRatesGetItems", "Data")";
+		app.urls.RefreshRates = "@Url.Action("RefreshRates", "Data")";
+
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Data/CurrencyRates.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-7"><h2>Курсы валют</h2></div>
+		<div class="col-md-1"><a href="#" data-bind="click: RefreshRates" class="btn btn-a" style="margin-top:22px;">обновить</a></div>
+		<div class="col-md-2"><input class="form-control" data-bind="datepicker: Filter.From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" style="margin-top: 22px;" /></div>
+		<div class="col-md-2"><input class="form-control" data-bind="datepicker: Filter.To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<theader>
+			<tr>
+				<th class="col-md-2">Дата</th>
+				<th class="col-md-1">USD</th>
+				<th class="col-md-1">EUR</th>
+				<th class="col-md-1">CNY</th>
+				<th class="col-md-1">GBP</th>
+				<th class="col-md-6"></th>
+			</tr>
+		</theader>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text:Date"></td>
+				<td data-bind="text:Rates()[1]"></td>
+				<td data-bind="text:Rates()[2]"></td>
+				<td data-bind="text:Rates()[3]"></td>
+				<td data-bind="text:Rates()[4]"></td>
+				<td></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+</div>
+

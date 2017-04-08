@@ -1,0 +1,28 @@
+﻿
+<div class="modal" id="changeOrderTemplateModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog modal-sm" data-bind="with: ChangeOrderTemplateModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close">&times;</button>
+				<h4 class="modal-title">Выбор шаблона</h4>
+			</div>
+			<div class="modal-body">
+				<p class="alert alert-danger">
+					Обратите внимание, что текущие операции заказа будут удалены при смене шаблона.
+				</p>
+
+				<div class="container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Шаблон</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: OrderTemplatesItems, optionsText: 'Name', optionsValue: 'ID', value: SelectedOrderTemplate"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Сменить шаблон</button>
+			</div>
+		</div>
+	</div>
+</div>

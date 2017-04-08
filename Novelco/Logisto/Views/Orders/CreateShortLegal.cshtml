@@ -1,0 +1,100 @@
+﻿@model Logisto.Models.Legal
+@{
+	ViewBag.Title = "Новое юрлицо (перевозчик)";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var modelDictionaries = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Dictionaries));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+
+		app.urls.SaveLegal = "@Url.Action("SaveLegal", "Contractors")";
+		app.urls.GetContractor = "@Url.Action("GetContractor", "Ajax")";
+
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/ShortLegal.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Новый грузоотправитель/получатель</h2></div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+	<h5>Для контрагента <strong data-bind="text: GetContractorDisplay()"></strong></h5>
+	<div class="row">
+		<div class="form-horizontal col-md-6 col-md-offset-3" data-bind="with: Legal">
+			<div>
+				<div class="row row-v-padding">
+					<div class="col-md-3"></div>
+					<div class="col-md-2 checkbox"><label><input type="checkbox" data-bind="checked: IsNotResident" />Нерезидент</label></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Наименование</div>
+					<div class="col-md-8"><input type="text" data-bind="textInput: DisplayName" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Наименование полное</div>
+					<div class="col-md-8"><input type="text" data-bind="textInput: Name, disable: IsNotResident" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Наименование полное EN</div>
+					<div class="col-md-8"><input type="text" data-bind="textInput: EnName, enable: IsNotResident" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">ИНН</div>
+					<div class="col-md-2"><input type="text" data-bind="textInput: TIN, disable: IsNotResident" class="form-control" /></div>
+
+					<div class="col-md-2 text-muted text-right form-text">КПП</div>
+					<div class="col-md-2"><input type="text" data-bind="textInput: KPP, disable: IsNotResident" class="form-control" /></div>
+				</div>
+
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Юр адрес</div>
+					<div class="col-md-8"><input type="text" data-bind="textInput: Address, disable: IsNotResident" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Юр адрес EN</div>
+					<div class="col-md-8"><input type="text" data-bind="textInput: EnAddress, enable: IsNotResident" class="form-control" /></div>
+				</div>
+
+				<div class="row row-v-padding">
+					<div class="col-md-3 text-muted text-right form-text">Рабочее время</div>
+					<div class="col-md-2"><input type="text" data-bind="textInput: WorkTime" class="form-control" /></div>
+
+					<div class="col-md-2 text-muted text-right form-text">Часовой пояс</div>
+					<div class="col-md-2">
+						<select class="form-control" data-bind="valueAllowUnset: true, options: $parent.Dictionaries.TimeZone, optionsText: 'Display', optionsValue: 'ID', value:TimeZone"></select>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>

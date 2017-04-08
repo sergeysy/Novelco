@@ -1,0 +1,141 @@
+﻿@model Dictionary<string, object>
+@{
+	ViewBag.Title = "Юридическое лицо";
+}
+
+@section Styles{
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.EditLegal = "@Url.Action("Edit", "Legals")";
+	</script>
+
+	<script src="~/Scripts/Contractors/ViewLegal.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-4"><h2>Юридическое лицо <span class="text-ghost">#<span data-bind="text: Legal.ID"></span></span></h2></div>
+		<div class="col-md-6"></div>
+		<div class="col-md-2"><button class="btn btn-primary" style="margin-top: 22px;" data-bind="click: EditLegal">Редактировать</button></div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default shadow">
+				<div class="panel-heading">
+					Юридическое лицо <strong data-bind="text: Legal.DisplayName"></strong>
+				</div>
+				<div class="panel-body">		
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Название</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.Name"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Адрес</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.Address"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Фактический адрес</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.AddressFact"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Почтовый адрес</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.PostAddress"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Email</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.Email"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Нерезидент</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.IsNotResident()?'да':'нет'"></span>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">КПП</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.KPP"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ОГРН</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.OGRN"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ОКПО</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.OKPO"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ОКВЭД</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.OKVED"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">ИНН</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.TIN"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Рабочее время</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.WorkTime"></span>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-3 text-right text-muted">Налоговый режим</div>
+						<div class="col-md-9">
+							<span data-bind="text: Legal.TaxType"></span>
+						</div>
+					</div>
+
+					<h4>Договоры</h4>
+					<!-- ko foreach: Legal.Contracts -->
+					<div class="row form-group">
+						<div class="col-md-2 text-right text-muted"><span data-bind="text: Number"></span></div>
+						<div class="col-md-10">
+							от <span data-bind="text: app.utility.FormatDate(Date)"></span>,
+							<span data-bind="text: Comment"></span>
+							<span data-bind="visible: IsProlongation">с пролонгацией</span>
+						</div>
+					</div>
+					<!-- /ko -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

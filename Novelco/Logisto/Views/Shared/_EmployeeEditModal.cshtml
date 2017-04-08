@@ -1,0 +1,107 @@
+﻿
+<div class="modal" id="employeeEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: EmployeeEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Информация о сотруднике <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый сотрудник</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">ФИО</div>
+						<div class="col-md-8">
+							<input id="personAutocomplete" type="text" class="form-control" data-bind="value: CurrentName">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-4"></div>
+						<div class="col-md-8">
+							<a href="#" data-bind="click: $parent.CreatePerson">+новое физлицо</a>
+							&nbsp;&nbsp;&nbsp;
+							<a href="#" data-bind="click: $parent.EditPerson"><span class="glyphicon glyphicon-pencil"></span>физлицо</a>
+						</div>
+					</div>
+
+					<div data-bind="with: CurrentPerson">
+						<div class="row form-group ro">
+							<div class="col-md-4 text-right form-text">Email</div>
+							<div class="col-md-8"><span class="form-control" data-bind="text: Email"></span></div>
+						</div>
+						<div class="row form-group ro">
+							<div class="col-md-4 text-right form-text">Адрес</div>
+							<div class="col-md-8"><span class="form-control" data-bind="text: Address"></span></div>
+						</div>
+						<div class="row form-group ro">
+							<div class="col-md-4 text-right form-text">Контакт для рассылки</div>
+							<div class="col-md-8"><span class="form-control" data-bind="text: IsSubscribed?'да':'нет'"></span></div>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsSigning" />Подписант</label>
+						</div>
+					</div>
+
+					<div class="row form-group" style="background-color: #f5f5f5; padding-top:4px;padding-bottom:4px;margin-top:0;">
+						<div class="col-md-12 text-right form-text" data-bind="if: !IsSelectTemplateVisible(), click: ShowSelectTemplate"><a href="#" class="btn local">Заполнить поля по шаблону</a></div>
+						<div class="col-md-8 col-md-offset-4" data-bind="if: IsSelectTemplateVisible()">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.PositionTemplate, optionsText: 'Position', optionsValue: 'ID', value: SelectedTemplate"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Должность</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Position" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Должность (род.пад.)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().GenitivePosition" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Должность (англ)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnPosition" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Отдел</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Department" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Действует на основании</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Basis" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Действует на основании (англ)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnBasis" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата вступления в должность</div>
+						<div class="col-md-8"><input class="form-control" data-bind="datepicker: CurrentItem().BeginDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата увольнения</div>
+						<div class="col-md-8"><input class="form-control" data-bind="datepicker: CurrentItem().EndDate, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Комментарии</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Comment" /></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<div style="float:left">
+					<a href="#" class="btn btn-a" data-bind="attr: { href: $parent.ChangeEmployeePasswordUrl(CurrentItem().ID()) }">Сменить пароль для NIP</a>
+				</div>
+				<div style="float:right;line-height: 34px;">
+					<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

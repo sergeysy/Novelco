@@ -1,0 +1,54 @@
+﻿
+<div class="modal" id="currencyRateDiffEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: CurrencyRateDiffEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Курсовая разница <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новая курсовая разница</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата начала</div>
+						<div class="col-md-8"><input class="form-control" data-bind="datepicker: CurrentItem().From, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Дата окончания</div>
+						<div class="col-md-8"><input class="form-control" data-bind="datepicker: CurrentItem().To, datepickerOptions: { dateFormat: 'dd-mm-yy'}" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">USD</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().USD"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">EUR</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EUR"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">CNY</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().CNY"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4 form-text text-right">GBP</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().GBP"></div>
+					</div>
+					
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

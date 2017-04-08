@@ -1,0 +1,188 @@
+﻿@model Logisto.ViewModels.CountriesViewModel
+@{
+	ViewBag.Title = "Страны и регионы";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetCountriesItems = "@Url.Action("GetCountries", "Data")";
+		app.urls.GetSubRegionsItems = "@Url.Action("GetSubRegions", "Data")";
+		app.urls.GetRegionsItems = "@Url.Action("GetRegions", "Data")";
+		app.urls.GetPlacesItems = "@Url.Action("GetPlaces", "Data")";
+
+		app.urls.GetNewPlace = "@Url.Action("GetNewPlace", "Data")";
+
+		app.urls.SaveSubRegion= "@Url.Action("SaveSubRegion", "Data")";
+		app.urls.SaveCountry="@Url.Action("SaveCountry", "Data")";
+		app.urls.SaveRegion="@Url.Action("SaveRegion", "Data")";
+		app.urls.SavePlace="@Url.Action("SavePlace", "Data")";
+	</script>
+
+	<script src="~/Scripts/Data/Places.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Страны и регионы</h2></div>
+	</div>
+	<hr />
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Страны <input class="pull-right form-control input-sm" style="width:auto; margin-top: -4px;" data-bind="textInput: CountriesFilter.Filter.Context" /></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="sortable" data-bind="css:{'asc-sorted':CountriesFilter.Filter.Sort()=='Name'&& CountriesFilter.Filter.SortDirection()=='Asc',  'desc-sorted':CountriesFilter.Filter.Sort()=='Name'&& CountriesFilter.Filter.SortDirection()=='Desc'}">
+								<a data-bind="click: function(){CountriesFilter.SortBy('Name')}">Наименование</a>
+							</th>
+							<th>Наименование en</th>
+							<th>Код ISO</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: CountriesItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedCountry()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectCountry"></td>
+							<td data-bind="text: EnName, click: $parent.SelectCountry"></td>
+							<td data-bind="text: IsoCode"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenCountryEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+
+				<div class="text-center" data-bind="with: CountriesFilter">
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+					Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+					из <span data-bind="text: TotalPageCount"></span>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Регионы <input class="pull-right form-control input-sm" style="width:auto; margin-top: -4px;" data-bind="textInput: RegionsFilter.Filter.Context" /></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="sortable" data-bind="css:{'asc-sorted':RegionsFilter.Filter.Sort()=='Name'&& RegionsFilter.Filter.SortDirection()=='Asc',  'desc-sorted':RegionsFilter.Filter.Sort()=='Name'&& RegionsFilter.Filter.SortDirection()=='Desc'}">
+								<a data-bind="click: function(){RegionsFilter.SortBy('Name')}">Наименование</a>
+							</th>
+							<th>Наименование en</th>
+							<th>Код ISO</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: RegionsItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedRegion()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectRegion"></td>
+							<td data-bind="text: EnName, click: $parent.SelectRegion"></td>
+							<td data-bind="text: IsoCode"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenRegionEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+
+				<div class="text-center" data-bind="with: RegionsFilter">
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+					Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+					из <span data-bind="text: TotalPageCount"></span>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">Области <input class="pull-right form-control input-sm" style="width:auto; margin-top: -4px;" data-bind="textInput: SubRegionsFilter.Filter.Context" /></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="sortable" data-bind="css:{'asc-sorted':SubRegionsFilter.Filter.Sort()=='Name'&& SubRegionsFilter.Filter.SortDirection()=='Asc',  'desc-sorted':SubRegionsFilter.Filter.Sort()=='Name'&& SubRegionsFilter.Filter.SortDirection()=='Desc'}">
+								<a data-bind="click: function(){SubRegionsFilter.SortBy('Name')}">Наименование</a>
+							</th>
+							<th>Наименование en</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: SubRegionsItems -->
+						<tr data-bind="css:{success:$data==$parent.SelectedSubRegion()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectSubRegion"></td>
+							<td data-bind="text: EnName, click: $parent.SelectSubRegion"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenSubRegionEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+
+				<div class="text-center" data-bind="with: SubRegionsFilter">
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+					Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+					из <span data-bind="text: TotalPageCount"></span>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-black">
+				<div class="panel-heading">Населенные пункты <input class="pull-right form-control input-sm" style="width:auto; margin-top: -4px;" data-bind="textInput: PlacesFilter.Filter.Context" /><a href="#" data-bind="click: OpenPlaceCreate" class="pull-right" style="color:#fd0">+новый </a></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th class="sortable" data-bind="css:{'asc-sorted':PlacesFilter.Filter.Sort()=='Name'&& PlacesFilter.Filter.SortDirection()=='Asc',  'desc-sorted':PlacesFilter.Filter.Sort()=='Name'&& PlacesFilter.Filter.SortDirection()=='Desc'}">
+								<a data-bind="click: function(){PlacesFilter.SortBy('Name')}">Наименование</a>
+							</th>
+							<th>Наименование en</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: PlacesItems -->
+						<tr class="pointer">
+							<td data-bind="text: Name"></td>
+							<td data-bind="text: EnName"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenPlaceEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+
+				<div class="text-center" data-bind="with: PlacesFilter">
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+					Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+					из <span data-bind="text: TotalPageCount"></span>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+					<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_CountryEditModal")
+@Html.Partial("_RegionEditModal")
+@Html.Partial("_SubRegionEditModal")
+@Html.Partial("_PlaceEditModal")

@@ -1,0 +1,78 @@
+﻿@model Logisto.ViewModels.ContractorsViewModel
+@{
+	ViewBag.Title = "Контрагенты";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetItems", "Contractors")";
+		app.urls.CreateContractor = "@Url.Action("Create", "Contractors")";
+		app.urls.ContractorDetails = "@Url.Action("Details", "Contractors")";
+		app.urls.LegalDetails = "@Url.Action("Details", "Legals")";
+		app.urls.PersonDetails = "@Url.Action("Details", "Persons")";
+		app.urls.UserDetails = "@Url.Action("View", "Users")";
+
+	</script>
+
+	<script src="~/Scripts/Contractors/Contractors.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-8"><h2>Контрагенты</h2></div>
+		<div class="col-md-1"></div>
+		<div class="col-md-1"><a href="#" class="btn btn-a" style="margin-top:22px;" data-bind="attr:{href: $data.Options.CreateContractorUrl}"><strong>+новый</strong></a></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-3 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">Название</a>
+				</th>
+				<th class="col-md-1">Доход</th>
+				<th class="col-md-1">Расход</th>
+				<th class="col-md-1 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Balance'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Balance'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Balance')}">Баланс</a>
+				</th>
+				<th class="col-md-1">Блокирован</th>
+				<th class="col-md-2">Создатель</th>
+				<th class="col-md-2 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='CreatedDate'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('CreatedDate')}">Создано</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td><a data-bind="text: Name, attr: { href: $parent.ContractorDetailsUrl(ID()) }"></a></td>
+				<td data-bind="text: app.utility.FormatDecimal(Income), click:  $parent.OpenContractor" class="pointer"></td>
+				<td data-bind="text: app.utility.FormatDecimal(Expense), click:  $parent.OpenContractor" class="pointer"></td>
+				<td class="pointer"><span data-bind="text: app.utility.FormatDecimal(Balance), css: {'text-danger':Balance()<0}, click:  $parent.OpenContractor"></span></td>
+				<td data-bind="text: IsLocked()?'да':'', click:  $parent.OpenContractor" class="pointer"></td>
+				<td><a data-bind="text: app.utility.GetDisplay($parent.Dictionaries.User, CreatedBy), attr: { href: $parent.UserDetailsUrl(CreatedBy()) }"></a></td>
+				<td data-bind="text: app.utility.FormatDate(CreatedDate)"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>

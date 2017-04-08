@@ -1,0 +1,56 @@
+﻿
+<div class="modal" id="productEditModal" tabindex="-1">
+	<div class="modal-dialog" data-bind="with: ProductEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Продукт <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый продукт</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Display"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-offset-4 сol-md-8 checkbox">
+							<label><input type="checkbox" data-bind="checked: CurrentItem().IsWorking" />работает</label>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Объемный вес</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.VolumetricRatio, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().VolumetricRatioId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Менеджер</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.ActiveUser, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().ManagerUserId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Заместитель</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.Dictionaries.ActiveUser, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().DeputyUserId"></select>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

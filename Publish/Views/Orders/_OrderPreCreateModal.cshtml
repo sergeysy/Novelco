@@ -1,0 +1,29 @@
+﻿
+<div class="modal" id="orderPreCreateModal" tabindex="-1">
+	<div class="modal-dialog modal-sm" data-bind="with: OrderPreCreateModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Выбор продукта</h4>
+			</div>
+			<div class="modal-body">				
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Продукт</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: $parent.Dictionaries.Product, optionsText: 'Display', optionsValue: 'ID', value: SelectedItem"></select>
+					</div>
+				</div>
+
+				<div class="row form-group">
+					<div class="col-md-4 text-right form-text">Шаблон</div>
+					<div class="col-md-8">
+						<select class="form-control" data-bind="optionsCaption:'',options: OrderTemplatesItems, optionsText: 'Name', optionsValue: 'ID', value: SelectedOrderTemplate"></select>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Создать заказ</button>
+			</div>
+		</div>
+	</div>
+</div>

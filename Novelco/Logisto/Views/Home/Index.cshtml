@@ -1,0 +1,57 @@
+﻿@model Logisto.ViewModels.HomeViewModel
+@{
+	ViewBag.Title = "Cargo Manager";
+}
+
+@section Styles{
+	@Styles.Render("~/Content/css/client")
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+	</script>
+
+	<script src="~/Scripts/Home/home.js"></script>
+}
+
+<div>
+	<br />
+	<div class="row row-no-padding">
+		<div class="col-md-4">
+			<div class="tile">
+				<h4>Курсы на @DateTime.Today.ToString("ddd, d MMMM yyyy", System.Globalization.CultureInfo.GetCultureInfo("ru-ru"))</h4>
+				<p class="text-muted">Обновлено <span data-bind="text: app.utility.FormatDateTime(LastRateUpdated)"></span></p>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="tile tile-primary">
+				<h4>USD</h4>
+				<strong data-bind="text: UsdRate"></strong>
+			</div>
+		</div>
+
+		<div class="col-md-2">
+			<div class="tile tile-primary">
+				<h4>EUR</h4>
+				<strong data-bind="text: EurRate"></strong>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="tile tile-primary">
+				<h4>CNY</h4>
+				<strong data-bind="text: app.utility.FormatDecimal(CnyRate,4)"></strong>
+			</div>
+		</div>
+		<div class="col-md-2">
+			<div class="tile tile-primary">
+				<h4>GBP</h4>
+				<strong data-bind="text: GbpRate"></strong>
+			</div>
+		</div>
+	</div>
+	<br />
+	<hr />
+	<a href="~/Sync/FinSync" class="btn btn-a">1C</a>
+	<a href="~/Data/RecalculateContractors" class="btn btn-a">Пересчитать баланс контрагентов</a>
+</div>

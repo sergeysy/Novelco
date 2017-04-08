@@ -1,0 +1,32 @@
+﻿
+<div class="modal" id="changeOrderContractorModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: ChangeOrderContractorModal">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close">&times;</button>
+				<h4 class="modal-title">Выбор контрагента</h4>
+			</div>
+			<div class="modal-body">
+				<p class="alert alert-info">
+					Участники выбранного контрагента заменят участников этого заказа.
+				</p>
+				<p class="alert alert-warning">
+					<b>Плательщик в доходах будет изменен, <i>непроверенные</i> финансовые документы обновятся.</b><br />
+					После смены контрагента вы должны проверить все расходы/доходы и исправить плательщиков, сформированные и прикрепленные документы и т.п.
+				</p>
+
+				<div class="container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4 text-right form-text">Контрагент</div>
+						<div class="col-md-6">
+							<select class="form-control" data-bind="optionsCaption: '', options: $parent.Dictionaries.Contractor, optionsText: 'Display', optionsValue: 'ID', value: SelectedContractor"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,40 @@
+﻿
+<div class="modal" id="phoneEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: PhoneEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-backdrop="static" data-keyboard="false"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Телефон <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый телефон</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal container-fluid">
+					<div class="row form-group">
+						<div class="col-md-4">Тип</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="options: $parent.Dictionaries.PhoneType, optionsText: 'Display', optionsValue: 'ID', value: CurrentItem().TypeId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Номер</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Number" class="form-control" /></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Комментарий</div>
+						<div class="col-md-8"><input data-bind="textInput: CurrentItem().Name" class="form-control" /></div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

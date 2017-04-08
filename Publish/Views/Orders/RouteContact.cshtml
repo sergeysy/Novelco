@@ -1,0 +1,92 @@
+﻿@model Logisto.ViewModels.RouteContactViewModel
+@{
+	ViewBag.Title = "Новый контакт на маршруте";
+}
+
+@section Styles{
+	<link href="~/Content/themes/base/all.css" rel="stylesheet" />
+
+	<style type="text/css">
+		div[class^="col-"] {
+			padding-left: 4px;
+			padding-right: 4px;
+		}
+	</style>
+
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+
+		app.urls.GetPlace = "@Url.Action("GetPlace", "Ajax")";
+		app.urls.GetPlaces = "@Url.Action("SearchPlaces", "Ajax")";
+		app.urls.SaveRouteContact = "@Url.Action("SaveRouteContact", "Orders")";
+
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Orders/RouteContact.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5">
+			<!-- ko ifnot: RouteContact.ID() -->
+			<h2>Новый контакт на маршруте</h2>
+			<!-- /ko -->
+			<!-- ko if: RouteContact.ID() -->
+			<h2>Контакт на маршруте <span class="text-ghost">#<span data-bind="text: RouteContact.ID"></span></span></h2>
+			<!-- /ko -->
+		</div>
+		<div class="col-md-5"></div>
+		<div class="col-md-2"><button class="btn btn-success" style="margin-top: 22px;" data-bind="click: Save">Сохранить</button></div>
+	</div>
+
+	<hr />
+	<div class="row">
+		<div class="form-horizontal col-md-6 col-md-offset-3" data-bind="with: RouteContact">
+
+			<div class="row form-group">
+				<div class="col-md-3 text-right">Юрлицо</div>
+				<div class="col-md-9"><strong data-bind="text: LegalName"></strong> &nbsp; #<span class="text-muted" data-bind="text: LegalId"></span></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Населенный пункт</div>
+				<div class="col-md-9"><input id="placeAutocomplete" type="text" class="form-control"></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Наименование</div>
+				<div class="col-md-9"><input data-bind="textInput: Name" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Контакты</div>
+				<div class="col-md-9"><input data-bind="textInput: Contact" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Контакты (en)</div>
+				<div class="col-md-9"><input data-bind="textInput: EnContact" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Адрес</div>
+				<div class="col-md-9"><input data-bind="textInput: Address" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Адрес (en)</div>
+				<div class="col-md-9"><input data-bind="textInput: EnAddress" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Телефоны</div>
+				<div class="col-md-9"><input data-bind="textInput: Phones" class="form-control" /></div>
+			</div>
+			<div class="row form-group">
+				<div class="col-md-3 form-text text-right">Email</div>
+				<div class="col-md-9"><input data-bind="textInput: Email" class="form-control" /></div>
+			</div>
+		</div>
+	</div>
+</div>

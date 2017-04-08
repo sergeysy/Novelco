@@ -1,0 +1,80 @@
+﻿@model IEnumerable<Logisto.Models.OrderTemplate>
+@{
+	ViewBag.Title = "Шаблоны заказов для договора";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+		var contractId=@ViewBag.ContractId;
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.SaveOrderTemplateOperation = "@Url.Action("SaveOrderTemplateOperation", "Data")";
+		app.urls.GetOrderTemplateOperations = "@Url.Action("GetOrderTemplateOperations", "Ajax")";
+		app.urls.GetNewOrderTemplate = "@Url.Action("GetNewOrderTemplate", "Contracts")";
+		app.urls.GetOperationsItems = "@Url.Action("GetOrderOperations", "Ajax")";
+		app.urls.SaveOrderTemplate = "@Url.Action("SaveOrderTemplate", "Contracts")";
+	</script>
+
+	<script src="~/Scripts/Contractors/OrderTemplates.js"></script>
+}
+
+<div>
+	<div class="row">
+		<h2>Шаблоны для заказов по договору <span class="text-ghost">#@ViewBag.ContractId</span></h2>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Шаблоны <strong class="pull-right" data-bind="click: OpenOrderTemplateCreate">+новый</strong></div>
+				<table class="table table-condensed table-hover">
+					<thead>
+						<tr>
+							<th>Наименование</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: Items -->
+						<tr data-bind="css:{success:$data==$parent.SelectedTemplate()}" class="pointer">
+							<td data-bind="text: Name, click: $parent.SelectTemplate"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenOrderTemplateEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">Операции <span data-bind="if: SelectedTemplate">для: <span data-bind="text: SelectedTemplate().Name"></span></span><strong class="pull-right" data-bind="click: OpenOrderTemplateOperationCreate">⋮добавить</strong></div>
+				<table class="table table-condensed">
+					<thead>
+						<tr>
+							<th class="col-md-2">Наименование</th>
+							<th class="col-md-2">No</th>
+							<th class="col-md-1"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<!-- ko foreach: TemplateOperationsItems -->
+						<tr>
+							<td data-bind="text: app.utility.GetDisplay($parent.OperationsItems, OrderOperationId)"></td>
+							<td data-bind="text: No"></td>
+							<td><a class="btn btn-default btn-xs" data-bind="click: $parent.OpenOrderTemplateOperationEdit"><span class="glyphicon glyphicon-pencil"></span></a></td>
+						</tr>
+						<!-- /ko -->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+@Html.Partial("_OrderTemplateEditModal")
+@Html.Partial("_OrderTemplateOperationEditModal")

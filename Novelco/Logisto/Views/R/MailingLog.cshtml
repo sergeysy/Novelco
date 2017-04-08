@@ -1,0 +1,50 @@
+﻿@model Logisto.ViewModels.IndexViewModel
+@{
+	ViewBag.Title = "История рассылки";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetMailingLogItems", "R")";
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/R/MailingLog.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-10"><h2>История рассылки</h2></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-1">Дата</th>
+				<th class="col-md-1">Email</th>
+				<th class="col-md-2">Тема</th>
+				<th class="col-md-8">Текст</th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: app.utility.FormatDateTime(Date)"></td>
+				<td data-bind="text: To"></td>
+				<td data-bind="text: Subject"></td>
+				<td data-bind="text: Text"></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+</div>
+

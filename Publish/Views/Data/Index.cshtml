@@ -1,0 +1,147 @@
+﻿@model Dictionary<string, object>
+@{
+	ViewBag.Title = "Справочники";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+	</script>
+
+	<script src="~/Scripts/Data/Index.js"></script>
+}
+
+<div>
+	<h2>Справочники</h2>
+	<hr />
+
+	<h3>Административные</h3>
+	<div class="row">
+		<a href="@Url.Action("Templates")" class="col-md-2 datatile">
+			<div>
+				<h4>Шаблоны</h4>
+				<p data-bind="text: TemplatesCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("CargoDescriptions")" class="col-md-2 datatile">
+			<div>
+				<h4>Виды груза</h4>
+				<p data-bind="text: CargoDescriptionsCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("PackageTypes")" class="col-md-2 datatile">
+			<div>
+				<h4>Типы упаковки</h4>
+				<p data-bind="text: PackageTypesCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("Services")" clas class="col-md-2 datatile">
+			<div>
+				<h4 style="line-height:80px;">Продукты - услуги</h4>
+			</div>
+		</a>
+		<a href="@Url.Action("Places")" clas class="col-md-2 datatile">
+			<div>
+				<h4 style="line-height:80px;">Страны - регионы</h4>
+			</div>
+		</a>
+		<a href="@Url.Action("OrderOperations")" class="col-md-2 datatile">
+			<div>
+				<h4>Операции</h4>
+				<p data-bind="text: OrderOperationsCount"></p>
+			</div>
+		</a>
+	</div>
+
+	<div class="row">
+		<a href="@Url.Action("Users", "Identity")" clas class="col-md-4 datatile datatile-red">
+			<div>
+				<h4>Пользователи</h4>
+				<p data-bind="text: UsersCount"></p>
+			</div>
+		</a>
+		@*<a href="@Url.Action("Roles", "Identity")" class="col-md-2 datatile datatile-red">
+				<div>
+					<h4>Роли</h4>
+					<p data-bind="text: RolesCount"></p>
+				</div>
+			</a>*@
+		<a href="@Url.Action("OrderTemplates")" class="col-md-2 datatile">
+			<div>
+				<h4>Шаблоны заказов</h4>
+				<p data-bind="text: OrderTemplatesCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("PositionTemplates")" class="col-md-3 datatile">
+			<div>
+				<h4>Шаблоны должностей</h4>
+				<p data-bind="text: PositionTemplatesCount"></p>
+			</div>
+		</a>
+	</div>
+
+	<h3>Финансовые</h3>
+
+	<div class="row">
+		<a href="@Url.Action("FinRepCenters")" class="col-md-2 datatile">
+			<div>
+				<h4>ЦФО</h4>
+				<p data-bind="text: FinRepCentersCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("Banks")" class="col-md-2 datatile datatile-orange">
+			<div>
+				<h4>Банки</h4>
+				<p data-bind="text: BanksCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("PaymentTerms")" class="col-md-2 datatile datatile-orange">
+			<div>
+				<h4>Типы оплаты</h4>
+				<p data-bind="text: PaymentTermsCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("CurrencyRates")" class="col-md-2 datatile datatile-orange">
+			<div>
+				<h4 style="line-height:80px;">Курсы валют</h4>
+			</div>
+		</a>
+		<a href="@Url.Action("CurrencyRateUses")" class="col-md-3 datatile datatile-orange">
+			<div>
+				<h4 style="line-height:80px;">Применяемые курсы валют</h4>
+			</div>
+		</a>
+		<a href="@Url.Action("RecalculateContractors")" class="col-md-4 datatile datatile-blue">
+			<div>
+				<h4 style="line-height:80px;">Пересчитать баланс контрагентов</h4>
+			</div>
+		</a>
+	</div>
+
+	<h3>Юридические</h3>
+
+	<div class="row">
+		<a href="@Url.Action("ContractRoles")" class="col-md-3 datatile">
+			<div>
+				<h4>Стороны в договоре</h4>
+				<p data-bind="text: ContractRolesCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("ContractTypes")" class="col-md-3 datatile">
+			<div>
+				<h4>Типы договоров</h4>
+				<p data-bind="text: ContractTypesCount"></p>
+			</div>
+		</a>
+		<a href="@Url.Action("OurLegals")" class="col-md-3 datatile">
+			<div>
+				<h4>Наши Юрлица</h4>
+				<p data-bind="text: OurLegalsCount"></p>
+			</div>
+		</a>
+	</div>
+</div>

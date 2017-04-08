@@ -1,0 +1,30 @@
+﻿
+<div class="modal" id="orderTemplateOperationEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: OrderTemplateOperationEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>			
+				<h4 class="modal-title">Операция</h4>
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Операция</div>
+						<div class="col-md-8">
+							<select class="form-control" data-bind="optionsCaption:'', options: $parent.OperationsItems, optionsText: function(item){return app.utility.GetDisplay($parent.Dictionaries.OperationKind, item.OperationKindId()) + ' / ' + item.Name()}, optionsValue: 'ID', value: CurrentItem().OrderOperationId"></select>
+						</div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Порядковый номер</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().No"></div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

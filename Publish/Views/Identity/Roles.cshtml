@@ -1,0 +1,66 @@
+﻿@model Logisto.Models.ListFilter
+@{
+	ViewBag.Title = "Роли";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+
+		var app = app || {};
+		app.urls = app.urls || {};
+		app.urls.GetItems = "@Url.Action("GetRoles", "Identity")";
+		app.urls.GetNewRole = "@Url.Action("GetNewRole", "Identity")";
+		app.urls.DeleteRole = "@Url.Action("DeleteRole", "Identity")";
+		app.urls.SaveRole = "@Url.Action("SaveRole", "Identity")";
+
+	</script>
+
+	<script src="~/Scripts/Identity/Roles.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-6"><h2>Роли</h2></div>
+		<div class="col-md-2"></div>
+		<div class="col-md-1"><button class="btn btn-a" data-bind="click: OpenRoleCreate" style="margin-top: 22px;">+новая</button></div>
+		<div class="col-md-2"><input type="text" class="form-control" data-bind="textInput: Filter.Context" placeholder="поиск по ..." style="margin-top: 22px;" /></div>
+	</div>
+	<hr />
+
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th class="col-md-4 sortable" data-bind="css:{'asc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Asc',  'desc-sorted':Filter.Sort()=='Name'&& Filter.SortDirection()=='Desc'}">
+					<a data-bind="click: function(){SortBy('Name')}">Название</a>
+				</th>
+				<th class="col-md-7">Описание</th>
+				<th class="col-md-1"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<!-- ko foreach: Items -->
+			<tr>
+				<td data-bind="text: Name"></td>
+				<td data-bind="text: Description"></td>
+				<td><button class="btn btn-xs" data-bind="click: $parent.OpenRoleEdit"><span class="glyphicon glyphicon-pencil"></span></button><a href="#" data-bind="click: $parent.DeleteRole" class="close">&times;</a></td>
+			</tr>
+			<!-- /ko -->
+		</tbody>
+	</table>
+
+	<div class="text-center">
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: FirstPage" style="background-color:#fafafa">&lt;&lt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()>0, click: PrevPage">&lt;</button>
+		Страница <span data-bind="text: Filter.PageNumber()+1"></span>
+		из <span data-bind="text: TotalPageCount"></span>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: NextPage">&gt;</button>
+		<button class="btn" data-bind="if: Filter.PageNumber()<(TotalPageCount()-1),click: LastPage" style="background-color:#fafafa">&gt;&gt;</button>
+	</div>
+</div>
+
+@Html.Partial("_RoleEditModal")

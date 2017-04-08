@@ -1,0 +1,39 @@
+﻿
+<div class="modal" id="regionEditModal" tabindex="-1" data-backdrop="static" data-keyboard="false">
+	<div class="modal-dialog" data-bind="with: RegionEditModal">
+		<div class="modal-content" data-bind="if: CurrentItem">
+			<div class="modal-header">
+				<button type="button" class="close" data-bind="click: Close"><span>&times;</span></button>
+				<!-- ko if: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Регион <span class="text-ghost">#<span data-bind="text: CurrentItem().ID"></span></span></h4>
+				<!-- /ko -->
+				<!-- ko ifnot: CurrentItem().ID() > 0 -->
+				<h4 class="modal-title">Новый регион</h4>
+				<!-- /ko -->
+			</div>
+			<div class="modal-body">
+				<div class="form-horizontal">
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().Name"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Наименование (en)</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().EnName"></div>
+					</div>
+
+					<div class="row form-group">
+						<div class="col-md-4">Код ISO</div>
+						<div class="col-md-8"><input class="form-control" data-bind="textInput: CurrentItem().IsoCode"></div>
+					</div>
+
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bind="click: Done">Готово</button>
+			</div>
+		</div>
+	</div>
+</div>

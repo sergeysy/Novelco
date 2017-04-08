@@ -1,0 +1,35 @@
+﻿@model Logisto.ViewModels.UserViewModel
+@{
+	ViewBag.Title = "Просмотр пользователя";
+}
+
+@section Styles{
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		var modelData = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+	</script>
+
+	@Scripts.Render("~/bundles/jquery-ui")
+	<script src="~/Scripts/Users/User.js"></script>
+}
+
+<div>
+	<div class="row">
+		<div class="col-md-5"><h2>Пользователь <span class="text-ghost">#<span data-bind="text: User.ID"></span></span></h2></div>
+	</div>
+
+	<hr />
+
+	<div class="row">
+		<div class="col-md-1 text-muted">Логин</div>
+		<div class="col-md-2" data-bind="text: User.Login"></div>
+
+		<div class="col-md-1 text-muted">Фамилия</div>
+		<div class="col-md-2" data-bind="text: User.Person.Family"></div>
+
+		<div class="col-md-1 text-muted">Роль</div>
+		<div class="col-md-2" data-bind="text: app.utility.GetDisplay(Dictionaries.Role, User.RoleId)"></div>
+	</div>
+</div>
