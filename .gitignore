@@ -2,3 +2,4 @@ $tf
 bin
 obj
 Temp
+*.suo
